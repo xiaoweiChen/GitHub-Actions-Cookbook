@@ -1,8 +1,284 @@
 
+Github在编写工作流程时非常出色地指导工作流设计人员的人。这就是为什么最好启动并写下您的第一个工作流并熟悉平台的原因。
+
 \mySubsubsection{1.6.1}{Getting ready}
+
+在创建第一个工作流程之前,您首先必须在Github上创建一个存储库。导航到https://github.c om/new,如果您尚未进行认证,请验证,并如图1.6中填写数据:
+
+\myGraphic{0.6}{content/chapter1/images/6.png}{图1.6 --- 创建一个新的存储库}
+
+选择您的github用户作为所有者,并给回购一个唯一的名称 - 例如ActionCookbook。 使其成为公共回购,以便所有工作流和存储都是免费的。使用readme文件初始化存储库 - 这样,我们已经在存储库中的文件和工作流中的某些内容可以使用。
 
 \mySubsubsection{1.6.2}{How to do it…}
 
+GitHub Action工作流程是YAML文件,该文件带有.YML或.YAML扩展名,该文件位于存储库中的.github/Workflows文件夹中。您可以手动创建文件,但是工作流编辑器只有在第一个提交之后才能使用。因此,我建议从菜单中创建一个新的工作流程。
+
+\begin{enumerate}
+\item 
+在您的新存储库中,导航到操作。由于您的存储库是新的,并且您还没有任何工作流,因此这将您直接将您重定向到创建新的工作流页(Action/New)。如果您的存储库包含工作流,您将在此处看到工作流(如图1.16所示),并且您必须单击新的工作流按钮才能到达该页面。
+
+在此页面上,您会发现很多模板工作流程可以用作起点。对于大多数云部署,大多数语言的CI,您的代码的安全扫描,自动化以及模板将内容部署到github页面。您可以通过这些类别过滤起始工作流。这些工作流为您的大多数工作流程提供了一个很好的起点。
+
+在此食谱中,我们将专注于熟悉编辑器,并通过单击设置工作流来从头开始创建一个工作流(请参见图1.7):
+
+\myGraphic{0.6}{content/chapter1/images/7.png}{图1.7 --- 在GitHub中创建新的工作流程}
+
+\item 
+GitHub将在默认分支上的.github/Workflows中创建一个新的main.yml文件,并将其显示在Web编辑器中。在编辑器的右侧,您有文档,您可以在Github Marketplace中搜索操作。
+在编辑器中,您可以使用Ctrl + Space(或Option + Space - 取决于您的键盘设置)来触发自动完成。编辑器将捕获Tab键,默认情况下将其用于两个空间缩进。要使用TAB键导航到页面上的其他控件,首先必须使用ESC或使用CTRL + shift +M。
+
+将文件名修改为myfirstworkflow.yml，并熟悉编辑器（见图1.8）：
+
+\myGraphic{0.6}{content/chapter1/images/8.png}{图1.8 --- GitHub操作的工作流编辑器}
+
+\item 
+在编辑器中,单击ctrl + space(或option + space)以查看在工作流文件中有效的根元素列表(请参见图1.9):
+
+\myGraphic{0.6}{content/chapter1/images/9.png}{图1.9 --- 编辑器向您显示工作流文件中某个级别的所有有效选项}
+
+通常,工作流的名称属性开始,该属性设置了UI中工作流的显示名称。这是一个很好的做法,最好在文件的顶部添加评论,总结了工作流程的意图。
+
+\item 
+将注释添加到文件顶部,并使用AutoComplete设置名称属性。请注意,编辑器有错误检查,并表明您仍缺少所需的根键,请(请参见图1.10):
+
+\myGraphic{0.6}{content/chapter1/images/10.png}{图1.10 --- 在代码编辑器中检查错误}
+
+\item 
+接下来,我们将配置应触发工作流程的事件。请注意,工作流可以具有多个触发器。根据您在设计师中的位置,自动完成将为您带来不同的结果。如果您与on同一行,则将在JSON语法中获得结果(请参见YAML Collection类型部分);也就是说:[push]。
+
+如果您在第一个元素之后添加逗号,然后再次单击“控制+空间,则可以从AutoComp lete中选择其他元素(请参见图1.11):
+
+\myGraphic{0.6}{content/chapter1/images/11.png}{图1.11 --- 自动补全也适用于方括号内}
+
+每个触发器都是地图,可以包含其他参数。如果将光标放在下面的线路上:添加两个空间缩进,AutoComplete将为您提供完整YAML语法的结果。它还将为您提供可用于配置每个触发的属性(请参见图1.12):
+
+\myGraphic{0.6}{content/chapter1/images/12.png}{图1.12 --- 自动完成还有助于触发器的选项}
+
+请注意,大多数参数(例如,分支或路径)是序列,如果您不使用JSON语法,则每个条目都需要破折号。
+
+我们希望我们的测试工作流程在每次推动到主分支上运行。我们还希望能够手动触发它(请参阅触发工作流程的事件)。您的触发器工作流程代码应该看起来像这样:
+
+\begin{shell}
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+\end{shell}
+
+\begin{myNotic}{通配符}
+*可以用作路径中的通配符,而**则可以用作递归通配符。 *是YAML中的特殊角色,因此您需要在这种情况下使用引号:
+
+\begin{shell}
+push:
+  branches:
+    - 'release/**'
+  paths:
+    - 'doc/**'
+\end{shell}
+\end{myNotic}
+
+\item 
+为工作流配置触发器后,下一步是添加另一个根元素:作业。作业是YAML中的地图 --- 这意味着在带有两个空间缩进的下一行上,AutoComplete将无法正常工作,因为编辑者期望您设置名称。命名您的工作first\_job,然后转到下一行。作业对象的名称只能包含字母数值,破折号( - )和下划线(\_)。如果您希望在工作流中显示任何其他字符,则可以使用名称属性:
+
+\begin{shell}
+jobs:
+  first_job:
+    name: My first job
+\end{shell}
+
+\item 
+每个作业都需要一个执行它的跑步者。跑步者通过标签标识。您将在工作流运行时第4 章中了解有关跑步者的更多信息。我们希望我们的工作流程在GitHub提供的最新版本的U buntu跑步者中执行,因此我们使用Ubuntu-lat-lat-latt 标签:
+
+\begin{shell}
+runs-on: ubuntu-latest
+\end{shell}
+
+\item 
+作业由一系列步骤组成,这些步骤被一个接一个地执行。最基本的步骤是运行:命令,该命令将执行命令行命令:
+
+\begin{shell}
+steps:
+  - name: Greet the user
+    run: echo "Hello world"
+    shell: bash
+\end{shell}
+
+该名称是可选的,并在日志中设置了步骤的输出。外壳也是可选的,默认情况下将在非窗口平台上敲击,并带有SH的后备。在Windows上,默认值为PowerShell Core(PWSH),并置于CMD。但是,您可以用\{0\}占位符为步骤的输入配置任何所需的外壳(即,shell:perl \{0\})。要添加可变输出,我们可以使用\$\{\{和\}\}之间写入的表达式。在表达式中,您可以使用上下文对象(例如github上下文)的值。请注意,AutoComplete还适用于这些上下文对象(请参见图1.13):
+
+\myGraphic{0.6}{content/chapter1/images/13.png}{图1.13 --- 自动完成也适用于上下文对象}
+
+从价值列表中挑选actor：
+
+\myGraphic{0.8}{content/chapter1/images/13.1.png}{}
+
+您将在整本书中了解有关表达式和上下文语法的更多信息。但是,您可以随时参考表达式(\url{(https://docs.github.com/en/actions/learn-github-actions/expressions})和上下文(\url{https://docs.github.com/en/actions/learn-github-actions/contexts})的文档。
+
+\item 
+YAML允许您编写多行脚本,而无需用报价和新线来搏斗。运行后只需添加管道操作员(|):并在下一行中写下您的脚本四个空间凹痕即可。 YAML将把它视为一个块,直到下一个元素为止 - 即使有新的和空白的线:
+
+\myGraphic{0.8}{content/chapter1/images/13.2.png}{}
+
+\item 
+github操作工作流程不会自动从您的存储库下载代码。 如果您想使用存储库中的文件进行操作,则必须先查看内容。这是使用github操作完成的 --- 可重复使用的工作流程步骤,可以轻松共享多个工作流程。
+
+在工作流编辑器的右侧是市场。您可以在此直接搜索各种操作。搜索结帐并从操作中找到动作(这些是GitHub的内置操作)。在列表中,您会看到动作的所有者,最新版本和存储库的星星。清单包含一个安装部分,您可以将其复制到工作流中以使用该操作(请参见图1.14):
+
+\myGraphic{0.6}{content/chapter1/images/14.png}{图1.14 --- 工作流编辑器中市场列表}
+
+请注意，许多参数都是可选的。要查看存储库，您只需要以下几行：
+
+\begin{shell}
+- name: Checkout
+  uses: actions/checkout@v4.1.0
+\end{shell}
+
+\begin{myNotic}{使用github动作}
+操作请参阅Github上的位置。语法为\{path\}@\{ref\}。路径指向GitHub上的物理位置, 如果操作位于存储库的根或\{owner\}/\{repo\}/\{path\}如果操作在子文件夹中,则可以是\{orsal\}/\{repo\}。 @\{ref\}之后的引用是指向提交的任何git引用。它可以是标签,分支或个人提交SHA。
+\end{myNotic}
+
+\item 
+为了在检出文件后显示存储库中的文件，我们将添加一个额外的步骤：
+
+\begin{shell}
+- run: tree
+\end{shell}
+
+这将在树结构中输出存储库中的文件。
+
+\item 
+要运行工作流程,只需将工作流文件提交到主分支。单击Commit changes…,留下提交消息和分支,然后单击对话框中的 Commit changes以完成操作(请参见图1.15):
+
+\myGraphic{0.6}{content/chapter1/images/15.png}{图1.15 --- 提交工作流文件}
+
+\item 
+由于我们为主分支设定了推动扳机,因此我们的提交自动触发了工作流程。如果您立即导航到存储库中的操作,则可以看到您的工作流程和最新的工作流程(请参见图1.16) :
+
+\myGraphic{0.6}{content/chapter1/images/16.png}{图1.16 --- 操作中的默认视图显示所有工作流的最新工作流程}
+
+请注意,工作流程的名称是提交消息。您还可以看到触发工作流程的提交和推动更改的演员。
+
+\item 
+单击工作流程以查看更多详细信息。工作流摘要页面包含左侧作业,右侧包含一个视觉表示(请参见图1.17)。它还包含用于触发,状态和持续时间的元数据:
+
+\myGraphic{0.6}{content/chapter1/images/17.png}{图1.17 --- 工作流摘要页面}
+
+\item 
+单击工作以查看更多详细信息。在工作流日志中,您可以检查各个步骤。 请注意, 工作流文件的每一行都有一个可单击的数字 - 这是您可以使用的URL来识别每行。Set up job 步骤是一个特殊的步骤,可为您提供有关工作流跑步者和工作流权限的大量背景信息( 请参见图1.18)。检查工作流程的所有步骤的输出:
+
+\myGraphic{0.6}{content/chapter1/images/18.png}{图1.18 --- 单个工作的工作流日志}
+
+\item 
+作为最后一步,我们想手动触发工作流程,以查看工作流程的差异。返回操作,选择左侧的工作流程(请参见图1.19),然后运行工作流程:
+
+\myGraphic{0.6}{content/chapter1/images/19.png}{图1.19 --- 通过UI手动触发工作流程}
+
+检查新的工作流程及其输出。
+
+\end{enumerate}
+
 \mySubsubsection{1.6.3}{How it works…}
 
+工作流文件是位于存储库中的.github/Workflows文件夹中的YAML文件。
+
+\mySamllsection{YAML基础知识}
+
+YAML代表YAML不是标记语言，是一种数据序列化语言，经过优化，可以被人类直接写入和读取。它是JSON的严格超集，但使用语法相关的换行符和缩进而不是大括号。
+
+你可以通过在文本前加一个哈希（\#）来写注释。
+
+在YAML中，你可以用以下语法给变量赋值： key: value.
+
+Key是变量的名称。根据值的数据类型，变量的类型会有所不同。注意，键和值可以包含空格，不需要引号！只有在使用一些特殊字符或希望将某些值强制为字符串时才添加它们。可以用单引号或双引号引用键和值。双引号使用反斜杠作为转义模式（"Foo \"bar \" Foo “），而单引号则使用额外的单引号（' Foo ”bar "Foo '）。
+
+\mySamllsection{YAML收集类型}
+
+在YAML中，有两种不同的集合类型：称为映射的嵌套类型和列表（也称为序列）。地图使用两个空格缩进：
+
+\begin{shell}
+parent_type:
+  key1: value1
+  key2: value2
+  nested_type:
+    key1: value1
+\end{shell}
+
+序列是项目的有序列表，每行之前都有减号：
+
+\begin{shell}
+sequence:
+  - item1
+  - item2
+  - item3
+\end{shell}
+
+由于YAML是JSON的超集，您也可以使用JSON语法将集合放在一行中：
+
+\begin{shell}
+key: [item1, item2, item3]
+key: {key1: value1, key2: value2}
+\end{shell}
+
+\mySamllsection{触发工作流程的事件}
+
+工作流程有三种类型的触发器:Webhook触发器,计划触发器和手动触发器。
+
+Webhook Triggers根据GitHub的事件启动工作流程。有许多Webhook触发器可用。例如,您可以在问题事件,存储库事件或讨论事件上运行工作流程。在我们的示例中,推动触发器是一个webhook触发器。
+
+计划触发器可以在多个计划的时间运行工作流程。语法与用于Cron作业的语法相同:
+
+\begin{shell}
+on:
+  schedule:
+    # Runs at every 15th minute
+    - cron: '*/15 * * * *'
+    # Runs every hour from 9am to 5pm
+    - cron: '0 9-17 * * *'
+    # Runs every Friday at midnight
+    - cron: '0 2 * * FRI'
+\end{shell}
+
+手动触发器允许您手动启动工作流程。 WorkFlow\_DisPatch触发器将允许您使用Web UI或GitHub CLI启动工作流程。您可以使用输入属性为此触发器定义输入参数。 Repository\_disPatc h触发器可用于使用API触发工作流程。该触发器也可以通过某些事件类型过滤,并且可以接受工作流中可以访问的其他JSON有效载荷。
+
+要了解有关触发因素的更多信息,请在\url{https://docs.github.com/en/actions/anction/lusther-work flows/events-th-trigger-workflows}上查看文档。
+
+\mySamllsection{工作}
+
+每个作业都需要一个执行它的跑步者。跑步者通过标签标识。在我们的食谱中,我们使用Ubuntu-latest标签。这意味着我们的工作将在GitHub托管的最新Ubuntu映像上执行。您将在工作流运行时第4章中了解有关跑步者的更多信息。
+
+\mySamllsection{使用github动作}
+
+操作请参阅Github上的位置。语法为\{path\}@\{ref\}。路径指向GitHub上的物理位置,如果操作位于存储库的根或\{owner\}/\{repo\}/\{path\}如果操作在子文件夹中,则可以是\{orsal\}/\{repo\} 。 @\{ref\}之后的引用是指向提交的任何git引用。它可以是标签,分支或个人提交:
+
+\begin{shell}
+# Reference a version using a tag
+- uses: actions/checkout@v4.1.0
+
+# Reference the current head of a branch
+- uses: actions/checkout@main
+
+# Reference a specific commit
+- uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+\end{shell}
+
+对于同一存储库中的本地操作，您可以在签出存储库时省略引用。
+
+如果操作已经定义了输入，则可以使用with属性指定它们：
+
+\begin{shell}
+- uses: ActionsInAction/HelloWorld@v1
+  with:
+    WhoToGreet: Mona
+\end{shell}
+
+输入可以是可选的或必需的。您还可以使用env属性设置步骤的环境变量:
+
+\begin{shell}
+- uses: ActionsInAction/HelloWorld@v1
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+\end{shell}
+
 \mySubsubsection{1.6.4}{There’s more…}
+
+这只是一个非常基本的工作流程,它使用操作检查代码并在命令行上运行一些命令。在接下来的两个食谱中,我将向您展示如何使用秘密,变量和受保护的环境来进行更复杂的工作流程。

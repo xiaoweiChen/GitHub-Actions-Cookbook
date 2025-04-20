@@ -1,5 +1,97 @@
+
+您可以在可以在工作流中访问的存储库中设置变量和秘密。在此食谱中,我们将同时添加并在工作流程中访问它们。
+
 \mySubsubsection{1.7.1}{Getting ready}
+
+在此食谱中,我们将使用Web UI设置变量和秘密。您也可以将GitHub CLI(\url{https://cli.github.com/})使用。如果您想尝试一下,则必须安装它。但是,没有必要遵循食谱。
 
 \mySubsubsection{1.7.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+在您的存储库中,导航到Settings | Secrets and Variables | Actions。您可以在存储库中查看所有现有的秘密,并且可以在Secrets(settings/
+secrets/actions)和Variables(settings/variables/actions;请参见图1.20)之间切换选项卡:
+
+\myGraphic{0.6}{content/chapter1/images/20.png}{图1.20 --- 为存储库配置秘密和变量}
+
+\item 
+单击New repository secret 将打开New secret 对话框（settings/secrets/actions/new；请参见图1.21）：
+
+\myGraphic{0.6}{content/chapter1/images/21.png}{图1.21 --- 添加一个新秘密}
+
+将my\_secret添加为秘密名称和一个随机单词,例如abracadabra作为秘密,然后单击“ Add secret”。秘密将在日志中掩盖!因此,不要使用可能在随机作业或步骤的其他输出中发生的常见单词。
+
+\begin{myTip}{命名秘密和变量的约定}
+秘密名称不是对病例敏感的,它们只能包含普通字符([A-Z]和[A-Z]),数字([0-9] )和下划线(\_)。他们一定不能从github\_或一个数字开始。
+
+最好的做法是用大写单词命名秘密,被下划线角色隔开
+\end{myTip}
+
+\item 
+重复New repository variable(settings/variables/actions/new)的过程,并创建一个具有值世界的WHO\_TO\_GREET变量。
+
+\item 
+从上一个食谱打开.github/workflows/myfirstworkflow.yml文件,然后单击“编辑”图标(请参见图1.22):
+
+\myGraphic{0.6}{content/chapter1/images/22.png}{图1.22 --- 编辑myfirstworkflow.yml}
+
+将单词World更改为\verb|${{vars.WHO_TO_GREET}}|表达式，并使用\verb|${{ secrets.MY_SECRET }} |添加新行:
+
+\myGraphic{0.6}{content/chapter1/images/22.1.png}{}
+
+\item 
+提交更改。工作流将自动运行。检查工作流日志中的输出。看起来应该像图1.23：
+
+\myGraphic{0.6}{content/chapter1/images/23.png}{图1.23 --- 日志中秘密和变量的输出}
+
+\end{enumerate}
+
 \mySubsubsection{1.7.3}{There’s more…}
+
+您可以通过在以下级别之一上定义它们来创建配置变量，以在多个工作流中使用：
+
+\begin{itemize}
+\item 
+组织级别
+
+\item 
+存储库级别
+
+\item 
+环境水平
+\end{itemize}
+
+这三个级别像层次结构一样工作:您可以通过为同一键提供新值来覆盖较低级别的变量或秘密。图1.24说明了层次结构:
+
+\myGraphic{0.6}{content/chapter1/images/24.png}{图1.24 --- 配置变量和秘密的层次结构}
+
+组织的秘密和变量的工作方式与存储库相同。您可以在Settings | Secrets and variables | Actions下创建一个秘密或变量。新的组织秘密或变量可以具有以下访问策略:
+
+\begin{itemize}
+\item 
+所有存储库(All repositories)
+
+\item 
+私人存储库(Private repositories)
+
+\item 
+选定的存储库(Selected repositories)
+\end{itemize}
+
+选择"选定的存储库"时,您可以授予对单个存储库的访问。
+
+除了通过UI设置这些值外,还可以使用GitHub CLI。
+
+您可以使用GH Secret或GH变量创建新条目：
+
+\begin{shell}
+$ gh secret set secret-name
+$ gh variable set var-name
+\end{shell}
+
+您将提示您的秘密或变量值,或者您可以从文件中读取值,将其输送到命令,或将其指定为正文(-b或-{}-body):
+
+\begin{shell}
+$ gh secret set secret-name < secret.txt
+$ gh variable set var-name --body config-value
+\end{shell}
