@@ -1,7 +1,241 @@
+在本教程中，我们将为操作添加一个输出参数，该参数可以在后续步骤中使用，同时我们还将向工作流作业总结中写入内容。
+
 \mySubsubsection{3.3.1}{Getting ready}
+
+您需要完成之前的教程才能继续本教程。
 
 \mySubsubsection{3.3.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+打开action.yml文件，并在“输入”部分下添加以下代码，但在运行部分之前：
+
+\begin{shell}
+outputs:
+  answer:
+    description: 'The answer to everything (always 42)'
+\end{shell}
+
+这定义了一个带有答案ID的输出。
+
+\item 
+接下来，打开entrypoint.sh并将以下行添加到文件末尾：
+
+\begin{shell}
+echo "answer=42" >> $GITHUB_OUTPUT
+\end{shell}
+
+这将把答案的输出值设置为42。
+
+\item 
+现在，将以下几行添加到entrypoint.sh的末尾，以将一些标记和html写入步骤摘要：
+
+\begin{shell}
+echo "### Hello $@! :rocket:" >> $GITHUB_STEP_SUMMARY
+echo "<h3> The answer from Deep Thought is 42 :robot:</h3>" >>
+$GITHUB_STEP_SUMMARY
+\end{shell}
+
+\item 
+在提交更改之前，我们必须调整工作流文件 .github/workflows/ci.yml，以便它能够使用输出参数。为执行我们操作的步骤添加一个 ID，命名为 my-action，如下所示：
+
+\begin{shell}
+- name: Test the container
+  if: ${{ steps.my-action.outputs.answer != 42 }}
+  run: |
+    echo "::error file=entrypoint.sh,line=4,title=Error in container::The answer was not expected"
+  exit 1
+\end{shell}
+
+\item 
+提交并推送所有更改。构建将自动运行并且应该会成功。检查工作流日志，确保输出参数已正确传递给后续步骤（请参见图 3.3）：
+
+\myGraphic{0.4}{content/chapter3/images/3.png}{图3.3 --- Docker容器操作的输出}
+
+另外,请查看摘要页面上的工作摘要,该页面已渲染了我们的Markdown/HTML(见3.4):
+
+\myGraphic{0.4}{content/chapter3/images/4.png}{图3.4 --- 工作流摘要页面上的工作摘要}
+
+\item 
+最后,我们要确保如果返回了意外的值,CI 构建会失败。打开 entrypoint.sh 文件,将 42 修改为其他值(例如 7)。
+
+切换到另一个分支,提交并推送更改,然后创建一个新的拉取请求:
+
+\begin{shell}
+$ git switch -c fail-ci-build
+$ git commit -m "Fail CI build"
+$ git push -u origin fail-ci-build
+$ gh pr create --fill
+\end{shell}
+
+拉取请求的检查将会失败，并且会注释对应的文件（如图 3.5 所示）：
+
+\myGraphic{0.4}{content/chapter3/images/5.png}{图3.5 --- 如果输出值不符合预期，CI 构建将会使拉取请求失败。}
+
+请注意 GitHub 是如何标记更改并注释具体行的。
+
+\end{enumerate}
+
 \mySubsubsection{3.3.3}{How it works…}
 
+让我们来理解一下代码是如何工作的。
+
+\mySamllsection{环境文件}
+
+将输出值传递给后续步骤和作业是通过将名称-值对写入环境文件来实现的——即 \$GITHUB\_OUTPUT：
+
+\begin{shell}
+echo "{name}={value}" >> "$GITHUB_OUTPUT"
+\end{shell}
+
+>{}> 操作符将名称-值对追加到文件的末尾。文件的路径和名称存储在 \$GITHUB\_OUTPUT 环境变量中。您可以通过步骤上下文（steps context）中步骤的 outputs 属性来访问该输出：
+
+\begin{shell}
+"${{ steps.<step-id>.outputs.<name> }}"
+\end{shell}
+
+输出是 Unicode 字符串，其大小不能超过 1 MB。一个工作流运行中所有输出的总大小不能超过 50 MB。
+
+环境文件的另一个用例是为作业中的后续步骤设置环境变量。相应环境文件的路径存储在 \$GITHUB\_ENV 中。您只需将一个名称-值对追加到文件末尾，如下所示：
+
+\begin{shell}
+echo "{environment_variable_name}={value}" >> "$GITHUB_ENV"
+\end{shell}
+
+请注意，环境变量的名称是区分大小写的！以下是一个完整的示例，展示了如何在一个步骤中设置环境变量并在后续步骤中使用 env 上下文访问它：
+
+\begin{shell}
+steps:
+  - name: Set the value
+    id: step_one
+    run: |
+      echo "action_state=yellow" >> "$GITHUB_ENV"
+
+  - run: |
+      echo "${{ env.action_state }}" # This will output 'yellow'
+\end{shell}
+
+\mySamllsection{工作总结}
+
+您可以为工作流中的每个作业设置自定义的 Markdown。渲染后的 Markdown 将显示在工作流运行的总结页面上。工作总结可用于展示内容，如测试或代码覆盖率结果，这样查看工作流运行结果的人不需要进入日志或外部系统即可获取关键信息。工作总结支持 GitHub 风味的 Markdown。由于 Markdown 允许包含 HTML，您也可以将 HTML 输出到工作总结文件中。请注意，在此示例中，我的 GitHub 用户名 @wulfland 是指向个人资料的链接，并带有预览功能，且所有 GitHub 表情符号都得到支持。
+
+向工作总结添加步骤结果可以通过将 Markdown 追加到以下文件实现：
+
+\begin{shell}
+echo "{markdown content}" >> $GITHUB_STEP_SUMMARY
+\end{shell}
+
+步骤是相互隔离的，并且被限制为 1 MiB（1.04858 MB），以防止来自单个步骤的格式错误的 Markdown 影响后续步骤的 Markdown 渲染。工作总结最多可以包含来自 20 个步骤的内容，超出后的步骤输出将不会显示。
+
+在接下来的教程中，我们将使用工具包向工作总结写入更复杂的内容。
+
+对于环境文件和工作总结的完整参考，请参阅 \url{ https://docs.github.com/en/actions/using-workflows/workflow-commands-for-githubactions?tool=bash#environment-files}。
+
+\mySamllsection{表达式和有条件执行}
+
+在第 1 章和第 2 章中，我们使用了表达式（\$\{\{ ... \}\}）从上下文对象中输出值。在本教程中，我们在步骤的 if 属性中使用表达式来实现条件执行：
+
+\begin{shell}
+- name: Test the container
+  if: ${{ steps.my-action.outputs.answer != 42 }}
+\end{shell}
+
+此步骤仅在具有 my-action ID 的操作的输出答案值不等于 42 时才会执行。if 属性同样适用于作业，以实现条件性执行。
+
+当您在 if 属性中使用表达式时，可以省略 \$\{\{ \}\} 表达式语法，因为 GitHub Actions 会自动将 if 条件评估为一个表达式。对于条件执行，表达式必须返回 true 或 false。要编写表达式并将上下文与静态值进行比较，您可以使用表 3.1 中提供的运算符。
+
+% Please add the following required packages to your document preamble:
+% \usepackage{longtable}
+% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+\begin{longtable}[c]{|l|l|}
+\hline
+\textbf{运算符}              & \textbf{描述}                   \\ \hline
+\endfirsthead
+%
+\endhead
+%
+( )                            & 逻辑分组                       \\ \hline
+{[} {]}                        & 索引                                  \\ \hline
+.                              & 属性解引用                  \\ \hline
+!                              & 非                                    \\ \hline
+\textless , \textless{}=       & 小于，小于或等于      \\ \hline
+\textgreater , \textgreater{}= & 大于，大于或等于 \\ \hline
+==                             & 等于                                  \\ \hline
+!=                             & 不等于                              \\ \hline
+\&\&                           & 与                                    \\ \hline
+||                             & 或                                     \\ \hline
+\end{longtable}
+
+\begin{center}
+表 3.1 --- 表达式运算符
+\end{center}
+
+GitHub 提供了一组内置函数,您可以在表达式中使用它们。这些函数可以帮助您搜索字符串、格式化输出或处理数组。有关可用函数的列表,请参见表 3.2:
+
+% Please add the following required packages to your document preamble:
+% \usepackage{longtable}
+% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+\begin{longtable}[c]{|l|l|}
+\hline
+\textbf{Function} &
+  \textbf{Description} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+contains(search, item) &
+  \begin{tabular}[c]{@{}l@{}}如果 search 包含 item，则返回 true。 \\ \\ 例如:\\ contains('Hello world', 'llo') returns true\\ contains(github.event.issue.labels.*.name, 'bug') \\如果与事件相关的议题包含标签 bug，则返回 true。\end{tabular} \\ \hline
+startsWith(search, iten) &
+  当 search 以 item 开头时，返回 true。 \\ \hline
+endsWith(search, item) &
+  当 search 以 item 结尾时，返回 true。 \\ \hline
+format(string, v0, v1, ...) &
+  \begin{tabular}[c]{@{}l@{}}替换字符串中的值。 \\ \\ 例如:\\ format('Hello \{0\} \{1\} \{2\}', 'Mona', 'the', 'Octocat') returns 'Hello Mona the Octocat'.\end{tabular} \\ \hline
+join(array, optS) &
+  数组中的所有值将被连接成一个字符串。如果您提供了可选的分隔符 optS，它将被插入到连接的值之间。如果没有提供分隔符，则默认使用逗号 , 作为分隔符 \\ \hline
+toJSON(value) &
+  返回值的格式化 JSON 表示。 \\ \hline
+fromJSON(value) &
+  为 value 返回一个 JSON 对象或 JSON 数据类型。 \\ \hline
+hashFiles(path) &
+  为匹配路径模式的一组文件返回一个唯一的哈希值。\\ \hline
+\end{longtable}
+
+\begin{center}
+表3.2 --- GitHub中表达式的内置函数
+\end{center}
+
 \mySubsubsection{3.3.4}{There’s more…}
+
+还有一些特殊函数可以用于检查当前作业的状态。在以下示例中，最后一个步骤仅会在作业的前一个步骤失败时执行——也就是说，它返回了一个非零值：
+
+\begin{shell}
+steps:
+  - run: exit 1
+  - name: The job has failed
+    if: ${{ failure() }}
+\end{shell}
+
+有关用于检查作业状态的可用函数列表，请参见表 3.3：
+
+% Please add the following required packages to your document preamble:
+% \usepackage{longtable}
+% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+\begin{longtable}[c]{|l|l|}
+\hline
+\textbf{函数} & \textbf{描述}                                   \\ \hline
+\endfirsthead
+%
+\endhead
+%
+success() & 如果之前的任何步骤都没有失败或被取消，则返回 true。                               \\ \hline
+always()  & 即使之前的某个步骤被取消，也返回 true，并确保该步骤无论如何都会被执行。 \\ \hline
+cancelled()       & 仅当工作流被取消时返回 true。        \\ \hline
+failure()         & 如果作业的前一个步骤失败，则返回 true。 \\ \hline
+\end{longtable}
+
+这些函数还可以帮助您有条件地执行某些步骤，并执行例如清理操作。要了解更多关于条件执行的表达式，请参阅：\url{ https://docs.github.com/en/actions/learn-github-actions/expressions and https:// ocs.github.com/en/actions/using-jobs/using-conditions-to-controljob-execution}。
+
+
+
+

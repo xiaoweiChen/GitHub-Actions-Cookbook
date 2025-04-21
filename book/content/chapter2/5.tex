@@ -1,6 +1,25 @@
-\mySubsubsection{2.5.1}{Getting ready}
 
-\mySubsubsection{2.5.2}{How to do it…}
+在上一个食谱中,我们看到您可以重新运行失败的作业或启用调试日志记录的所有作业。但是,您还可以在存储库基础上启用或禁用Debug登录。
 
-\mySubsubsection{2.5.3}{How it works…}
+\mySubsubsection{2.5.1}{How to do it…}
 
+我们可以通过在我们的存储库中添加一个称为ACTIONS\_STEP\_DEBUG的变量并将值设置为true或fa se来启用或禁用调试记录。这将为我们的工作流日志和所有调试消息添加一个非常详细的出,这将从所有操作中显示。
+
+您可以使用Web,GitHub CLI或VS代码配置变量。要使用Web设置变量,在存储库中,请导到Settings | Secrets and variables | Actions,然后选择Variables(/settings/variables/actions)。单击 New repository variable (将您将您重定向//settings/variables/actions/new),输入ACTIONS\_STEP\_DEBUG作为名称为true为值,然后单击Add variable。
+
+要使用CLI设置它,只需执行以下行:
+
+\begin{shell}
+$ gh variable set ACTIONS_STEP_DEBUG --body true
+\end{shell}
+
+如果要在VS代码中设置变量,只需打开操作扩展名,导航到 Variables |
+Repository Variables,单击+符号请参见图2.24),Enter ACTIONS\_STEP\_DEBUG,然后命中[Enter];输入true并再次点击[Enter]。在VS代码中,使用更新选项更改变量也非常方便:
+
+\myGraphic{0.4}{content/chapter2/images/24.png}{图2.24 --- 在VS代码中设置步骤调试到true}
+
+运行您的工作流程并检查详细的输出。
+
+\mySubsubsection{2.5.2}{How it works…}
+
+您还可以通过将变量ACTIONS\_RUNNER\_DEBUG设置为true来激活跑步者的其他日志。跑步者的调日志将从工作流中下载的工作流中包含在日志存档中。如果您想了解有关监视和故障排除的更多信息,则可以参考\url{https://docs.github.com/en/actions/monitoring-andtroubleshooting-workflows/enabling-debug-logging}。

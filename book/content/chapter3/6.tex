@@ -1,7 +1,108 @@
-
+在这个示例中，我们将使用一个名为 github-script 的操作来在复合操作中利用工具包的强大功能。
 
 \mySubsubsection{3.6.1}{How to do it…}
 
+\begin{enumerate}
+\item 
+从 action.yml 文件中移除包含 Bash 脚本的 run 步骤，并用 github-script 操作替换它：
+
+\begin{shell}
+- name: Awesome github script action
+  uses: actions/github-script@v6
+  with:
+    script: |
+\end{shell}
+
+\item 
+使用工具包读取输入参数，将问候消息写入日志，并设置输出参数。这些内容在 创建 TypeScript 操作 的示例中应该已经很熟悉了：
+
+\begin{shell}
+var whoToGreet = core.getInput('who-to-greet')
+core.notice(`Hello ${whoToGreet}`)
+core.setOutput('answer', 42)
+\end{shell}
+
+\item 
+为了添加这个额外的功能，我们需要检查触发工作流的事件是否是 issues 事件。如果是的话，我们将使用 github.rest.issues.createComment 方法向该问题添加一条评论。以下是具体的实现步骤：
+
+\myGraphic{0.4}{content/chapter3/images/10.1.png}{}
+
+\item 
+在 CI 工作流中，添加一个额外的触发器，以便在新问题打开时执行工作流：
+
+\begin{shell}
+on:
+  issues:
+    types: [opened]
+\end{shell}
+
+\item 
+提交并推动您的更改。
+
+\item 
+在您的仓库中，前往 Issues | New issue（或访问 issues/new），为其添加一个标题并保存。工作流将运行，并在该问题下添加一条评论，如图 3.11 所示。
+
+\myGraphic{0.4}{content/chapter3/images/11.png}{图3.11 --- github-script 操作在新问题上添加评论}
+
+github-script 操作是一种利用工具包的强大功能进行原型设计的绝佳方法，且无需创建单独的操作。
+\end{enumerate}
+
 \mySubsubsection{3.6.2}{How it works…}
 
+github-script 操作使得在工作流或复合操作中快速编写使用 GitHub API 和工作流运行上下文的脚本变得非常容易。 它使用一个名为 script 的输入，该输入包含异步函数调用的主体。以下参数将由该操作提供：
+
+\begin{itemize}
+\item 
+github: 一个预认证的 octokit/rest.js 客户端，包含分页插件。
+
+\item 
+context: 一个包含工作流运行上下文的对象。
+
+\item 
+core: 对 @actions/core 包的引用。
+
+\item 
+glob: 对 @actions/glob 包的引用。
+
+\item 
+io: 对 @actions/io 包的引用。
+
+\item 
+exec: 对 @actions/exec 包的引用。
+
+\item 
+fetch: 对 node-fetch 包的引用。
+
+\item 
+require: 一个围绕普通 Node.js require 的代理包装器，用于支持相对于当前工作目录的相对路径加载，以及在当前工作目录中安装的 npm 包的加载。
+\end{itemize}
+
+由于脚本只是一个函数体，这些值已经预先定义好了，因此您无需导入它们，可以直接使用它们，就像我们在示例中使用 core、context 和 github 那样。
+
+要了解更多关于 github-script 的信息，请访问 \url{https://github.com/actions/github-script}。
+
 \mySubsubsection{3.6.3}{There’s more…}
+
+在 YAML 文件中的编辑和调试体验可能不是很好。然而，您可以在操作中使用脚本文件来改善这一过程，如下所示：
+
+\begin{shell}
+with:
+  script: |
+    const script = require('./path/to/script.js')
+    await script({github, context, core})
+\end{shell}
+
+通过这种方式，您可以将 github-script 操作的简便性与更优的 JavaScript 编写体验结合起来。
+
+github-script 操作是一种快速尝试某些功能并创建概念验证或一些集成的绝佳方法。通过复合操作，您可以逐渐将其构建成易于共享的模块。复合操作也是一种打包可重用功能的简单方式。随着您的解决方案不断发展，您可能需要考虑将其迁移到 TypeScript 或 Docker 容器操作中，以获得更好的可维护性。
+
+
+
+
+
+
+
+
+
+
+

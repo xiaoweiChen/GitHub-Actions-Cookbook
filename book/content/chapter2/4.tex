@@ -1,8 +1,97 @@
 
+基于现有结果文件的问题匹配者也可以通过使用WorkFlow命令将单个警告或错误事件编写日志中来实现。在此食谱中,我们将在工作流程中添加一些输出并注释工作流文件。
+
 \mySubsubsection{2.4.1}{Getting ready}
+
+确保您仍然从上一个食谱打开的拉动请求。只需使用VS代码添加其他更改,推动将自动触工作流程。
 
 \mySubsubsection{2.4.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+打开 github/workflows/developinbranch.yml在vs代码中的新工作流分支中,并在结帐操之前直接添加以下代码:
+
+\begin{shell}
+- run: |
+  echo "::debug::This is a debug message."
+  echo "::notice::This is a notice message."
+  echo "::warning::This is a warning message."
+  echo "::error::This is an error message."
+\end{shell}
+
+这将为工作流日志和工作流程摘要写不同类型的消息。
+
+\item 
+提交并推动更改。这将自动触发新的工作流程。
+
+\item 
+打开工作流日志并检查输出。它应该看起来像图2.19：
+
+\myGraphic{0.4}{content/chapter2/images/19.png}{图2.19 --- 将消息写入工作流日志}
+
+请注意,调试消息不可见。检查工作流程摘要,并包含在那里的消息以及我们的覆盖的错误(结果应如图2.20):
+
+\myGraphic{0.4}{content/chapter2/images/20.png}{图2.20 --- 摘要中的工作流注释}
+
+\item 
+要查看在行动中的调试消息,我们可以通过启用调试日志记录来重新运行工作流程。在工作流摘要中,单击重Re-run jobs | Re-run all jobs,选择“Enable debug logging”,然后击 Re-run jobs (如图2.21所示):
+
+\myGraphic{0.4}{content/chapter2/images/21.png}{图2.21 --- 启用了带有调试记录的重播作业}
+
+\item 
+再次检查工作流日志，并查看其他消息（如图2.22所示）：
+
+\myGraphic{0.4}{content/chapter2/images/22.png}{图2.22 --- 带有调试登录的工作流日志}
+
+\item 
+但是,注意,警告和错误不仅可以写入日志。我们可以使用它们来注释文件。将以下段添加到工作流程:
+
+\begin{shell}
+- run: |
+  echo "::notice file=.github/workflows/DevelopInBranch.yml,line=19,col=11,endColumn=51::There is a debug message that is not always visible!"
+  echo "::warning file=.github/workflows/DevelopInBranch.yml,line=19,endline=21::A lot of messages"
+  echo "::error title=Script Injection,file=.github/workflows/DevelopInBranch.yml,line=13,col=37,endColumn=68::Potentialscript injection"
+\end{shell}
+
+这将为第19行添加通知注释,对第19至21行的警告,以及第37至68列第13行的错误。如果您的行号和凹痕不同,请调整值!
+
+\item 
+提交并推动更改。打开拉动请求,并查看“文件更改”选项卡中的注释(请参见图2.23 ):
+
+\myGraphic{0.4}{content/chapter2/images/23.png}{图2.23 --- 拉动请求中的工作流注释更改}
+\end{enumerate}
+
 \mySubsubsection{2.4.3}{How it works…}
 
-\mySubsubsection{2.4.4}{There’s more…}
+就像匹配器的工作方式一样,您可以创建警告和错误消息并将其打印到日志中。消息将创注释,该注释可以将消息与存储库中的特定文件相关联。可选,您的消息可以指定文件的位置:
+
+\begin{shell}
+::notice file={name},line={line},endLine={el},title={title}::{message}
+::warning
+file={name},line={line},endLine={el},title={title}::{message}
+::error file={name},line={line},endLine={el},title={title}::{message}
+\end{shell}
+
+参数如下：
+
+\begin{itemize}
+\item 
+Title：消息的自定义标题
+
+\item 
+File：提出错误或警告的文件名
+
+\item 
+Col：列/角色编号，从1开始
+
+\item 
+EndColumn：末端列号
+
+\item 
+Line：文件中的行号以1开始
+
+\item 
+EndLine：终点号码
+\end{itemize}
+
+唯一无法注释文件的消息是调试消息。此工作流命令仅接受该消息作为参数。
