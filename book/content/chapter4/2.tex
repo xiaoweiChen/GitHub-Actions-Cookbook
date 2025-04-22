@@ -1,6 +1,233 @@
+
+到目前为止，我们仅使用了 ubuntu-latest 标签来运行我们的作业。这会在 GitHub 托管的最新版 Ubuntu 镜像上运行工作流。不过，GitHub 也提供了 macOS 和 Windows 的运行器，并且有不同的配置。您可以在任何您喜欢的平台上托管自己的运行器。在这个初步的示例中，我们将设置一个位于 Linux Docker 容器中的自托管运行器。通过这种方式，我们可以轻松地扩展它，并在工作流运行后清理资源。
+
 \mySubsubsection{4.2.1}{Getting ready}
 
+你需要安装 Docker 来完成这个示例，并且需要知道你的处理器架构。如果你不清楚自己的处理器架构，只需运行 docker info 并查找 "Architecture:"
+
+\begin{shell}
+$ docker info | grep Architecture
+\end{shell}
+
 \mySubsubsection{4.2.2}{How to do it…}
+
+\begin{enumerate}
+\item 
+前往 GitHub 上的一个代码仓库。你可以创建一个新的仓库，或者使用你在第 1 章中创建的 GitHubActionsCookbook 仓库。进入 Settings（设置） > Actions（操作） > Runners（运行器）（路径：/settings/actions/runners），然后点击 New self-hosted runner（新建自托管运行器）（参见图 4.1）。这将引导你开始设置自己的自托管运行器。
+
+\myGraphic{0.4}{content/chapter4/images/1.png}{图4.1 --- 
+可以通过进入仓库的 Settings（设置） 区域来添加自托管运行器}
+
+这将重定向你到 /settings/actions/runners/new 页面。在这里，为运行器镜像选择 Linux 并根据你的 Docker 环境设置 Architecture（架构） 属性。
+
+请注意每个平台和处理器架构的不同脚本。你可以复制整个脚本用于虚拟机上的安装。然而，由于我们是在 Docker 容器中操作，我们将需要一些额外的步骤。请注意，你也可以单独复制某一行命令（参见图 4.2）。这种灵活性允许你根据实际需求调整安装过程，确保与你的 Docker 环境兼容。在进行容器化部署时，这些额外步骤可能包括修改 Dockerfile 或者调整容器的启动参数以正确配置自托管运行器。
+
+\myGraphic{0.4}{content/chapter4/images/2.png}{图4.2 --- 
+在不同平台上安装自托管运行器的脚本}
+
+\item 
+在最新版本的Ubuntu容器中启动控制台：
+
+\begin{shell}
+$ docker run -it ubuntu:latest /bin/bash
+\end{shell}
+
+\item 
+运行脚本的第一行。这将为运行器创建一个文件夹并切换到该目录：
+
+\begin{shell}
+$ mkdir actions-runner && cd actions-runner
+\end{shell}
+
+\item 
+要下载运行器的二进制文件，我们需要在容器中安装 `curl`，因为它不是普通 Ubuntu 镜像的一部分：
+
+\begin{shell}
+$ apt-get -y update; apt-get -y install curl
+\end{shell}
+
+\item 
+下载运行器二进制文件：从浏览器中复制并粘贴对应的 curl 命令到你的控制台来下载最新的运行器包。命令看起来像这样：
+
+\begin{shell}
+$ curl -o actions-runner-{version}.tar.gz -L https://{URL}.tar.gz
+\end{shell}
+
+\item 
+解压下载的包：使用脚本中的 tar 命令解压缩下载的包:
+
+\begin{shell}
+tar xzf ./actions-runner-{version}.tar.gz
+\end{shell}
+
+\item 
+安装运行器所需的依赖：通过执行以下脚本来安装运行器需要的依赖项。
+
+\begin{shell}
+$ ./bin/installdependencies.sh
+\end{shell}
+
+\item 
+允许以 root 身份运行：由于我们的容器默认以 root 用户运行，我们需要允许运行器作为 root 运行。这可以通过设置 RUNNER\_ALLOW\_RUNASROOT 环境变量为非零值来实现：
+
+\begin{shell}
+$ export RUNNER_ALLOW_RUNASROOT="1"
+\end{shell}
+
+\item 
+配置运行器：如果前面的步骤花费了太长时间，你可能需要刷新浏览器页面以获取新的令牌，因为令牌的有效期很短。然后，复制包含令牌的那一行并执行它来配置运行器。
+
+\begin{shell}
+./config.sh --url https://github.com/{OWNER}/{REPO} --token {TOKEN}
+\end{shell}
+
+按下回车键，并接受所有默认值。
+
+完成上述步骤后，你可以导航回到 Settings > Actions > Runners 查看新注册的运行器。你会看到运行器仍处于离线状态，因为我们还没有启动运行器进程（参见图 4.3）。接下来，你需要启动运行器服务以使它在线并开始接收任务。
+
+\myGraphic{0.4}{content/chapter4/images/3.png}{图4.3 --- 
+一个已配置但未运行的运行器会显示为 离线（Offline） 状态}
+
+\item 
+使用以下脚本启动运行器：
+
+\begin{shell}
+$ ./run.sh
+\end{shell}
+
+运行器启动后，它将进入 空闲（Idle） 状态，这意味着它正在等待工作流任务来执行。
+
+\item 
+创建一个简单的使用自托管标签的工作流。由于 bash 在所有平台上都可用，因此我们可以省略为 Linux 添加额外的标签。不过，你也可以通过指定 [self-hosted, Linux] 来明确指定运行器需要满足的条件:
+
+\begin{shell}
+name: Self-Hosted
+
+on: [workflow_dispatch]
+
+jobs:
+  main:
+    runs-on: self-hosted
+    steps:
+      - name: Output environment
+      shell: bash
+      run: |-
+        echo "Runner Name: '${{ runner.name }}'"
+        echo "Runner OS: '${{ runner.os }}'"
+        echo "Runner ARCH: '${{ runner.arch }}'"
+\end{shell}
+
+\item 
+执行工作流并监控你的 Docker 容器以查看它是如何执行工作流的。你可以根据需要重复此步骤多次。只要你的容器正在运行，它就会执行所有带有匹配标签的工作流。
+
+\item 
+如果你现在停止（kill）你的容器，运行器将在 GitHub 上显示为离线状态。要移除它，请导航回 Settings > Actions > Runners，然后在对应运行器右侧的菜单中选择 Remove runner（参见图 4.4）。
+
+\myGraphic{0.4}{content/chapter4/images/4.png}{图4.4 --- 
+从 GitHub 中移除运行器}
+
+运行对话中提供的脚本来移除运行器：
+
+\begin{shell}
+$ ./config.sh remove --token {TOKEN}
+\end{shell}
+
+运行此命令后，该运行器将从 GitHub 中被移除。
+
+\item 
+我们可以进一步配置运行器，使其在执行完一个任务后自动注销自身。这种方法在容器环境中非常有意义。为此，只需在生成新令牌后的配置步骤中添加 -{}-ephemeral 参数即可：
+
+\begin{shell}
+./config.sh --url {URL} --token {TOKEN} --ephemeral
+\end{shell}
+
+\item 
+再次运行工作流，你会发现运行器在任务执行完成后会自动移除。
+
+\item 
+接下来，我们可以将所学内容整合到一个 Dockerfile 中（你可以使用以下文件：\url{https://github.com/wulfland/GitHubActionsCookbook/blob/main/SelfHostedRunner/Dockerfile}）。通过这种方式，我们可以创建一个可重复使用的 Docker 镜像，每次运行时，该镜像都会自动注册自身、等待任务、执行任务，并在完成后终止。
+
+我们以 ubuntu:latest 为基础镜像，以便简化操作。当然，你也可以轻松将其替换为包含所有构建工具的基础镜像：
+
+\begin{shell}
+FROM ubuntu:latest
+\end{shell}
+
+设置连接所需的变量。将 TOKEN 和 RUNNER\_NAME 留空，因为这些值将在容器启动时提供，而不是在镜像创建时。同时设置正确的 URL、平台和版本：
+
+\begin{shell}
+ENV TOKEN=
+ENV RUNNER_NAME=
+ENV RUNNER_URL="https://github.com/{owner}/{repo}"
+ENV GH_RUNNER_PLATFORM="linux-arm64"
+ENV GH_RUNNER_VERSION="2.311.0"
+ENV LABELS="self-hosted,ARM64,Linux"
+ENV RUNNER_GROUP="Default"
+\end{shell}
+
+为了确保操作系统在构建 Docker 镜像的过程中不会提示用户输入，我们需要将 DEBIAN\_FRONTEND 设置为非交互模式：
+
+\begin{shell}
+ARG DEBIAN_FRONTEND=noninteractive
+\end{shell}
+
+为了减少 Docker 镜像的层数，最好将整个脚本合并为一个 RUN 命令。该脚本更新包管理器及其所有软件包，安装所有依赖项，添加容器运行时使用的 docker 用户（我们不希望容器以 root 身份运行），下载对应的运行器包，解压它，更改文件所有者为 docker 用户，并执行 installdependencies.sh 脚本：
+
+\begin{shell}
+RUN apt-get -y update && \
+  apt-get upgrade -y && \
+  useradd -m docker && \
+  apt-get install -y --no-install-recommends curl ca-certificates && \
+  mkdir -p /opt/hostedtoolcache /home/docker/actions-runner && \
+  curl -L https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/actions-runner-${GH_RUNNER_PLATFORM}-${GH_RUNNER_VERSION}.tar.gz -o /home/docker/actions-runner/actionsrunner.tar.gz && \
+  tar xzf /home/docker/actions-runner/actions-runner.tar.gz -C /home/docker/actions-runner && \
+  chown -R docker /home/docker && \
+  /home/docker/actions-runner/bin/installdependencies.sh
+\end{shell}
+
+在 Dockerfile 中，添加以下内容以确保容器以非特权用户 docker 身份运行，并将工作目录设置为该用户的 /home/docker/actions-runner 文件夹：
+
+\begin{shell}
+USER docker
+WORKDIR /home/docker/actions-runner
+\end{shell}
+
+接下来，确保在容器启动时检查必要的环境变量（如 TOKEN 和 RUNNER\_NAME），并运行 config.sh 脚本完成运行器的注册。之后，启动运行器服务（run.sh）。以下是完整的 CMD 指令：
+
+\begin{shell}
+CMD if [ -z "$TOKEN" ]; then echo 'TOKEN is not set'; exit 1; fi
+&& \
+  if [ -z "$RUNNER_NAME" ]; then echo 'RUNNER_NAME is not set';
+exit 1; fi && \
+  ./config.sh --url "${RUNNER_URL}" --token "${TOKEN}"
+--name "${RUNNER_NAME}" --work "_work" --labels "${LABELS}"
+--runnergroup "${RUNNER_GROUP}" --unattended --ephemeral && \
+  ./run.sh
+\end{shell}
+
+\item 
+进入包含 Dockerfile 的文件夹，并使用以下命令构建 Docker 镜像：
+
+\begin{shell}
+$ docker build -t simple-ubuntu-runner .
+\end{shell}
+
+\item 
+现在，您可以使用 docker run 运行任意数量的镜像实例。-d（-{}-detached）选项将以分离模式在后台运行容器。它不会阻塞您的终端，但也不会在终端中接收输入或显示输出。-{}-rm 选项会在容器退出时自动删除容器。使用 -e 选项传递 RUNNER\_NAME 和 TOKEN 参数。请注意，这些名称是区分大小写的！
+
+\begin{shell}
+$ docker run -d --rm -e RUNNER_NAME=Runner1 -e TOKEN={TOKEN} simple-ubuntu-runner
+\end{shell}
+
+您将在仓库的“设置”(Settings)区域看到运行器，如图 4.5 所示：
+
+\myGraphic{0.4}{content/chapter4/images/5.png}{图4.5 --- 
+通过多次运行相同的 Docker 镜像来获得临时运行器，这些运行器将等待传入的任务}
+
+\end{enumerate}
+
+
+启动工作流的次数与您创建的容器数量相同，每个容器将运行一个工作流并在执行完成后清理该容器
 
 \mySubsubsection{4.2.3}{How it works…}
 
