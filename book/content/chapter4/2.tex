@@ -221,14 +221,96 @@ $ docker run -d --rm -e RUNNER_NAME=Runner1 -e TOKEN={TOKEN} simple-ubuntu-runne
 
 您将在仓库的“设置”(Settings)区域看到运行器，如图 4.5 所示：
 
-\myGraphic{0.4}{content/chapter4/images/5.png}{图4.5 --- 
-通过多次运行相同的 Docker 镜像来获得临时运行器，这些运行器将等待传入的任务}
+\myGraphic{0.4}{content/chapter4/images/5.png}{图4.5 --- 通过多次运行相同的 Docker 镜像来获得临时运行器，这些运行器将等待传入的任务}
 
 \end{enumerate}
-
 
 启动工作流的次数与您创建的容器数量相同，每个容器将运行一个工作流并在执行完成后清理该容器
 
 \mySubsubsection{4.2.3}{How it works…}
 
+来了解一下流程的工作原理。
+
+\mySamllsectionNoContent{自托管运行器应用程序}
+
+自托管运行器是通过安装开源的运行器应用程序（\url{https://github.com/actions/runner}）创建的。该应用程序基于 .NET Core 运行时，可以在大量操作系统和处理器架构上运行。它可以在 macOS 11（Big Sur）或更高版本、Windows（7 至 10 和 Server 2012 R2 至 2022）、以及许多 Linux 发行版（Red Hat Enterprise 7 或更高版本、Fedora 29 或更高版本、Ubuntu 16.04 或更高版本，以及其他更多系统）上运行。同时，它还支持 x64、ARM64 和 ARM32 架构。有关受支持操作系统的最新列表，请参阅 \url{https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#supported-architectures-and-operating-systems-for-self-hosted-runners}。您可以在运行器应用程序文件夹中使用 bin/installdependencies.sh 脚本来安装 .NET Core 运行时所需的所有库。
+
+如果您想运行基于 Docker 的操作，则必须使用 Linux 镜像。Windows 和 macOS 不支持运行基于 Docker 的操作！
+
+\mySamllsectionNoContent{GitHub的身份验证}
+
+将运行器连接到 GitHub 是通过一个可通过 GitHub 用户界面由用户生成的配置令牌完成的。这个令牌的有效期仅为1小时，且仅能用于安装运行器。您也可以通过发送 POST 请求到 REST API 来按需创建一个安装令牌，对于仓库级别的运行器，请求地址为 https://api.github.com/repos/{OWNER}/{REPO}/actions/runners/registration-token；对于组织级别的运行器，则为 https://api.github.com/orgs/{ORG}/actions/runners/registration-token。
+
+\begin{shell}
+$ curl -L \
+> -X POST \
+> -H "Accept: application/vnd.github+json" \
+> -H "Authorization: Bearer <YOUR-PAT>" \
+> -H "X-GitHub-Api-Version: 2022-11-28" \
+> https://api.github.com/repos/{OWNER}/{REPO}/actions/runners/registration-token
+\end{shell}
+
+结果中也包含了过期日期。如果您想将令牌存储在一个变量中，可以将结果通过管道传递给 jq，如下所示：
+
+\begin{shell}
+$ TOKEN=$(<curl command> | jq .token --raw-output)
+\end{shell}
+
+要使用此端点，您必须使用具有 repo 范围的 PAT 访问令牌进行身份验证。GitHub 应用程序必须对仓库有管理权限，并对组织有 organization\_self\_hosted\_runners 权限。已认证用户需要对仓库或组织拥有管理员访问权限，或者对于企业而言，需要 manage\_runners:enterprise 范围。
+
+该令牌仅用于注册。在注册过程中，服务器会发送一个仅具有监听队列权限的 JWT（OAuth 交换的 JSON Web Token）。当工作流运行开始时，会为构建的生命周期创建另一个具有有限范围（由工作流定义）的预构建令牌。该令牌无法通过临时脚本或不受信任的代码访问——只能由构建代理和任务访问。代理与服务器之间的 OAuth 令牌交换所用的 RSA 私钥将被存储在一个名为 .credentials\_rsaparams 的文件中，而服务器持有公钥。每隔50分钟，服务器会发送一个新的由公钥加密的令牌给代理。OAuth 配置则存储在 .credentials 文件中:
+
+\begin{shell}
+{
+  "scheme": "OAuth",
+  "data": {
+    "clientId": "{CLIENT_ID}",
+    "authorizationUrl": "https://pipelinesghubeus4.actions.githubusercontent.com/{TOKEN}/_apis/oauth2/token",
+    "requireFipsCryptography": "True"
+  }
+\end{shell}
+
+\mySamllsectionNoContent{运行应用程序作为服务}
+
+在 Windows 上，配置脚本会询问您是否希望将运行器作为服务执行，这样它将在环境启动时一并启动。在 Linux 上，您需要使用 svc.sh 脚本自行配置服务：
+
+\begin{shell}
+sudo ./svc.sh install
+sudo ./svc.sh start
+\end{shell}
+
+\mySamllsectionNoContent{网络通信}
+
+运行器应用程序通过端口 443 上的出站 HTTPS 连接与 GitHub 通信，使用带有 50 秒超时的长轮询。这意味着应用程序会询问 GitHub 是否有排队的工作适合该运行器的标签，然后等待 50 秒以获取响应，之后连接关闭。一旦连接关闭，就会立即开启一个新的连接。不需要任何来自 GitHub 的入站连接或打开任何防火墙端口。只需要确保使用 SSL 通过端口 443 进行安全的出站连接即可。
+
+\mySamllsectionNoContent{更新自托管运行器}
+
+自托管运行器会自动检查是否有可用的新版本的运行器应用程序，并进行更新。GitHub 仅更新运行器本身——机器的其余部分由客户管理。
+
+\mySamllsectionNoContent{清理}
+
+值得注意的是，GitHub 运行器应用程序不会在工作流运行后清理资源。这种行为与 GitHub 托管的运行器不同，因为它们为每个工作流运行提供了一个临时的清新环境。如果您下载了仓库并执行构建，所有文件都将保留在那里。如果您想让一个运行器应用程序用于多个工作流运行，则必须自己清理一切。因此，推荐在容器中使用临时运行器，这样每次都有一个干净的环境。
+
+可以使用工作流逻辑在工作流运行后进行清理——也可以使用预作业或后作业脚本来在运行器上完成此操作。要配置预作业或后作业脚本，需要将脚本文件保存到运行器可访问的位置，然后配置一个环境变量，其名称为以下之一，值为脚本的完整路径：
+
+\begin{itemize}
+\item 
+ACTIONS\_RUNNER\_HOOK\_JOB\_STARTED
+
+\item 
+ACTIONS\_RUNNER\_HOOK\_JOB\_COMPLETED
+\end{itemize}
+
+作为替代方案,您可以在运行器应用程序目录内的 .env 文件中存储键值对。这样可以根据需要自动化一些清理任务或其他准备工作。
+
 \mySubsubsection{4.2.4}{There’s more…}
+
+在 macOS 上安装运行器的过程与在 Linux 上相同。不同之处在于 Windows，脚本是 PowerShell 脚本而不是 bash 脚本。例如，它使用 Invoke-WebRequest 而不是 curl，但所有步骤都是相同的。用于配置和启动运行器的脚本扩展名为 .cmd，而不是 .sh：
+
+\begin{shell}
+$ ./config.cmd --url <URL> --token <TOKEN>
+$ ./run.cmd
+\end{shell}
+
+如果您已经成功在 Linux 容器中安装了运行器，那么在 Windows 上安装也不会有任何问题。
+

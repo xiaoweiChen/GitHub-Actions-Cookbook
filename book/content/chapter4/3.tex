@@ -1,7 +1,242 @@
+在这个方案中，我们将基于之前的方案构建一个解决方案，使得每次触发新工作流时自动启动一个新的临时 Docker 容器实例。为此，我们将使用 GitHub Webhook。
+
 \mySubsubsection{4.3.1}{Getting ready}
+
+确保您的机器或 GitHub Codespaces 上仍然有我们在上一个方案中创建的 simple-ubuntu-runner Docker 镜像。
 
 \mySubsubsection{4.3.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+前往 https://github.com/settings/apps。点击 New GitHub App（新建 GitHub 应用）。
+
+\item 
+将 GitHub App Name 设置为 auto-scale-runners，并将 Homepage URL 设置为您正在使用的仓库的 URL（参见图 4.6）：
+
+\myGraphic{0.4}{content/chapter4/images/6.png}{图4.6 --- 设置新应用的名称和URL}
+
+\item 
+跳过 Identifying and authorizing users（识别和授权用户）以及 Post installation（安装后）部分，直接进入 Webhook 配置。
+
+\item 
+打开另一个浏览器标签页，访问 \url{https://smee.io}，然后点击 Start new channel（启动新频道）。复制生成的 Webhook Proxy URL 值。
+
+\item 
+返回到创建 GitHub 应用的标签页，将刚刚复制的 Webhook Proxy URL 粘贴到 Webhook URL 字段中。在 Webhook secret 字段中设置一个您以后能记住的字符串（参见图 4.7）。
+
+\myGraphic{0.4}{content/chapter4/images/7.png}{图4.7 ---  配置Webhook}
+
+\item 
+在 Permissions（权限） 下的 Repository permissions（仓库权限） 中，将 Actions（操作） 设置为 Read-only（只读），并将 Administration（管理） 设置为 Read and write（读写）（参见图 4.8）。
+
+\myGraphic{0.4}{content/chapter4/images/8.png}{图4.8 --- 配置应用程序的存储库权限}
+
+\item 
+在 Subscribe to events（订阅事件） 部分，勾选 Workflow job（工作流作业）（参见图 4.9）。
+
+\myGraphic{0.4}{content/chapter4/images/9.png}{图4.9 --- 订阅 Workflow job Webhook 事件}
+
+\item 
+在 Where can this GitHub App be installed（此 GitHub 应用可以安装在哪里） 下，选择 Only on this account（仅在此账户上），然后点击 Create GitHub App（创建 GitHub 应用）。
+
+\item 
+在您新创建的应用中，点击 Generate a private key（生成私钥）。私钥将会自动下载。将其移动到您的仓库中。
+
+\item 
+从应用的 General（通用） 标签页中复制 App ID 值（参见图 4.10）。
+
+\myGraphic{0.4}{content/chapter4/images/10.png}{图4.10 --- 获取 App ID 值}
+
+\item 
+在您的存储库中，创建一个名为 .env 的新文件，并添加 APP\_ID、WEBHOOK\_SECRET 和 PRIVATE\_KEY\_PATH 变量，赋予它们相应的值：
+
+\begin{shell}
+APP_ID="653496"
+WEBHOOK_SECRET="YOUR_SECRET"
+PRIVATE_KEY_PATH="auto-scale-runners.2023-11-26.private-key.pem"
+\end{shell}
+
+稍后我们将在应用程序中使用这些环境变量来对 GitHub 进行身份验证。
+
+\item 
+将 .env 文件添加到 .gitignore 文件中，以避免意外提交：
+
+\begin{shell}
+$ echo ".env" >> .gitignore
+\end{shell}
+
+\item 
+在github的应用中，选择“安装应用”，然后单击安装（请参见图4.11）：
+
+\myGraphic{0.4}{content/chapter4/images/11.png}{图4.11 --- 安装应用程序}
+
+\item 
+在出现的对话中，选择您的存储库，然后单击Install（安装）（请参见图4.12）：
+
+\myGraphic{0.4}{content/chapter4/images/12.png}{图4.12 --- 在存储库中安装应用程序}
+
+接下来，我们将创建一个服务器，当它收到来自 webhook 的有效负载时会运行。前往您的存储库并初始化它：
+
+\begin{shell}
+$ npm init –yes
+\end{shell}
+
+添加代码中使用的依赖项：
+
+\begin{shell}
+$ npm install octokit
+$ npm install dotenv
+$ npm install smee-client --save-dev
+\end{shell}
+
+
+将 node\_modules 文件夹添加到 .gitignore：
+
+\begin{shell}
+$ echo "node_modules" >> .gitignore
+\end{shell}
+
+\item 
+创建一个名为 app.js 的新文件。您可以从这里复制内容:\url{https://github.com/wulfland/GitHubActionsCookbook/blob/main/SelfHostedRunner/auto-scale/app.js}。不过,我仍会在这里逐步讲解代码。
+
+\item 
+添加必要的依赖项：
+
+\begin{shell}
+import dotenv from "dotenv";
+import {App} from "octokit";
+import {createNodeMiddleware} from "@octokit/webhooks";
+import fs from "fs";
+import http from "http";
+import { exec } from 'child_process';
+\end{shell}
+
+\item 
+接下来，使用 dotenv 包从我们之前创建的 .env 文件中读取环境变量：
+
+\begin{shell}
+dotenv.config();
+const appId = process.env.APP_ID;
+const webhookSecret = process.env.WEBHOOK_SECRET;
+const privateKeyPath = process.env.PRIVATE_KEY_PATH;
+\end{shell}
+
+\item 
+接下来，从对应的路径加载私钥：
+
+\begin{shell}
+const privateKey = fs.readFileSync(privateKeyPath, "utf8");
+\end{shell}
+
+\item 
+从 octokit 创建 app 类的新实例：
+
+\begin{shell}
+const app = new App({
+  appId: appId,
+  privateKey: privateKey,
+  webhooks: {
+    secret: webhookSecret
+  },
+});
+\end{shell}
+
+然后，为 workflow\_job.queued 事件注册一个事件处理程序：
+
+\begin{shell}
+app.webhooks.on("workflow_job.queued", handleNewQueuedJobsRequestOpened);
+\end{shell}
+
+\item 
+调用 GitHub API 以接收可用于注册运行器的新令牌。我们需要这个令牌，以便将其传递给我们的容器。我们必须使用 workflow\_job.id 为我们的运行器创建一个唯一的名称：
+
+\begin{shell}
+const response = await octokit.request('POST /repos/{owner}/{repo}/actions/runners/registration-token', { owner: payload.repository.owner.login,
+  repo: payload.repository.name,
+  headers: {
+    'X-GitHub-Api-Version': '2022-11-28'
+  }
+});
+
+const token = response.data.token;
+const runner_name = `Runner_${payload.workflow_job.id}`;
+\end{shell}
+
+\item 
+然后，我们必须创建一个新的 Docker 容器实例，并传入令牌和名称：
+
+\begin{shell}
+exec(`docker run -d --rm -e RUNNER_NAME=${runner_name} -e
+  TOKEN=${token} simple-ubuntu-runner`, (error, stdout, stderr) =>
+  {
+  if (error) {
+    console.error(`exec error: ${error}`);
+    return;
+  }
+  console.log(`stdout: ${stdout}`);
+  console.error(`stderr: ${stderr}`);
+});
+\end{shell}
+
+这里我跳过了错误处理部分，因为它并不相关。
+
+\item 
+在文件的最后一部分，我们必须创建一个开发服务器，监听端口 3000：
+
+\begin{shell}
+const port = 3000;
+const host = 'localhost';
+const path = "/api/webhook";
+const localWebhookUrl = `http://${host}:${port}${path}`;
+const middleware = createNodeMiddleware(app.webhooks, {path});
+http.createServer(middleware).listen(port, () => {
+console.log(`Server is listening for events at: ${localWebhookUrl}`);
+console.log('Press Ctrl + C to quit.')
+});
+\end{shell}
+
+\item 
+在 package.json 文件中,添加一个顶级条目 type 并将其设置为 module。然后,添加一个名为 server 的脚本以运行应用程序:
+
+\begin{shell}
+"type": "module",
+"scripts": {
+  "server": "node app.js"
+},
+\end{shell}
+
+\item 
+我们准备好了！打开一个新的终端，并使用您的频道 URL（第 4 步）启动 Smee 客户端：
+
+\begin{shell}
+$ npx smee -u https://smee.io/{ID} -t http://localhost:3000/api/webhook
+\end{shell}
+
+在您的存储库的终端中，运行应用程序：
+
+\begin{shell}
+$ npm run server
+\end{shell}
+
+为自托管工作流启动一个新的工作流运行：
+
+\begin{shell}
+$ gh workflow run Self-Hosted
+\end{shell}
+
+注意您的 Smee 客户端如何接收从 GitHub 转发的 Webhook,以及您的服务器如何处理它并启动一个新容器来执行您的工作流。
+
+\end{enumerate}
+
 \mySubsubsection{4.3.3}{How it works…}
 
+GitHub 应用为您提供了一种轻松验证身份并注册 Webhook 的方式。在此方案中，我们注册了 workflow\_job Webhook，并使用 queued 动作类型，以便每次有新工作流排队时，我们可以启动一个新的运行器。如果您有较大的镜像需要更长时间加载，您也可以预先维护一组现有的运行器，并在有任务排队时再加载新的运行器。
+
+您启动的临时运行器不一定需要是执行任务的那个运行器。
+
+由于我们需要一个可以被 GitHub 访问的端点，因此我们使用了 smee.io 作为代理，并在事件发生时转发有效负载。这并不适用于生产环境，它只是为我们提供了一种方便的方式，以便在本地或 GitHub Codespace 中进行开发，而无需公开可用的入站端口。对于生产用途，您应该将应用程序托管在 Web 服务器上。
+
 \mySubsubsection{4.3.4}{There’s more…}
+
+本方案旨在为您提供构建自己的解决方案以扩展自托管运行器的基本模块。通过使用临时运行器和 Webhook，自动化这一过程变得非常简单。但如果您需要一个更具扩展性、更成熟的解决方案，那么您可能需要考虑使用 Kubernetes 来实现。
+
