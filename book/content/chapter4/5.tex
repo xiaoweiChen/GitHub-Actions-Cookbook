@@ -1,4 +1,56 @@
+在组织和企业级别，对运行器的访问是通过运行器组来组织的。工作流与运行器之间的关联是通过标签完成的 —— 但运行器组控制着工作流可以访问哪些运行器。
+
 \mySubsubsection{4.5.1}{Getting ready}
+
+请注意，在免费组织中，只有一个名为“Default”的运行器组，你可以用它来添加自托管运行器。如果要创建多个运行器组或将它们用于 GitHub 托管的运行器，则需要付费的团队（Team）或企业（Enterprise）计划。
 
 \mySubsubsection{4.5.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+在拥有付费计划的组织中，导航到“设置 | Actions | 运行器组”（/settings/actions/runner-groups），并点击“新建组”。
+
+为该组命名。在“仓库访问权限”下，将选择从“所有仓库”更改为“选定的仓库”，并点击齿轮图标来选择一个或多个可以访问该组的仓库（参见图4.15）。请注意，你可以在此处允许访问公共仓库，但此选项默认是禁用的：
+
+\myGraphic{0.4}{content/chapter4/images/15.png}{图4.15 --- 管理对组的仓库访问权限}
+
+\item 
+在“工作流访问权限”下，选择“选定的工作流”并点击齿轮图标（参见图4.16）：
+
+\myGraphic{0.4}{content/chapter4/images/16.png}{图4.16 --- 限制对特定工作流的访问权限}
+
+\item 
+在出现的对话框中，你可以添加多种模式以识别工作流（参见图4.17）。
+
+\myGraphic{0.4}{content/chapter4/images/17.png}{图4.17 --- 限制工作流版本访问的语法}
+
+工作流通过指向工作流文件的路径和一个有效的git引用来指定。该引用可以是分支、标签或SHA值。
+
+\item 
+退出对话框，将值改回“所有工作流”，并点击“创建组”。现在你可以向该组添加自托管运行器和GitHub托管的运行器。我们将在下一个配方中介绍GitHub托管的运行器。点击“新建自托管运行器”（参见图4.18）：
+
+\myGraphic{0.4}{content/chapter4/images/18.png}{图4.18 --- 向运行器组添加自托管运行器}
+
+\item 
+请注意，添加运行器的对话框与设置自托管运行器的对话框相同。你可以通过覆盖RUNNER\_URL来测试你的容器：
+
+\begin{shell}
+$ docker run -d --rm -e RUNNER_NAME=Runner_Group \
+> -e TOKEN={TOKEN} \
+> -e RUNNER_URL=https://github.com/{org} \
+> simple-ubuntu-runner
+\end{shell}
+
+这将创建位于“Default”组中的运行器！打开该运行器，并将其分配给你创建的新组（参见图4.19）：
+
+\myGraphic{0.4}{content/chapter4/images/19.png}{图4.19 --- 将运行器分配给运行器组}
+
+请注意,一个运行器只能被分配到一个组中。要在设置时直接将运行器分配给特定组,你需要在配置脚本中传递相应的参数,这不在上述指令内:
+
+\begin{shell}
+$ ./config.sh --url $org_or_enterprise_url --token $token --runnergroup rg-runnergroup
+\end{shell}
+
+\end{enumerate}
+
+运行器组是组织和企业用于管理对运行器访问权限的重要功能。此功能非常直观,不需要过多解释——因此这里保持简明扼要。在下一个配方中,我们将使用运行器组来添加更大规模的GitHub托管运行器。

@@ -1,6 +1,64 @@
+在这个配方中，你将创建一个简单的问题模板，之后可以扩展这个模板以收集用户输入用于你的 IssueOps 工作流。
+
 \mySubsubsection{5.2.1}{Getting ready}
 
+我们将把问题模板添加到你在前几章中使用的仓库中。你可以将仓库克隆到本地并在 Visual Studio Code 中操作，或者你也可以直接在浏览器中完成这部分操作——这无关紧要。你可以参考我的仓库中的示例（\url{https://github.com/wulfland/GitHubActionsCookbook}）。
+
 \mySubsubsection{5.2.2}{How to do it…}
+
+\begin{enumerate}
+\item 
+创建新文件：在你的仓库中创建一个名为 .github/ISSUE_TEMPLATE/repo\_request.yml 的新文件。只要该文件位于 .github/ISSUE\_TEMPLATE 文件夹内，并且是 YAML 或 Markdown 格式，GitHub 就会自动将其视为一个问题模板。
+
+\item 
+添加名称和描述：为模板添加名称和描述。
+
+\myGraphic{0.4}{content/chapter5/images/0.1.png}{}
+
+\item 
+预填充新问题的标题：使用默认值预填充新问题的标题。
+
+\myGraphic{0.4}{content/chapter5/images/0.2.png}{}
+
+\item 
+应用一个或多个标签给新问题：
+
+\begin{shell}
+labels:
+  - 'repo-request'
+  - 'issue-ops'
+\end{shell}
+
+注意，这些标签必须存在于仓库中。如果它们不存在，请创建它们（可以使用 gh label list 来检查）：
+
+\begin{shell}
+$ gh label create repo-request
+$ gh label create issue-ops
+\end{shell}
+
+如果需要，你还可以提供描述或显式的颜色字符串：
+
+\begin{shell}
+$ gh label create repo-request \
+> -c=#D541D0 \
+> -d="Request a new repository"
+\end{shell}
+
+\item 
+将问题分配给一个或多个用户或团队：在这个例子中，只需使用你的 GitHub 用户名即可。
+
+\begin{shell}
+assignees:
+  - wulfland
+\end{shell}
+
+\item 
+自动将新问题分配给 GitHub 项目：语法为 \{owner\}/\{project id\}。
+
+\begin{shell}
+projects: 'wulfland/19
+\end{shell}
+\end{enumerate}
 
 \mySubsubsection{5.2.3}{How it works…}
 
