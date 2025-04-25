@@ -1,6 +1,40 @@
+我们已经在第5章《使用GitHub Actions在GitHub中自动化任务》中使用过环境，所以这是一个重复的内容。因此，我会保持这个指南相对简短。环境管理核心发布，我们将在接下来的指南中使用它们来显示我们在Kubernetes中的服务的URL。
+
 \mySubsubsection{7.4.1}{Getting ready}
+
+确保您手头有来自前面章节的应用(客户端)ID、目录(租户)ID和订阅ID。可以通过以下命令获取订阅ID:
+
+\begin{shell}
+$ az account show
+\end{shell}
 
 \mySubsubsection{7.4.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+在您的存储库设置中，转到“环境”，点击“新环境”，并创建一个名为“生产”的新环境。
+
+\item 
+将main作为部署分支添加。
+
+\item 
+添加一个名为AZURE\_CLIENT\_ID的新环境密钥，并将其设置为应用（客户端）ID。
+
+\item 
+添加一个名为AZURE\_TENANT\_ID的新环境密钥，并将其设置为目录（租户）ID。
+
+\item 
+添加一个名为AZURE\_SUBSCRIPTION\_ID的新环境密钥，并将其设置为订阅ID。
+
+\item 
+添加一个名为AZURE\_CLUSTER\_NAME的新环境密钥，并将其设置为集群的名称（如果您没有修改setup-azure.sh脚本，则为AKSCluster）。
+
+\item 
+添加一个名为AZURE\_RESOURCE\_GROUP的新环境密钥，并将其设置为资源组的名称（如果您没有修改setup-azure.sh脚本，则为AKSCluster）。
+\end{enumerate}
+
+我们将在下一个指南中使用这些环境密钥，以安全地部署到云中的Kubernetes。
+
 \mySubsubsection{7.4.3}{How it works…}
 
+环境在工作流程中的作业上添加了一层抽象，并且可以通过规则进行保护。有关批准检查的更多详细信息，请参阅第5章《使用GitHub Actions在GitHub中自动化任务》。环境还可以被OIDC实体信任，这就是我们将在下一个指南中使用的内容。

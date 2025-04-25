@@ -1,7 +1,198 @@
+
+SBOM（软件物料清单）（参见 https://www.cisa.gov/sbom）声明了构成软件的嵌套组件清单。根据 2014 年的《网络安全供应链管理和透明度法案》，美国政府必须为其购买的任何产品获取 SBOM。
+
+您可以在 GitHub 上的Insights | Dependency graph | Export SBOM下手动导出 SBOM（参见图 6.19）：
+
+\myGraphic{0.4}{content/chapter6/images/19.png}{图6.19 ---  在存储库中手动导出 SBOM}
+
+SBOM 是一个遵循软件包数据交换（SPDX）标准的 JSON 文件。
+
+在这个指南中，我们将自动化从存储库当前依赖项生成 SBOM 的过程，并将其作为附加附件附加到发布中。
+
 \mySubsubsection{6.8.1}{Getting ready}
+
+切换到一个新分支：
+
+\begin{shell}
+$ git switch -c upload-sbom
+\end{shell}
 
 \mySubsubsection{6.8.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+编辑 .github/workflows/release.yml 文件。修改发布作业的权限以允许写入访问权限：
+
+\begin{shell}
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+\end{shell}
+
+\item 
+在发布软件包步骤之后，添加以下步骤，该步骤使用 GitHub CLI 调用 API 并下载 SBOM：
+
+\begin{shell}
+- name: Generate SBoM
+  env:
+    GH_TOKEN: ${{ github.token }}
+  run: |
+    gh api \
+      -H "Accept: application/vnd.github+json" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      /repos/wulfland/package-recipe/dependency-graph/sbom > sbom.json
+\end{shell}
+
+\item 
+添加 svenstaro/upload-release-action 操作并将 SBOM 作为附件上传到发布中：
+
+\begin{shell}
+- name: Upload SBoM to release
+  uses: svenstaro/upload-release-action@v2
+  with:
+    file: sbom.json
+    asset_name: SBoM
+    tag: ${{ github.ref }}
+    overwrite: true
+\end{shell}
+
+\item 
+提交工作流程，创建一个拉取请求，并在检查通过后将其合并回去：
+
+\begin{shell}
+$ git add .
+$ git commit
+$ gh pr create --fill
+$ gh pr merge -m --auto
+$ gh pr checks
+\end{shell}
+
+\item 
+等待所有检查都通过。然后，创建一个发布：
+
+\begin{shell}
+$ gh release create v1.0.5 --generate-notes
+\end{shell}
+
+\item 
+工作流程将创建一个发布并将 SBOM 作为资产附加（参见图 6.20）：
+
+\myGraphic{0.4}{content/chapter6/images/20.png}{图6.20 --- 在发布中自动附加 SBOM 作为资产}
+
+您可以下载并检查发布中的 JSON 文件。
+\end{enumerate}
+
 \mySubsubsection{6.8.3}{How it works…}
 
+在发布软件时，始终需要存储输出——有时是二进制文件，有时是文本文件，就像这种情况。
+
+您可以使用 \url{https://github.com/actions/} 上传工件到 GitHub 工作流程 upload-artifact 操作：
+
+\begin{shell}
+- uses: actions/upload-artifact@v4
+  with:
+    name: my-artifact
+    path: path/**/[abc]rtifac?/*
+\end{shell}
+
+我们在测试徽章上就是这样做的,将它们发布到 GitHub Pages。然后,您可以使用工作流程摘要页面或后续作业中的 \url{https://github.com/ctions/download-artifact} 操作:
+
+\begin{shell}
+- uses: actions/download-artifact@v4
+  with:
+    name: my-artifact
+\end{shell}
+
+但对于最终用户来说,将所有内容存储在发布中更为方便。这样,您就可以将所有构建输出与源代码的确切版本捆绑在一起。您可以使用 API 管理发布资产,请参阅 \url{https://docs.github.com/en/rest/releases/assets}):
+
+\begin{shell}
+gh api \
+  --method POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  --hostname HOSTNAME \
+  /repos/OWNER/REPO/releases/ID/assets?name=example.zip \
+  -f '@example.zip'
+\end{shell}
+
+但有很多可用的操作可以帮助您完成这项工作。我们使用 svenstaro/upload-release-action 操作——但还有许多其他操作。例如,GitTools 的 GitReleaseManager(请参阅 \url{https://github.com/GitTools/actions/blob/main/docs/examples/github/gitreleasemanager/index.md})有一整套用于与发布交互的操作。
+
 \mySubsubsection{6.8.4}{There’s more…}
+
+SBOM 有不同的常见格式：
+
+\begin{itemize}
+\item 
+SPDX:SPDX 是一个由 Linux 基金会发起的开源 SBOM 标准。它的起源是许可证合规性,但也包含版权、安全参考和其他元数据。
+
+SPDX 最近被批准为 ISO/IEC 标准(ISO/IEC 5962:2021),并且满足国家电信和信息管理局(NTIA)的《软件物料清单最低元素》。
+
+\item 
+CycloneDX (CDX)：CDX 是一个轻量级的开源格式，起源于开放网络应用安全项目（OWASP）社区。它优化了将 SBOM 生成集成到发布流程中。
+
+\item 
+软件识别（SWID）标签：SWID 是一个由各种商业软件发布者使用的 ISO/IEC 行业标准（ISO/IEC 19770-2）。它支持软件库存自动化、评估机器上的软件漏洞、检测缺失的补丁、针对配置清单评估的目标、软件完整性检查、安装和执行白名单/黑名单以及其他安全和运营用例。它是用于清点构建机器上安装的软件的好格式。
+\end{itemize}
+
+每种格式都有不同的工具和用例。GitHub、FOSSology 和 yft 使用 SPDX。您可以使用 Anchore SBOM 操作（请参阅 \url{https://github.com/marketplace/actions/anchore-sbom-action}）为 Docker 或开放容器计划（OCI）容器生成 SPDX SBOM：
+
+\begin{shell}
+  - name: Anchore SBOM Action
+    uses: anchore/sbom-action@v0.6.0
+    with:
+      path: .
+      image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      registry-username: ${{ github.actor }}
+      registry-password: ${{ secrets.GITHUB_TOKEN }}
+\end{shell}
+
+SBOM 将作为工作流程工件上传。
+
+CDX（\url{https://cyclonedx.org/}）更专注于应用安全。市场中有针对 NodeJS、.NET、Python、PHP 和 Go 的版本——但许多其他语言可以通过 CLI 或其他包管理器（Java、Maven、Conan 等）支持。使用方法很简单。
+
+以下是 .NET 操作的示例：
+
+\begin{shell}
+- name: CycloneDX .NET Generate SBOM
+  uses: CycloneDX/gh-dotnet-generate-sbom@v1.0.1
+  with:
+    path: ./CycloneDX.sln
+    github-bearer-token: ${{ secrets.GITHUB_TOKEN }}
+\end{shell}
+
+与 Anchore 操作不同，SBOM 不会自动上传——您需要手动完成：
+
+\begin{shell}
+- name: Upload a Build Artifact
+  uses: actions/upload-artifact@v2.3.1
+  with:
+    path: bom.xml
+\end{shell}
+
+CDX 也在 OWASP 依赖项跟踪（参见 \url{https://github.com/DependencyTrack/dependency-track}）中使用——这是一个组件分析平台，您可以将其作为容器或在 Kubernetes 中运行。您可以将其直接上传到您的依赖项跟踪实例中：
+
+\begin{shell}
+- uses: DependencyTrack/gh-upload-sbom@v1.0.0
+  with:
+    serverhostname: 'your-instance.org'
+    apikey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
+    projectname: 'Your Project Name'
+    projectversion: 'main'
+\end{shell}
+
+SWID 标签更多地用于软件资产管理系统（SAM）解决方案，例如 Snow（\url{https://www.snowsoftware.com/}）、Microsoft System Center 或 ServiceNow IT Operations Management（ITOM）。如果存在，CDX 和 SPDX 可以使用 SWID 标签。
+
+如果您想了解更多关于 SBOM 的信息，请访问 \url{https://www.ntia.gov/sbom}。
+
+
+
+
+
+
+
+
+
+

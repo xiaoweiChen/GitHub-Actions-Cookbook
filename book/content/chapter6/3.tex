@@ -1,7 +1,116 @@
+
+在这个指南中，我们将为不同的版本构建和测试我们的软件，具体来说，是为 NodeJS 环境。
+
 \mySubsubsection{6.3.1}{Getting ready}
+
+确保您已经从上一个指南中克隆了存储库。创建一个新分支来修改工作流程：
+
+\begin{shell}
+$ git switch -c build-matrix
+\end{shell}
+
+在编辑器中打开 .github/workflows/ci.yml 文件。
 
 \mySubsubsection{6.3.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+将以下代码添加到工作流程文件中：
+
+\begin{shell}
+strategy:
+  matrix:
+    node-version: ["21.x", "20.x"]
+\end{shell}
+
+如有需要，请调整版本。
+
+\item 
+在 actions/setup-node 操作中，将 Node 版本设置为矩阵上下文中的相应值：
+
+\begin{shell}
+- uses: actions/setup-node@v4
+  with:
+    node-version: ${{ matrix.node-version }}
+    check-latest: true
+\end{shell}
+
+\item 
+提交并推送您的更改，并创建一个拉取请求：
+
+\begin{shell}
+$ git add .
+$ git commit
+$ git push -u origin build-matrix
+$ gh pr create --fill
+\end{shell}
+
+\item 
+检查工作流程的输出。它将为矩阵数组中的每个条目运行一个单独的工作（见图 6.3）：
+
+\myGraphic{0.4}{content/chapter6/images/3.png}{图6.3 --- 矩阵为每个条目运行不同的作业}
+
+\item 
+等待工作流程完成。合并您的拉取请求并清理您的存储库：
+
+\begin{shell}
+$ gh pr merge -m
+\end{shell}
+\end{enumerate}
+
 \mySubsubsection{6.3.3}{How it works…}
 
+矩阵是一种方便的方法，可以使用不同的组合来运行相同的工作流程作业。它可以包含一个或多个包含多个值的数组。矩阵将运行所有数组中所有值的组合。您可以将矩阵视为嵌套的 for 循环。一个很好的例子是在不同的平台上运行和测试不同的版本：
+
+\begin{shell}
+jobs:
+  example_matrix:
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-20.04]
+        version: [10, 12, 14]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.version }}
+\end{shell}
+
+通过这种方式，您可以重复使用相同的工作流程逻辑来同时测试许多不同的值组合。
+
 \mySubsubsection{6.3.4}{There’s more…}
+
+矩阵还有一些附加功能。您可以设置 fail-fast 来指示如果在矩阵中的一个作业失败时是否取消工作流程,或者是否应该继续。您可以使用 max-parallel 定义并行作业的数量,并且可以包含和排除某些元素的值。这里是一个更复杂的例子:
+
+\begin{shell}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: true
+      max-parallel: 2
+      matrix:
+        version: [5, 6, 7, 8]
+        experimental: [false]
+        include:
+          - version: 9
+            xperimental: true
+\end{shell}
+
+要了解更多关于矩阵策略的信息，请访问：\url{https://docs.github.com/en/actions/running-jobs/using-a-matrix-for-your-jobs}。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,7 +1,141 @@
+
+如果您现在创建一个新的发布,工作流程将会失败,因为它会试图再次在软件包注册表上发布版本 1.0.0。您将不得不手动在 package.json 文件中设置版本号。在这个指南中,我们将使用 GitVersion 来自动化这个过程。
+
 \mySubsubsection{6.7.1}{Getting ready}
+
+切换到一个新的分支：
+
+\begin{shell}
+$ git switch -c add-gitversion
+\end{shell}
 
 \mySubsubsection{6.7.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+为了让 GitVersion 自动确定您 git 工作流程的版本,您必须下载所有引用,而不仅仅是 HEAD 分支。我们通过向检出操作添加 fetch-depth 参数并将其设置为 0 来实现这一点:
+
+\begin{shell}
+- uses: actions/checkout@v4
+  with:
+    fetch-depth: 0
+\end{shell}
+
+\item 
+设置特定版本的 GitVersion：
+
+\begin{shell}
+- name: Install GitVersion
+  uses: gittools/actions/gitversion/setup@v0.10.2
+  with:
+    versionSpec: '5.x'
+\end{shell}
+
+\item 
+执行 GitVersion 以确定版本号：
+
+\begin{shell}
+  - name: Determine Version
+    uses: gittools/actions/gitversion/execute@v0.10.2'
+\end{shell}
+
+\item 
+更改 npm 包的版本：
+
+\begin{shell}
+  - name: 'Change NPM version'
+    uses: reedyuk/npm-version@1.2.2
+    with:
+      version: $GITVERSION_SEMVER
+\end{shell}
+
+\item 
+提交您的更改，创建一个拉取请求，并在所有检查都通过后合并它：
+
+\begin{shell}
+$ git add .
+$ git commit -m '(build): Add GitVersion to automatically set
+version'
+$ gh pr create --fill
+$ gh pr merge -m --auto
+$ gh pr checks
+\end{shell}
+
+\item 
+等待所有检查都通过。然后，创建发布：
+
+\begin{shell}
+$ gh release create v1.0.1 --generate-notes
+\end{shell}
+
+您将拥有一个如图 6.18 所示的新发布——这次是从 CLI 创建的：
+
+\myGraphic{0.4}{content/chapter6/images/18.png}{图6.18 ---  从 CLI 创建一个发布，这将触发工作流程以发布一个与发布版本相同的软件包}
+
+发布将触发工作流程,并且将发布版本为 1.0.1 的新软件包。
+\end{enumerate}
+
 \mySubsubsection{6.7.3}{How it works…}
 
+GitVersion(参见 \url{https://gitversion.net/docs/})是一个根据您的 Git 历史记录自动生成语义化版本号的工具。GitVersion 使用默认配置运行,该配置适用于 GitHub 流程(\url{https://docs.github.com/en/get-started/usinggithub/github-flow})和 Git 流程(\url{https://nvie.com/posts/a-successfulgit-branching-model/})。您可以运行 GitVersion init 来启动一个向导,该向导会指导您创建一个配置文件(GitVersion.yml)。在我们的示例中,我们使用持续交付模式——这意味着我们显式使用标签创建一个版本。但也有其他模式,如持续部署模式(从对特定分支的每次提交创建版本)或主线模式。
+
+gittools/actions/gitversion/execute 操作将执行 GitVersion 并将结果保存在 $GITVERSION_SEMVER 环境变量中。您还可以使用操作的输出来访问版本和配置的各个部分:
+
+\begin{shell}
+- name: Determine Version
+  id: gitversion
+  uses: gittools/actions/gitversion/execute@v0
+
+- name: Display GitVersion outputs (step output)
+  run: |
+    echo "Major: ${{ steps.gitversion.outputs.major }}"
+    echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+    echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+\end{shell}
+
 \mySubsubsection{6.7.4}{There’s more…}
+
+您还可以使用传统提交(参见 \url{https://www.conventionalcommits.org})来自动确定提交消息中的语义化版本。传统提交是一个规范,提供了一组规则,通过在提交消息中描述功能、修复和破坏性更改,创建一个显式的提交历史。您可以使用传统提交来创建发布说明——并且您可以将其与 GitVersion 结合使用,以自动确定新版本是补丁、次要还是主要版本号。这是在 GitVersion.yml 配置中完成的:
+
+\begin{shell}
+mode: Mainline
+major-version-bump-message:
+"^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\\([\\w\\s-]*\\))?(!:|:.*\\n\\n((.+\\n)+\\n)?BREAKING CHANGE:\\s.+)"minor-version-bump-message: "^(feat)(\\([\\w\\s-]*\\))?:"
+patch-version-bump-message:
+"^(build|chore|ci|docs|fix|perf|refactor|revert|style|test)(\\([\\w\\s-]*\\))?:"
+\end{shell}
+
+在 CI 构建中，您可以添加一个作业，该作业根据传统提交消息确定版本并创建一个新发布：
+
+\begin{shell}
+publish:
+  if: ${{ github.ref == 'refs/heads/main' }}
+  needs: build
+  runs-on: ubuntu-latest
+  permissions:
+    contents: write
+
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.10.2
+      with:
+        versionSpec: '5.x'
+
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.10.2
+      with:
+        useConfigFile: true
+
+    - name: Create a new release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh release create ${{ env.GITVERSION_SEMVER }}
+--generate-notes
+\end{shell}
+
+这两个工作流一起将在每次生成主版本后完全自动化新版本的创建。

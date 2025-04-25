@@ -1,7 +1,86 @@
+
+在这个指南中,我们将在Azure中设置我们的Kubernetes集群,并且我们将在Azure中配置OIDC,以便在不使用存储的密钥的情况下部署到集群。
+
 \mySubsubsection{7.3.1}{Getting ready}
+
+确保您拥有至少具有对包的读取访问权限的PAT（个人访问令牌）。
+
+如果您在Azure方面有经验并且本地安装了Azure CLI（\url{https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest}），那么您可以从中开始工作。如果您对Azure不熟悉或没有安装CLI，只需使用Azure Cloud Shell（\url{https://shell.azure.com}）。
+
+将PAT令牌设置为环境变量：
+
+\begin{shell}
+$ export GHCR_PAT=<YOUR_PAT_TOKEN>
+\end{shell}
+
+该令牌将被Kubernetes用来从GitHub包注册表中读取。打开脚本setup-azure.sh，并将文件顶部的位置变量调整为您选择的Azure区域。您可以使用az account list-locations -o table命令获取区域列表。
+
+提交并推送您的更改，然后运行脚本：
+
+\begin{shell}
+$ git clone https://github.com/{OWNER}/release-recipe.git
+$ cd release-recipe
+$ chmod +x setup-azure.sh
+$ ./setup-azure.sh
+\end{shell}
+
+这将创建一个Azure Kubernetes服务并将其与GitHub容器注册表连接。在脚本运行时，您可以配置OIDC以便从工作流程中访问它。
 
 \mySubsubsection{7.3.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+使用Cloud Shell或本地终端创建一个新的应用程序注册：
+
+\begin{shell}
+$ az ad app create --display-name release-recipe
+\end{shell}
+
+\item 
+然后，使用注册输出中的应用程序ID创建一个服务主体：
+
+\begin{shell}
+$ az ad sp create --id <appId>
+\end{shell}
+
+\item 
+接着,打开Azure门户,在Microsoft Entra中,找到“App registrations”下的release-recipe。在“Certificates \& secrets”|“Federated credentials”|“Add credentials”下添加OIDC信任。填写表单。将组织设置为您的GitHub用户名,输入存储库名称,并将实体类型选择为“Environment”(参见图7.1):
+
+\myGraphic{0.4}{content/chapter7/images/1.png}{图7.1 --- 在Microsoft Entra中连接您的GitHub账户}
+
+为凭证命名并点击添加。记下release-recipe应用程序的应用程序(客户端)ID和目录租户ID(参见图7.2)。稍后您将需要这些信息:
+
+\myGraphic{0.4}{content/chapter7/images/2.png}{图7.2 --- 来自应用程序注册的客户端和租户ID}
+
+\item 
+然后,在工作订阅中为服务主体分配角色。在门户中打开订阅。在访问控制(IAM)| 角色分配 | 添加 | 添加角色分配下( Access control (IAM) | Role assignment | Add | Add role assignment),按照向导操作。选择角色 - 例如,贡献者 - 并点击下一步。选择用户、组或服务主体,并选择您之前创建的服务主体。
+
+\end{enumerate}
+
 \mySubsubsection{7.3.3}{How it works…}
 
-\mySubsubsection{7.3.4}{There’s more…}
+代替使用作为秘密存储的凭据来连接到云提供商,例如Azure、AWS、GCP或HashiCorp,您可以使用OIDC。OIDC将交换短时效的令牌用于身份验证,而不是凭据。您的云提供商也需要在其端支持OIDC。
+
+当使用OIDC时,您不必在GitHub中存储云凭据,您对工作流程可以访问的资源有更细粒度的控制,并且您有旋转的、短时效的令牌,这些令牌将在工作流程运行后过期。图7.3显示了OIDC工作原理的概述:
+
+\myGraphic{0.4}{content/chapter7/images/3.png}{图7.3 --- 与云提供商集成的OIDC}
+
+步骤如下：
+
+\begin{itemize}
+\item 
+在您的云提供商和GitHub之间创建OIDC信任。将信任限制在组织和存储库,并进一步限制对环境、分支或拉取请求的访问。
+
+\item 
+在工作流程运行期间,GitHub OIDC提供者自动生成一个JSON网络令牌。该令牌包含多个声明,为特定工作流程作业建立安全和可验证的身份。
+
+\item 
+云提供商验证这些声明,并提供一个短时效的访问令牌,该令牌仅在工作流程的生命周期内有效。
+
+\item 
+访问令牌用于访问身份有权访问的资源。
+\end{itemize}
+
+您可以使用该身份直接访问资源，也可以使用它从安全保险库（如Azure Key Vault或HashiCorp Vault）获取凭据。通过这种方式，您可以通过使用保险库安全地连接到不支持OIDC和自动密钥轮换的服务。
+
+在GitHub上，您可以找到有关为AWS、Azure和GDP配置OIDC的说明，网址为\url{https://docs.github.com/en/actions/deployment/security-hardening-your-deployments}。

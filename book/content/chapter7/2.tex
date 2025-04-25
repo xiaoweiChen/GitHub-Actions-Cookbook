@@ -1,7 +1,223 @@
+在本教程中，我们将把一个简单的 Web 应用程序容器化并推送到容器注册表中。
+
 \mySubsubsection{7.2.1}{Getting ready}
+
+打开代码仓库（\url{https://github.com/wulfland/release-recipe}），然后点击“使用此模板创建新的副本”（直接链接：\url{https://github.com/new?template_name=release-recipe&template_owner=wulfland}）。在您的个人账户中创建一个新的公共仓库，命名为release-recipe，并克隆该仓库。
+
+打开package.json文件，并调整作者和仓库URL。
+
+在依赖项下，将recipe包的所有者和版本更改为您在第6章中创建的包：
+
+\begin{shell}
+"dependencies": {
+  "@wulfland/package-recipe": "^2.0.5",
+  "express": "^4.18.2"
+}
+\end{shell}
+
+在文件.npmrc中替换所有者：
+
+\begin{shell}
+@wulfland:registry=https://npm.pkg.github.com
+\end{shell}
+
+在终端中，运行以下命令：
+
+\begin{shell}
+$ npm login --registry https://npm.pkg.github.com
+\end{shell}
+
+输入您的GitHub用户名和具有访问包权限的PAT令牌。运行以下命令：
+
+\begin{shell}
+$ npm install
+$ npm start
+
+> release-recipe@1.0.0 start
+> node src/index.js
+
+Server running at http://localhost:3000
+\end{shell}
+
+现在，您应该有一个在3000端口上运行的Node.js应用程序。打开浏览器，导航到http://localhost:3000，并验证它是否显示Hello World!。通过退出进程（CTRL+C）来停止服务器。
 
 \mySubsubsection{7.2.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+在仓库的根目录下创建一个新文件，名为Dockerfile。从node镜像继承您的镜像，并选择21-bullseye版本。创建一个文件夹，将仓库内容复制到其中，并将其设为工作文件夹：
+
+\begin{shell}
+FROM node:21-bullseye
+RUN mkdir -p /app
+COPY . /app
+WORKDIR /app
+\end{shell}
+
+\item 
+注意，您需要在进行Docker镜像构建之前运行npm install，以避免将您的凭据存储在容器中。在容器中重新构建npm包：
+
+\begin{shell}
+RUN npm rebuild
+\end{shell}
+
+\item 
+将我们express网站的3000端口暴露出来，并将npm start作为容器的启动命令：
+
+\begin{shell}
+EXPOSE 3000
+CMD [ "npm", "start"]
+\end{shell}
+
+\item 
+接下来，在本地构建您的容器镜像并运行它：
+
+\begin{shell}
+$ npm install
+$ docker build -t hello-world-recipe .
+$ docker run -it -p 3000:3000 hello-world-recipe
+\end{shell}
+
+\item 
+再次验证您的本地机器上的网站是否在3000端口上运行。
+
+\item 
+创建一个新的工作流程.github/workflows/publish.yml。在拉取请求和推送到主分支上运行它：
+
+\begin{shell}
+name: Publish Docker Image
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+\end{shell}
+
+\item 
+将注册表名称和镜像名称设为环境变量：
+
+\begin{shell}
+env:
+  REGISTRY: 'ghcr.io'
+  IMAGE_NAME: '${{ github.repository }}'
+\end{shell}
+
+\item 
+添加一个具有GITHUB\_TOKEN权限的工作，以写入包和读取内容：
+
+\begin{shell}
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+\end{shell}
+
+\item 
+添加以下步骤。检出仓库并登录到Docker注册表：
+
+\begin{shell}
+- name: Checkout repository
+  uses: actions/checkout@v4
+
+- name: Log in to the Container registry
+  uses: docker/login-action@v3
+  with:
+    registry: ${{ env.REGISTRY }}
+    username: ${{ github.actor }}
+    password: ${{ secrets.GITHUB_TOKEN }}
+\end{shell}
+
+\item 
+从注册表中提取镜像的元数据。我们使用长的SHA作为容器的标签。给这个步骤一个id，以便稍后访问输出：
+
+\begin{shell}
+- name: Extract metadata (tags, labels) for Docker
+  id: meta
+  uses: docker/metadata-action@v5
+  with:
+    images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    tags: |
+      type=sha,format=long
+\end{shell}
+
+\item 
+设置Node.js以使用正确的版本和注册表。然后，构建和测试您的代码。您需要将NODE\_AUTH\_TOKEN环境变量设置为GITHUB\_TOKEN，以便对包注册表进行身份验证并从第6章的包配方中接收npm包：
+
+\begin{shell}
+- uses: actions/setup-node@v4
+  with:
+    node-version: 21.x
+    registry-url: https://npm.pkg.github.com/
+
+- name: Build and test
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: |
+    npm install
+    npm run test
+\end{shell}
+
+\item 
+现在，我们已经准备好构建和推送Docker镜像了。使用meta步骤的输出来设置标签和标签：
+
+\begin{shell}
+- name: Build and push Docker image
+  uses: docker/build-push-action@v5
+  with:
+    context: .
+    push: ${{ github.event_name != 'pull_request' }}
+    tags: ${{ steps.meta.outputs.tags }}
+    labels: ${{ steps.meta.outputs.labels }}
+\end{shell}
+
+\item 
+提交并推送您的更改。在工作流程运行之后，您将在您仓库的代码选项卡上找到Docker镜像，位于右侧的包下。
+
+\end{enumerate}
+
 \mySubsubsection{7.2.3}{How it works…}
 
+我使用Express（\url{https://expressjs.com/}）作为一个简单的web框架来运行一个网站。该网站显示来自我们包的内容；我们将在即将到来的配方中利用这一点来自动保持我们的依赖项最新。代码很容易理解：
+
+\begin{shell}
+const express = require('express');
+const greet = require('@wulfland/package-recipe/src/index')
+const app = express();
+const port = 3000;
+
+app.get('/', (req, res) => {
+  res.send(greet());
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+\end{shell}
+
+这次,我省略了所有的linting和testing,因为我们在第6章已经涵盖了这些内容。我们需要将这个应用程序容器化,以便稍后将其部署到云端。
+
+要将容器部署到云端,您需要将其存储在容器注册表中。在这里我们使用GitHub Packages,但使用特定于云的注册表的方式相同。您只需要配置PAT令牌,并且不能使用GITHUB\_TOKEN,但这唯一的区别。
+
 \mySubsubsection{7.2.4}{There’s more…}
+
+Docker元动作(\url{https://github.com/docker/metadata-action})可用于从Git引用和GitHub事件中提取元数据。就像第6章中的GitVersion一样,它可以用于自动处理容器的版本控制。它还支持语义版本控制:
+
+\begin{shell}
+- name: Docker meta
+  id: meta
+  uses: docker/metadata-action@v5
+  with:
+    images: |
+      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    tags: |
+      type=ref,event=branch
+      type=ref,event=pr
+      type=semver,pattern={{version}}
+      type=semver,pattern={{major}}.{{minor}}
+\end{shell}
+
+在我们的示例中，我们只使用Git SHA以便能够部署每个提交，但您可以根据您的工作流程轻松扩展版本控制。

@@ -1,7 +1,273 @@
+
+在这个指南中，我们将在拉取请求和工作流程摘要中添加我们的测试结果的详细信息。我们还将向 README 文件添加徽章，以指示分支或发布的质量。
+
 \mySubsubsection{6.4.1}{Getting ready}
+
+创建一个新分支来进行修改：
+
+\begin{shell}
+$ git switch -c add-badges
+\end{shell}
 
 \mySubsubsection{6.4.2}{How to do it…}
 
+您可以使用以下 URL 下载工作流程的徽章：
+
+\begin{shell}
+https://github.com/OWNER/REPO/actions/workflows/FILE.yml/badge.svg
+\end{shell}
+
+您还可以通过添加查询参数来按分支或事件进行筛选(例如,?branch=main 或 event=push)。我们需要为主分支添加一个徽章,因此在 README 的 markdown 中添加以下图片:
+
+\begin{shell}
+![main](https://github.com/OWNER/package-recipe/actions/workflows/ i.yml/badge.svg?branch=main)
+\end{shell}
+
+该徽章将使用工作流程文件中的名称，并在预览中看起来像图 6.4：
+
+\myGraphic{0.4}{content/chapter6/images/4.png}{图6.4 --- CI 工作流程的徽章}
+
+但是，我们希望更进一步，在 README 中添加代码覆盖率的徽章，用代码覆盖率输出来注释拉取请求，并在工作流程中添加摘要。
+
+\begin{enumerate}
+\item 
+为了装饰拉取请求，工作流程需要写权限。此外，由于我们使用矩阵构建多个版本，我们必须选择一个用于创建徽章的版本。将以下代码添加到构建作业中：
+
+\begin{shell}
+jobs:
+  build:
+    permissions:
+      pull-requests: write
+    env:
+      MAIN_VERSION: "21.x"
+\end{shell}
+
+\item 
+在工作流程文件中，在运行 npm test 后立即添加以下代码：
+
+\begin{shell}
+- name: Prepare coverage report in markdown
+  uses: fingerprintjs/action-coverage-report-md@v1.0.6
+  id: coverage
+  with:
+    textReportPath: coverage/coverage.txt"
+\end{shell}
+
+这使用了 fingerprintjs/action-coverage-report-md 操作来创建一个 markdown 格式的报告，我们将把这个报告写入作业摘要和拉取请求中。
+
+\item 
+接下来，我们使用 marocchino/sticky-pull-request-comment 操作将 markdown 报告写入拉取请求：
+
+\begin{shell}
+- name: Add coverage comment to the PR
+  uses: marocchino/sticky-pull-request-comment@v2.8.0
+  with:
+    message: ${{ steps.coverage.outputs.markdownReport }}
+\end{shell}
+
+\item 
+同样，将输出写入 \$GITHUB\_STEP\_SUMMARY。由于我们在矩阵中运行作业，所以添加一个指示版本号的标题：
+
+\begin{shell}
+- name: Add coverage report to the job summary
+  run: |
+    echo "## Code Coverage v${{ matrix.node-version }}" >> "$GITHUB_STEP_SUMMARY"
+    echo "${{ steps.coverage.outputs.markdownReport }}" >> "$GITHUB_STEP_SUMMARY"
+\end{shell}
+
+\item 
+提交并推送您的更改，并创建一个拉取请求：
+
+\begin{shell}
+$ git add .
+$ git commit
+$ git push -u origin add-badges
+$ gh pr create –fill
+\end{shell}
+
+这将触发带有拉取请求触发器的工作流程，您可以在工作流程运行中检查作业摘要，它应该看起来像图 6.5：
+
+\myGraphic{0.4}{content/chapter6/images/5.png}{图6.5 --- 在工作流程摘要中显示代码覆盖率结果}
+
+摘要也被添加为拉取请求的评论（见图 6.6）：
+
+\myGraphic{0.4}{content/chapter6/images/6.png}{图6.6 --- 将代码覆盖率结果添加为拉取请求评论}
+
+\item 
+代码覆盖率的徽章是在测试期间由 npm 包自动创建的。但为了添加徽章（即添加到 README），我们需要一个地方来托管它。我们将为此使用 GitHub Pages。
+
+将以下代码添加到构建作业的末尾，以将工件上传到工作流程中。请注意，这不是通常的 actions/upload-artifact 操作 - 它是用于 GitHub Pages 的特殊操作：
+
+\begin{shell}
+- name: Upload page artifacts
+  if: ${{ matrix.node-version == env.MAIN_VERSION }}
+  uses: actions/upload-pages-artifact@v3
+  with:
+    path: coverage
+\end{shell}
+
+由于我们只能上传一个具有相同名称的工件，因此我们仅在矩阵的 Node 版本是我们的主要版本时运行此步骤。
+
+\item 
+在构建之后添加一个新的部署作业，该作业仅在推送到 main 分支时运行，并依赖于构建作业：
+
+\begin{shell}
+deploy:
+  if: ${{ github.ref == 'refs/heads/main' }}
+  needs: build
+  runs-on: ubuntu-latest
+\end{shell}
+
+\item 
+创建一个名为 pages 的并发组，以便我们一次只部署一个版本到页面环境。但不要取消正在进行的部署以部署所有版本：
+
+\begin{shell}
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+\end{shell}
+
+\item 
+该作业需要以下权限：
+
+\begin{shell}
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+\end{shell}
+
+\item 
+该作业部署到 github-pages 环境，并使用 actions/deploy-pages 操作中的 URL 在工作流程中显示它。URL 将指向包的根目录。由于我们的 index.html 文件所在的 HTML 报告在 lcov-report 文件夹中，我们将此添加到 URL 中：
+
+\begin{shell}
+environment:
+  name: github-pages
+  url: "${{ steps.deployment.outputs.page_url }}lcov-report"
+\end{shell}
+
+\item 
+该作业只有两个简单的步骤 - 配置页面和部署页面：
+
+\begin{shell}
+steps:
+  - name: Setup Pages
+    uses: actions/configure-pages@v4
+  - name: Deploy to GitHub Pages
+    id: deployment
+    uses: actions/deploy-pages@v4
+\end{shell}
+
+\item 
+在工作流程完成后，提交并推送您的更改并合并拉取请求：
+
+\begin{shell}
+$ git add .
+$ git commit
+$ git push
+$ gh merge -m
+\end{shell}
+
+\item 
+合并拉取请求后,推送到 main 分支将触发新的工作流程运行。完成后,您可以看到包含报告的网站的 URL(见图 6.7):
+
+\myGraphic{0.4}{content/chapter6/images/7.png}{图6.7 --- 检查 Pages 网站}
+
+\item 
+GitHub 创建的网站在目录的根目录中包含徽章。URL 看起来像这样：https://\{OWNER\}.github.io/package-recipe/badge.svg。Markdown 中的徽章 URL 将看起来像这样：
+
+\begin{shell}
+[![Coverage](https://wulfland.github.io/package-recipe/badge.svg)]
+\end{shell}
+
+但是,当我们点击徽章时,我们希望被定向到网站上的 lcov-report 文件夹,因此我们将在图像周围添加一个链接。将以下 markdown 添加到您的 README(将 wulfland 替换为您的 GitHub 用户名):
+
+\begin{shell}
+[![Coverage](https://wulfland.github.io/package-recipe/badge.svg)](https://wulfland.github.io/package-recipe/lcov-report)
+\end{shell}
+
+徽章将看起来像图 6.8，当您点击它时，您将被重定向到覆盖率报告：
+
+\myGraphic{0.4}{content/chapter6/images/8.png}{图6.8 --- 添加测试覆盖率徽章}
+  
+\end{enumerate}
+
 \mySubsubsection{6.4.3}{How it works…}
 
+让我们了解代码是如何工作的。
+
+\mySamllsectionNoContent{添加工作流程状态徽章}
+
+徽章的 URL 如下，它将使用工作流程的名称并显示最后一次工作流程运行的状态:
+
+\begin{shell}
+https://github.com/OWNER/REPOSITORY/actions/workflows/WORKFLOW-FILE/ adge.svg
+\end{shell}
+
+通常,您只想显示特定分支或事件的状态。您可以通过提供相应的参数(即 ?branch=main 或 ?event=push)来实现这一点。这样,您可以为软件的不同版本显示多个徽章。更多信息请参见 \url{ https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-aworkflow-status-badge}。
+
+\mySamllsectionNoContent{GitHub Pages}
+
+GitHub Pages 是 GitHub 提供的静态站点托管服务，它将存储库中的静态文件发布为网站。该站点托管在 GitHub 的 github.io 域上，或者您也可以使用自己的自定义域。
+
+除非您使用自定义域，否则项目站点可在以下 URL 访问：
+
+\begin{itemize}
+\item 
+http(s)://<username>.github.io/<repository> 或
+
+\item 
+http(s)://<organization>.github.io/<repository>
+\end{itemize}
+
+Pages 可以直接从分支部署，并且可以选择使用 Jekyll (\url{https://github.com/jekyll/jekyll}) 预处理。这样，您可以轻松地将 markdown 文件呈现为网站——例如，用于托管博客。
+
+您可以在 \url{https://wulfland.github.io/AccelerateDevOps/} 下找到一个示例，该示例呈现了 \url{https://github.com/wulfland/AccelerateDevOps/tree/main/docs} 文件夹的内容。
+
+除了从分支部署之外，您还可以使用自己的工作流程来部署页面。这就是我们在本指南中所做的。在撰写本文时，该功能仍处于测试阶段——但在我看来，它已经可以在生产中使用。
+
+要了解更多关于 GitHub Pages 的信息，请访问：\url{https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages}。
+
+\mySamllsectionNoContent{并发组}
+
+默认情况下，GitHub Actions 允许同一工作流程内的多个作业以及同一存储库内的多个工作流程运行并发执行——这意味着多个步骤可以同时运行。
+
+GitHub Actions 还允许您控制工作流程运行的并发性，以便您可以确保在特定上下文中一次只运行一个运行、一个作业或一个步骤。当同时运行多个步骤可能导致冲突或消耗更多行动分钟数时，这可能非常有用。
+
+并发组可以有一个静态名称，就像我们在我们的配方中所做的那样。但您还可以使用上下文表达式将某些上下文——例如分支——组合在一起形成一个组：
+
+\begin{shell}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+\end{shell}
+
+cancel-in-progress 参数可用于在可用新版本时取消作业并运行该版本。这可以帮助节省资源。如果设置为 false，工作流程将等待前一个版本完成，然后运行并发队列中的下一个作业。这样，给定组一次只执行一个作业。
+
+您可以在以下链接了解更多关于并发组的信息：\url{https://docs.github.com/en/actions/running-jobs/using-concurrency}。
+
 \mySubsubsection{6.4.4}{There’s more…}
+
+自动验证代码并将详细信息带到对开发者有价值的地方非常重要。除了测试结果、代码覆盖率和代码检查工具之外，您还可以集成诸如 SonarQube 或 SonarCloud 之类的解决方案。它们提供了出色的 GitHub 集成，并且对开源项目免费。只需使用您的 GitHub 凭据登录，您就可以配置一个新项目。该项目允许您创建其他徽章，您可以将其添加到您的 README（见图 6.9）：
+
+\myGraphic{0.4}{content/chapter6/images/9.png}{图6.9 --- 在您的 GitHub README 中使用 SonarCloud 徽章}
+
+Sonar 徽章提供了与您的拉取请求的出色集成，并且可以作为规则集和分支保护规则中的附加状态检查。质量门在拉取请求中报告（见图 6.10）：
+
+\myGraphic{0.4}{content/chapter6/images/10.png}{图6.10 --- SonarCloud 质量门在拉取请求中的集成}
+
+要了解有关SonarCloud集成GitHub的更多信息，请参阅\url{https://docs.sonarsource.com/sonarcloud/getting-started/github/}。
+
+
+
+
+
+
+
+
+
+
+
+
+
+

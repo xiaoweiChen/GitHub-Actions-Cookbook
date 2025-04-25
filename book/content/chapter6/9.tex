@@ -1,7 +1,120 @@
+在这个配方中，我们将使用缓存来优化工作流程的速度。
+
 \mySubsubsection{6.9.1}{Getting ready}
+
+切换到一个新分支：
+
+\begin{shell}
+$ git switch -c cache-npm-packages
+\end{shell}
 
 \mySubsubsection{6.9.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+编辑 .github/workflows/ci.yml 文件。在 setup-node 操作之后，添加以下脚本以获取正确 npm 版本的 npm 缓存目录，并将其存储为输出变量：
+
+\begin{shell}
+- name: Get npm cache directory
+  id: npm-cache-dir
+  run: echo "dir=$(npm config get cache)" >> "${GITHUB_OUTPUT}"
+\end{shell}
+
+\item 
+在那之后添加实际的缓存步骤。还要给它一个名称，并从 package-lock.json 文件的哈希值中创建一个键：
+
+\begin{shell}
+- uses: actions/cache@v3
+  id: npm-cache
+  with:
+    path: ${{ steps.npm-cache-dir.outputs.dir }}
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      restore-keys: |
+        ${{ runner.os }}-node-
+\end{shell}
+
+\item 
+下一步将仅在将它们添加到缓存时列出依赖项：
+
+\begin{shell}
+- name: List the state of node modules
+  if: ${{ steps.npm-cache.outputs.cache-hit != 'true' }}
+  continue-on-error: true
+  run: npm list
+\end{shell}
+
+\item 
+提交您的更改并创建一个拉取请求：
+
+\begin{shell}
+$ git add.
+$ git commit
+$ gh pr create --fill
+\end{shell}
+
+\item 
+在您的拉取请求中打开 CI 工作流程运行并检查我们添加的步骤的输出。重新运行这两个作业，并注意操作如何从缓存中恢复软件包，以及 cache-hit 如何防止下一步执行（参见图 6.21）：
+
+\myGraphic{0.4}{content/chapter6/images/21.png}{图6.21 --- 缓存成功恢复并且 cache-hit 为 true}
+
+\item 
+合并您的拉取请求：
+
+\begin{shell}
+$ gh pr merge -s --auto
+\end{shell}
+
+\end{enumerate}
+
 \mySubsubsection{6.9.3}{How it works…}
 
+重要的是只在有性能问题时使用缓存。如果你使用设置操作,你可能看不到很大的改进。但是了解缓存如何工作是很重要的,以便在需要时可以使用这个工具。
+
+缓存操作(\url{https://github.com/actions/cache})在GitHub拥有的云存储上存储信息,并在后续运行中从那里检索它。
+
+假设你有一个长时间运行的操作——比如计算质数——你在后续步骤中使用输出。(我这里只是使用sleep来模拟一个长时间运行的任务):
+
+\begin{shell}
+- name: Generate Prime Numbers
+  run: |
+    sleep 60
+    echo "1 2 3..." > primes
+
+- name: Use Prime Numbers
+  run: cat primes
+\end{shell}
+
+你现在可以在那个步骤之前添加一个缓存步骤，并缓存primes文件夹:
+
+\begin{shell}
+- name: Cache Primes
+  id: cache-primes
+  uses: actions/cache@v3
+  with:
+    path: primes
+    key: ${{ runner.os }}-primes
+\end{shell}
+
+这里的关键是必须唯一,以确定缓存是否已更改。在我们的示例中,我们使用了package-lock.json文件的哈希值。对于质数,我们可能对操作系统有不同的格式。
+
+在长时间运行的操作中,你现在可以检查缓存是否有效,并且只在当前键没有命中时执行它:
+
+\begin{shell}
+- name: Generate Prime Numbers
+  if: steps.cache-primes.outputs.cache-hit != 'true'
+  run: |
+    sleep 60
+    echo "1 2 3..." > primes
+\end{shell}
+
+这个工作流程将在第一次长时间运行的操作中运行,并在缓存中填充文件。如果你第二次运行它,它将从缓存中加载文件,并省略长时间运行的步骤。
+
 \mySubsubsection{6.9.4}{There’s more…}
+
+一个存储库可以在缓存中存储最多10 GB的数据。一旦达到这个限制,旧的文件将根据最后一次访问的时间被删除。一周内未使用的缓存也将被清理。
+
+你可以在 Actions | Caches下管理缓存(见图6.22):
+
+\myGraphic{0.4}{content/chapter6/images/22.png}{图6.22 --- 管理缓存}
+
+缓存操作(\url{https://github.com/actions/cache})对大多数编程语言都有很好的文档和示例。当你想实现缓存时,也可以参考文档(\url{https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows})。
