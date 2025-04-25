@@ -79,7 +79,7 @@ $ gh release create v1.0.1 --generate-notes
 
 GitVersion(参见 \url{https://gitversion.net/docs/})是一个根据您的 Git 历史记录自动生成语义化版本号的工具。GitVersion 使用默认配置运行,该配置适用于 GitHub 流程(\url{https://docs.github.com/en/get-started/usinggithub/github-flow})和 Git 流程(\url{https://nvie.com/posts/a-successfulgit-branching-model/})。您可以运行 GitVersion init 来启动一个向导,该向导会指导您创建一个配置文件(GitVersion.yml)。在我们的示例中,我们使用持续交付模式——这意味着我们显式使用标签创建一个版本。但也有其他模式,如持续部署模式(从对特定分支的每次提交创建版本)或主线模式。
 
-gittools/actions/gitversion/execute 操作将执行 GitVersion 并将结果保存在 $GITVERSION_SEMVER 环境变量中。您还可以使用操作的输出来访问版本和配置的各个部分:
+gittools/actions/gitversion/execute 操作将执行 GitVersion 并将结果保存在 \$GITVERSION\_SEMVER 环境变量中。您还可以使用操作的输出来访问版本和配置的各个部分:
 
 \begin{shell}
 - name: Determine Version
