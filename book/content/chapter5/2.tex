@@ -58,8 +58,80 @@ assignees:
 \begin{shell}
 projects: 'wulfland/19
 \end{shell}
+
+请注意,创建问题的人需要对该项目具有写入权限。
+如果你没有项目,那么只需创建一个新项目。点击右上角的 + 图标,然后选择新建项目(见图 5.1)。
+
+\myGraphic{0.4}{content/chapter5/images/1.png}{图 5.1 --- 创建一个新项目}
+
+为项目选择一个模板或从头开始。对于一个用于管理存储库请求的简单项目,你可以从一个简单的看板(Board)开始(见图 5.2)。
+
+\myGraphic{0.4}{content/chapter5/images/2.png}{图 5.2 --- 选择一个模板或从头开始}
+
+例如“存储库请求”，然后点击创建项目(Create project)。从项目的 URL 中获取项目 ID：https://github.com/users/\{owner\}/projects/\{id\}。
+
+\item 
+在表单的主体中,你可以定义不同的字段。首先为请求的仓库名称创建一个简单的文本输入框。你可以设置字段为必填项,并添加额外的标签、默认值或占位符:
+
+\begin{shell}
+body:
+  - type: input
+    id: name
+    attributes:
+      label: 'Name'
+      description: 'Name of the repository in lower-case and
+kebab casing.'
+      placeholder: 'your-name-kebab'
+    validations:
+      required: true
+\end{shell}
+
+\item 
+通常，你会有一个部门、区域或团队用于权限设置或命名约定。添加一个简单的下拉菜单，从中选择两个示例部门之一：
+
+\begin{shell}
+- type: dropdown
+  id: department
+  attributes:
+    label: 'Department'
+    description: 'Pick your department. It will be used as a   prefix for the repository name.'
+    multiple: false
+    options:
+      - dep1
+      - dep2
+    default: 0
+  validations:
+    required: true
+\end{shell}
+
+\item 
+将文件提交到你的仓库。
+
+\item 
+现在，在“问题| 新建问题”(Issues | New issue)下，你可以挑选你的模板并点击开始(Get started)（见图 5.3）。
+
+\myGraphic{0.4}{content/chapter5/images/3.png}{图 5.3 --- 使用模板创建问题}
+
+请注意,标签、项目和被指派人会自动设置,控件也会渲染为必填字段,并设置为正确的默认值。
+
+\myGraphic{0.4}{content/chapter5/images/4.png}{图 5.4 --- 使用问题模板创建新问题,填写表单并保存新问题}
+
+填写表单并保存新问题。
+
 \end{enumerate}
 
 \mySubsubsection{5.2.3}{How it works…}
 
+问题和拉取请求模板是引导用户创建问题或拉取请求时的强大工具。你可以通过用户界面生成这些模板，使它们更容易被发现（参见GitHub文档：\url{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issuesand-pull-requests/syntax-for-issue-forms}）。模板可以是纯Markdown格式的，但使用本指南中提到的新自定义模板，你可以创建包含多种表单元素（如markdown、文本区域、输入框、下拉菜单和复选框）的丰富表单。你还可以添加验证并提供默认值。对于GitHub表单模式的完整语法，请参考此链接 \url{https://docs.github.com/en/communities/using-templates-toencourage-useful-issues-and-pull-requests/syntax-for-githubs-formschema}。请注意，在填写完表单后，数据将以Markdown形式添加到问题或拉取请求的正文中。模板仅在用户创建问题或拉取请求时支持他们，之后编辑时就只是Markdown了。
+
 \mySubsubsection{5.2.4}{There’s more…}
+
+在创建新问题时,GitHub会显示来自.github/ISSUE\_TEMPLATE文件夹中的所有有效的Markdown或YAML表单模板。但是,你可以配置额外的链接至外部系统,并且你可以设置是否允许空白问题或者强制用户选择一个模板(见图 5.5)。这使得你可以更灵活地管理如何创建问题以及收集必要的信息来加快解决流程。
+
+要配置模板选择器,请在 .github/ISSUE\_TEMPLATE 文件夹中添加一个 config.yml 文件。将 blank\_issues\_enabled 设置为 true 或 false,并在 contact\_links 数组中添加额外的链接。例如:
+
+\myGraphic{0.4}{content/chapter5/images/5.1.png}{}
+
+更多详细信息，请参考官方文档:\url{https://docs.github.com/en/communities/usingtemplates-to-encourage-useful-issues-and-pull-requests/configuringissue-templates-for-your-repository}
+
+
