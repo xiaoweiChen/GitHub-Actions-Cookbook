@@ -1,7 +1,252 @@
+如果你开始使用 IssueOps 进行自动化，工作流很快就会变得非常复杂。你将在任务和步骤中频繁使用 if 条件判断。为了保持这些解决方案的可维护性，你可以使用 复合动作（composite actions） 或 可重用工作流（reusable workflows），不仅实现功能复用，还能将复杂的工作流拆分成更小、更易管理的部分。
+
+我们已经在前面的章节中介绍过复合动作。在本示例中，我们将使用一个可重用工作流，为我们的 IssueOps 解决方案添加“删除仓库”的功能。
+
 \mySubsubsection{5.5.1}{Getting ready}
+
+请确保你已完成本章之前的各项实作内容。
 
 \mySubsubsection{5.5.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+创建一个新的 delete-repo.yml 工作流文件。
+
+\item 
+作为触发器，我们使用 workflow\_call，这表示该工作流是一个可重用工作流。定义工作流所需的输入参数：
+
+\begin{shell}
+on:
+  workflow_call:
+    inputs:
+      REPO_NAME:
+        description: 'Repository name'
+        required: true
+        type: string
+      ISSUE_USER:
+        description: 'User who created the issue'
+        required: true
+        type: string
+      ISSUE_NUMBER:
+        description: 'Issue number'
+        required: true
+        type: number
+\end{shell}
+
+\item 
+可重用工作流其实就是一个普通的工作流，它可以包含一个或多个任务，并且这些任务也可以与某个环境相关联：
+
+\begin{shell}
+  jobs:
+    delete:
+      runs-on: ubuntu-latest
+      environment: repo-cleanup
+      steps:
+\end{shell}
+
+你可以为仓库删除操作创建一个新的环境,并在其中添加 PRIVATE\_KEY、APP\_ID、ORGANIZATION、PROJECT\_OWNER 和 REPO\_OWNER 等变量和密钥;或者为了简化配置,你也可以直接复用之前创建的 repo-creation 环境。
+
+\item 
+像在 issue-ops 工作流中一样，从应用获取令牌以进行身份验证：
+
+\begin{shell}
+- name: Create app token
+  uses: actions/create-github-app-token@v1.6.2
+  id: get-workflow-token
+  with:
+    app-id: ${{ vars.APP_ID }}
+    private-key: ${{ secrets.PRIVATE_KEY }}
+    owner: ${{ vars.ORGANIZATION }}
+\end{shell}
+
+\item 
+接下来，使用提供的令牌删除仓库：
+
+\begin{shell}
+- name: Delete repository
+  id: delete-repo
+  env:
+    GH_TOKEN: ${{ steps.get-workflow-token.outputs.token }}
+    REPO_NAME: ${{ inputs.REPO_NAME }}
+    REPO_OWNER: ${{ vars.REPO_OWNER }}
+  run: |
+    gh repo delete $REPO_OWNER/$REPO_NAME --yes
+    echo "Repository '$REPO_NAME' has been successfully deleted."
+\end{shell}
+
+\item 
+通知用户并关闭议题：
+
+\begin{shell}
+- name: Notify User
+  if: ${{ success() }}
+  env:
+    GH_TOKEN: ${{ github.token }}
+    ISSUE_NUMBER: ${{ inputs.ISSUE_NUMBER }}
+    ISSUE_USER: ${{ inputs.ISSUE_USER }}
+    REPO_NAME: ${{ inputs.REPO_NAME }}
+    REPO_OWNER: ${{ vars.REPO_OWNER }}
+  run: |
+    gh issue comment $ISSUE_NUMBER \
+      -b "@$ISSUE_USER: Repository '$REPO_OWNER/$REPO_NAME' has been deleted successfully." \
+      --repo ${{ github.event.repository.full_name }}
+    gh issue close $ISSUE_NUMBER \
+      --repo ${{ github.event.repository.full_name }}
+\end{shell}
+
+\item 
+如果发生失败，也通知用户：
+
+\begin{shell}
+- name: Handle Exception
+  if: ${{ failure() }}
+  env:
+    GH_TOKEN: ${{ github.token }}
+    ISSUE_NUMBER: ${{ inputs.ISSUE_NUMBER }}
+    ISSUE_USER: ${{ inputs.ISSUE_USER }}
+  run: |
+    gh issue comment $ISSUE_NUMBER \
+      -b "@$ISSUE_USER: Repository '$REPO_OWNER/$REPO_NAME' deletion failed. Please contact the administrator." \
+      --repo ${{ github.event.repository.full_name }}
+\end{shell}
+
+\item 
+要使用此工作流，我们创建一个新的名为 handle-issue.yml 的工作流文件。我们将它设置为在标记议题时运行，并赋予其对议题的写访问权限：
+
+\begin{shell}
+name: Handle Issue
+on:
+  issues:
+    types: [labeled]
+permissions:
+  contents: read
+  issues: write
+\end{shell}
+
+\item 
+为了解析议题,我们添加一个通用任务,该任务使用与 issue-ops 工作流中相同的逻辑(只需复制过来直到设置输出变量):
+
+\begin{shell}
+jobs:
+  parse-issue:
+    runs-on: ubuntu-latest
+    outputs:
+      REPO_NAME: ${{ steps.repo-request.outputs.REPO_NAME }}
+    steps:
+      - name: Issue Forms Body Parser
+        id: parse
+        uses: zentered/issue-forms-body-parser@v2.0.0
+      - name: Repository Request Validation
+        id: repo-request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          repo_name=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.name.text')
+          repo_dept=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.department.text')
+          repo_full_name=$repo_dept-$repo_name
+          echo "REPO_NAME=$repo_full_name" >> "$GITHUB_OUTPUT"
+\end{shell}
+
+\item 
+然后，我们添加一个将调用另一个工作流文件的任务。当应用的标签是 delete-repo 时有条件地执行此任务。通过 with 部分传入仓库名称以及其他参数：
+
+\begin{shell}
+repo-deletion:
+  name: "Delete a repository"
+  if: github.event.label.name == 'delete-repo'
+  uses: ./.github/workflows/delete-repo.yml
+  with:
+    REPO_NAME: ${{ needs.parse-issue.outputs.REPO_NAME }}
+    ISSUE_USER: ${{ github.event.issue.user.login }}
+    ISSUE_NUMBER: ${{ github.event.issue.number }}
+    needs: parse-issue
+  with:
+    REPO_NAME: ${{ needs.parse-issue.outputs.REPO_NAME }}
+    ISSUE_USER: ${{ github.event.issue.user.login }}
+    ISSUE_NUMBER: ${{ github.event.issue.number }}
+  secrets: inherit
+\end{shell}
+
+通过 with secrets: inherit,你可以允许子工作流继承父级工作流中的所有密钥,而无需将每个密钥都显式声明为密钥参数。
+
+\item 
+提交并推送你的文件，然后在你之前用于测试仓库创建的议题上添加 delete-issue 标签。批准部署后，仓库将会被删除。
+
+请注意：来自可重用工作流的任务会嵌套显示在工作流的“Jobs（任务）”部分中，并且在可视化设计器中也会以嵌套形式展示（参见图 5.15）。
+
+\myGraphic{0.4}{content/chapter5/images/15.png}{图 5.15 --- 来自可重用工作流的嵌套任务}
+
+同时注意，在删除成功的通知评论之后，该议题会被自动关闭。
+
+\end{enumerate}
+
 \mySubsubsection{5.5.3}{How it works…}
 
+可重用工作流是组织复杂工作流和复用依赖多个任务或环境的复杂功能的一种绝佳方式。不过也存在一些限制：
+
+\begin{itemize}
+\item 
+你最多可以连接 4 层嵌套 的工作流。
+
+\item 
+单个工作流文件中最多可以调用 20 个可重用工作流，包括从顶层调用者开始的所有嵌套工作流。
+
+\item 
+在调用者工作流中于 env 上下文中定义的环境变量不会传递到被调用的工作流中。
+
+\item 
+同样地，在被调用工作流中定义的 env 环境变量也无法在调用者工作流中访问。
+\end{itemize}
+
+要解决这个问题,你必须使用可重用工作流的 输出(outputs) 来传递数据。如果需要在多个工作流之间共享变量,建议将它们设置在 组织、仓库或环境级别,并通过 vars 上下文进行引用。
+
+要了解有关可重用工作流的更多信息，请参阅：\url{https://docs.github.com/en/actions/using-workflows/reusing-workflows}。
+
+请注意，在本例中删除仓库后，我没有更新项目中的字段。GitHub Projects 还支持工作流功能，当议题被关闭时，可以用于更新某个字段。
+
+你只需在你的项目中进入 Workflows（工作流），启用 Item closed（项目关闭） 事件，并将状态字段设置为你希望的值（参见图 5.16）。
+
+\myGraphic{0.4}{content/chapter5/images/16.png}{图 5.16 --- 在 GitHub Projects 中配置工作流}
+
+这样，当议题被关闭时，状态将自动设置为 Deleted（已删除）。
+
 \mySubsubsection{5.5.4}{There’s more…}
+
+当然，这只是一个起点。若要在真实场景中采用此类方案，你需要将解决方案扩展到以下方面：
+
+\begin{itemize}
+\item 
+团队生命周期管理
+
+\item 
+向团队授予权限
+
+\item 
+为仓库设置基础配置
+
+\item 
+为不同类型的解决方案提供不同的模板
+\end{itemize}
+
+但所使用的核心构建模块是相同的。
+
+你还应该重构当前的解决方案，将仓库的创建过程也作为一个**可重用工作流**，并将其包含在 `handle-issue` 工作流中。我在自己的仓库中暂时保留了原有结构，以尽可能降低各个步骤的复杂度，同时提供一个贴近真实场景的解决方案。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

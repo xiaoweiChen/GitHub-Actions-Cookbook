@@ -11,6 +11,7 @@
 \usepackage{microtype}
 
 \usepackage{amssymb}
+\usepackage{ifthen}
 
 \usepackage{fontspec}                  %引入字体设置宏包
 %\setmainfont{Times New Roman}             %设置英文正文字体
@@ -359,6 +360,26 @@
 
 % Latex如何在文本模式批量处理下划线
 % https://zhuanlan.zhihu.com/p/615108006
+
+% 判断是否为 macOS（Apple Color Emoji 存在）
+\IfFontExistsTF{Apple Color Emoji}{
+\newfontfamily\emojifont{Apple Color Emoji}
+}{
+    % 判断是否为 Windows（Segoe UI Emoji 存在）
+\IfFontExistsTF{Segoe UI Emoji}{
+    \newfontfamily\emojifont{Segoe UI Emoji}
+}{
+    % 否则可能是 Linux（Noto Color Emoji）
+    \IfFontExistsTF{Noto Color Emoji}{
+        \newfontfamily\emojifont{Noto Color Emoji}
+    }{
+        \newfontfamily\emojifont{Symbola} % fallback
+    }
+}
+}
+
+% 定义 Emoji 命令
+\newcommand{\emoji}[1]{{\emojifont #1}}
 
 \ExplSyntaxOff
 

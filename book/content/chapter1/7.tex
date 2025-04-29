@@ -37,7 +37,13 @@ secrets/actions)和Variables(settings/variables/actions;请参见图1.20)之间�
 
 将单词World更改为\verb|${{vars.WHO_TO_GREET}}|表达式，并使用\verb|${{ secrets.MY_SECRET }} |添加新行:
 
-\myGraphic{0.6}{content/chapter1/images/22.1.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+- run: | \\
+\hspace*{2em}echo "Hello \$\{\{ vars.WHO\_TO\_GREET \}\} \emoji{👋} from \$\{\{ github.actor \}\}." \\
+\hspace*{2em}echo "My secret is \emoji{🤫} '\$\{\{ secrets.MY\_SECRET \}\}'."
+}
+\end{tcolorbox}
 
 \item 
 提交更改。工作流将自动运行。检查工作流日志中的输出。看起来应该像图1.23：

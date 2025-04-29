@@ -110,14 +110,24 @@ steps:
 
 从价值列表中挑选actor：
 
-\myGraphic{0.8}{content/chapter1/images/13.1.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+- run: echo "Hello world \emoji{👋} from \$\{\{ github.actor \}\}."
+}
+\end{tcolorbox}
 
 您将在整本书中了解有关表达式和上下文语法的更多信息。但是,您可以随时参考表达式(\url{(https://docs.github.com/en/actions/learn-github-actions/expressions})和上下文(\url{https://docs.github.com/en/actions/learn-github-actions/contexts})的文档。
 
 \item 
 YAML允许您编写多行脚本,而无需用报价和新线来搏斗。运行后只需添加管道操作员(|):并在下一行中写下您的脚本四个空间凹痕即可。 YAML将把它视为一个块,直到下一个元素为止 - 即使有新的和空白的线:
 
-\myGraphic{0.8}{content/chapter1/images/13.2.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+- run: | \\
+\hspace*{2em}echo "Hello world \emoji{👋} from \$\{\{ github.actor \}\}." \\
+\hspace*{2em}echo "Current branch is '\$\{\{ github.ref \}\}'."
+}
+\end{tcolorbox}
 
 \item 
 github操作工作流程不会自动从您的存储库下载代码。 如果您想使用存储库中的文件进行操作,则必须先查看内容。这是使用github操作完成的 --- 可重复使用的工作流程步骤,可以轻松共享多个工作流程。
@@ -181,7 +191,7 @@ github操作工作流程不会自动从您的存储库下载代码。 如果您�
 
 工作流文件是位于存储库中的.github/Workflows文件夹中的YAML文件。
 
-\mySamllsection{YAML基础知识}
+\mySamllsectionNoContent{YAML基础知识}
 
 YAML代表YAML不是标记语言，是一种数据序列化语言，经过优化，可以被人类直接写入和读取。它是JSON的严格超集，但使用语法相关的换行符和缩进而不是大括号。
 
@@ -191,7 +201,7 @@ YAML代表YAML不是标记语言，是一种数据序列化语言，经过优化
 
 Key是变量的名称。根据值的数据类型，变量的类型会有所不同。注意，键和值可以包含空格，不需要引号！只有在使用一些特殊字符或希望将某些值强制为字符串时才添加它们。可以用单引号或双引号引用键和值。双引号使用反斜杠作为转义模式（"Foo \"bar \" Foo “），而单引号则使用额外的单引号（' Foo ”bar "Foo '）。
 
-\mySamllsection{YAML收集类型}
+\mySamllsectionNoContent{YAML收集类型}
 
 在YAML中，有两种不同的集合类型：称为映射的嵌套类型和列表（也称为序列）。地图使用两个空格缩进：
 
@@ -219,7 +229,7 @@ key: [item1, item2, item3]
 key: {key1: value1, key2: value2}
 \end{shell}
 
-\mySamllsection{触发工作流程的事件}
+\mySamllsectionNoContent{触发工作流程的事件}
 
 工作流程有三种类型的触发器:Webhook触发器,计划触发器和手动触发器。
 
@@ -242,11 +252,11 @@ on:
 
 要了解有关触发因素的更多信息,请在\url{https://docs.github.com/en/actions/anction/lusther-work flows/events-th-trigger-workflows}上查看文档。
 
-\mySamllsection{工作}
+\mySamllsectionNoContent{工作}
 
 每个作业都需要一个执行它的跑步者。跑步者通过标签标识。在我们的食谱中,我们使用Ubuntu-latest标签。这意味着我们的工作将在GitHub托管的最新Ubuntu映像上执行。您将在工作流运行时第4章中了解有关跑步者的更多信息。
 
-\mySamllsection{使用github动作}
+\mySamllsectionNoContent{使用github动作}
 
 操作请参阅Github上的位置。语法为\{path\}@\{ref\}。路径指向GitHub上的物理位置,如果操作位于存储库的根或\{owner\}/\{repo\}/\{path\}如果操作在子文件夹中,则可以是\{orsal\}/\{repo\} 。 @\{ref\}之后的引用是指向提交的任何git引用。它可以是标签,分支或个人提交:
 

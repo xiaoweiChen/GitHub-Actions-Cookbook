@@ -49,7 +49,14 @@ Test:
 
 要查看环境如何覆盖秘密,我们必须使用一些黑客。当Github搜索日志输出中秘密的值以掩盖其时,我们必须修改实际文本。例如,我们可以使用 \verb|sed 's/./& /g'|命令来做到这一点。这将在秘密的每个字符之间增加一个空白。有了这个小技巧,测试工作的步骤应该看起来像:
 
-\myGraphic{0.6}{content/chapter1/images/30.1.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+- run: | \\
+\hspace*{2em}echo "Hello \$\{\{ vars.WHO\_TO\_GREET \}\} \emoji{👋} from \$\{\{ github.actor \}\}." \\
+\hspace*{2em}sec=\$(echo \$\{\{ secrets.MY\_SECRET \}\} | sed 's/./\& /g') \\
+\hspace*{2em}echo "My secret is \emoji{🤫} '\$sec'."
+}
+\end{tcolorbox}
 
 \item 
 接下来，添加一个与负载测试环境相关联的新负载测试作业，并在first\_job之后执行：

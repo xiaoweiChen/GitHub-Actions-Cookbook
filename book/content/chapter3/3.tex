@@ -80,7 +80,7 @@ $ gh pr create --fill
 
 让我们来理解一下代码是如何工作的。
 
-\mySamllsection{环境文件}
+\mySamllsectionNoContent{环境文件}
 
 将输出值传递给后续步骤和作业是通过将名称-值对写入环境文件来实现的——即 \$GITHUB\_OUTPUT：
 
@@ -115,7 +115,7 @@ steps:
       echo "${{ env.action_state }}" # This will output 'yellow'
 \end{shell}
 
-\mySamllsection{工作总结}
+\mySamllsectionNoContent{工作总结}
 
 您可以为工作流中的每个作业设置自定义的 Markdown。渲染后的 Markdown 将显示在工作流运行的总结页面上。工作总结可用于展示内容，如测试或代码覆盖率结果，这样查看工作流运行结果的人不需要进入日志或外部系统即可获取关键信息。工作总结支持 GitHub 风味的 Markdown。由于 Markdown 允许包含 HTML，您也可以将 HTML 输出到工作总结文件中。请注意，在此示例中，我的 GitHub 用户名 @wulfland 是指向个人资料的链接，并带有预览功能，且所有 GitHub 表情符号都得到支持。
 
@@ -131,7 +131,7 @@ echo "{markdown content}" >> $GITHUB_STEP_SUMMARY
 
 对于环境文件和工作总结的完整参考，请参阅 \url{ https://docs.github.com/en/actions/using-workflows/workflow-commands-for-githubactions?tool=bash#environment-files}。
 
-\mySamllsection{表达式和有条件执行}
+\mySamllsectionNoContent{表达式和有条件执行}
 
 在第 1 章和第 2 章中，我们使用了表达式（\$\{\{ ... \}\}）从上下文对象中输出值。在本教程中，我们在步骤的 if 属性中使用表达式来实现条件执行：
 

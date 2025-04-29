@@ -1,6 +1,6 @@
-# GitHub Actions Cookbook
+# GitHub Actions 实用指南
 
-*A practical guide to automating repetitive tasks and streamlining your development process*
+*自动化重复任务和优化开发流程*
 
 <a href=""><img src="cover.png" height="256px" align="right"></a>
 
@@ -15,40 +15,40 @@
 
 ## 本书概述
 
-Say goodbye to tedious tasks! GitHub Actions is a powerful workflow engine that automates everything in the GitHub ecosystem, letting you focus on what matters most.
+告别繁琐的任务！GitHub Actions 是一个强大的工作流引擎，可以自动化 GitHub 生态系统中的所有内容，让开发者专注于更重要的事。
 
 **关于本书**
 
-Authored by a Microsoft Regional Director, this book shows you how to leverage the power of the community-driven GitHub Actions workflow platform to automate repetitive engineering tasks
+本书展示了如何使用社区驱动的GitHub Actions工作流平台，来自动化重复性的工程任务。
 
-This book explains the GitHub Actions workflow syntax, the different kinds of actions, and how GitHub-hosted and self-hosted workflow runners work. You'll get tips on how to author and debug GitHub Actions and workflows with Visual Studio Code (VS Code), run them locally, and leverage the power of GitHub Copilot. The book uses hands-on examples to walk you through real-world use cases that will help you automate the entire release process. You'll cover everything, from automating the generation of release notes to building and testing your software and deploying securely to Azure, Amazon Web Services (AWS), or Google Cloud using OpenID Connect (OIDC), secrets, variables, environments, and approval checks.
+本书解释了GitHub Actions工作流语法、不同种类的动作，以及GitHub托管和自托管的工作流运行器是如何工作的。可以了解到如何使用Visual Studio Code (VS Code)编写和调试GitHub Actions和工作流的技巧，学习如何在本地运行，并借用GitHub Copilot的力量。书中通过动手实例，引导你完成实际应用案例，自动化整个发布过程。从自动生成发布说明到构建和测试软件，再到使用OpenID Connect (OIDC)、密钥、变量、环境和审批检查安全地部署到Azure、Amazon Web Services (AWS)或Google Cloud。
 
-The book goes beyond CI/CD by demonstrating recipes to execute IssueOps and automate other repetitive tasks using the GitHub CLI, GitHub APIs and SDKs, and GitHub Token. You'll learn how to build your own actions and reusable workflows to share building blocks with the community or within your organization.
+内容不仅限于CI/CD，还演示了使用GitHub CLI、GitHub API和SDK及GitHub Token执行IssueOp和其他重复性任务的解决方案。你将学习如何构建自己的动作和可重用的工作流，以与社区或组织内部共享构建模块。
 
-By the end of this GitHub book, you'll have gained the skills you need to automate tasks and work with remarkable efficiency and agility.
+阅读完这本关于GitHub的书籍后，读者们将掌握自动化任务所需的技能，并能够以卓越的效率和敏捷性开展工作。
 
 **主要特点**
 
-* Automate CI/CD workflows and deploy securely to cloud providers like Azure, AWS, or GCP using OpenID
-* Create your own custom actions with Docker, JavaScript programming, or shell scripts and share them with others
-* Discover ways to automate complex scenarios beyond the basic ones documented in GitHub
+* 使用OpenID安全地自动化CI/CD工作流并部署到如Azure、AWS或GCP这样的云提供商
+* 使用Docker、JavaScript编程或shell脚本创建自己的自定义动作并与他人分享
+* 发现复杂场景的自动化方法，超越GitHub中已记录的基本示例
 
 **内容包括**
 
-* Author and debug GitHub Actions workflows with VS Code and Copilot
-* Run your workflows on GitHub-provided VMs (Linux, Windows, and macOS) or host your own runners in your infrastructure
-* Understand how to secure your workflows with GitHub Actions
-* Boost your productivity by automating workflows using GitHub's powerful tools, such as the CLI, APIs, SDKs, and access tokens
-* Deploy to any cloud and platform in a secure and reliable way with staged or ring-based deployments
+* 使用VS Code和Copilot编写和调试GitHub Actions工作流
+* 在GitHub提供的虚拟机（Linux、Windows和macOS）上运行工作流，或者在开发者的基础设施中托管运行器
+* 学习如何通过GitHub Actions保护工作流
+* 通过使用GitHub的强大工具（如CLI、API、SDK和访问令牌）自动化工作流以提高生产力
+* 通过分阶段或环形部署，以安全可靠的方式部署至云和服务
 
 **适读人群**
 
-This book is for anyone looking for a practical approach to learning GitHub Actions, regardless of their experience level. Whether you're a software developer, a DevOps engineer, anyone who has already experimented with Actions, or someone completely new to CI/CD tools like Jenkins or Azure Pipelines, you'll find expert insights in this book. Basic knowledge of using Git and command lines is a must.
+这本书适合学习GitHub Actions实用方法的人，无论经验水平如何，无论职业是软件开发者、DevOps工程师，还是已经尝试过Actions的人，亦或对于Jenkins或Azure Pipelines这样的CI/CD工具完全不了解的人，都能在这本书中找到自己所寻之物。不过，使用Git和命令行是必备的基础知识。
 
 
 ## 作者简介
 
-Michael Kaufmann believes that developers and engineers can be happy and productive at work. He loves DevOps, GitHub, Azure, and modern work. Microsoft has awarded him with the title Microsoft Regional Director (RD) and Microsoft Most Valuable Professional (MVP) – the latter in the category of DevOps and GitHub. Michael is also the founder and managing director of Xebia Microsoft Services, Germany – a consulting company that helps its customers become digital leaders by supporting them in their cloud, DevOps, and digital transformation. Michael shares his knowledge in books, training, and as a frequent speaker at international conferences.
+Michael Kaufmann相信开发者和工程师能够在工作中感到快乐和高效。他热爱DevOps、GitHub、Azure和现代工作方式。Microsoft授予他Microsoft区域总监(RD)和Microsoft最有价值专家(MVP)称号——后者属于DevOps和GitHub类别。Michael同时也是德国Xebia Microsoft服务公司的创始人兼总经理，这是一家咨询公司，通过支持客户进行云、DevOps和数字化转型来帮助他们成为数字领导者。Michael通过书籍、培训，以及经常在国际会议上进行分享。
 
 ## 本书相关
 

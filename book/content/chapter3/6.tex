@@ -25,7 +25,18 @@ core.setOutput('answer', 42)
 \item 
 为了添加这个额外的功能，我们需要检查触发工作流的事件是否是 issues 事件。如果是的话，我们将使用 github.rest.issues.createComment 方法向该问题添加一条评论。以下是具体的实现步骤：
 
-\myGraphic{0.4}{content/chapter3/images/10.1.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+if (context.eventName === 'issues') \{ \\
+\hspace*{1em}github.rest.issues.createComment(\{ \\
+\hspace*{2em}issue\_number: context.issue.number, \\
+\hspace*{2em}owner: context.repo.owner, \\
+\hspace*{2em}repo: context.repo.repo, \\
+\hspace*{2em}body: '\emoji{👋} Thanks for reporting!' \\
+\hspace*{1em}\}) \\
+\}
+}
+\end{tcolorbox}
 
 \item 
 在 CI 工作流中，添加一个额外的触发器，以便在新问题打开时执行工作流：

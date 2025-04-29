@@ -1,6 +1,266 @@
+
+在这个食谱中，我们将解析上一章中的问题，并在工作流程中使用GitHub CLI与问题进行交互。
+
 \mySubsubsection{5.3.1}{Getting ready}
+
+您将需要上一章中的问题模板。您可以在Visual Studio Code中创建工作流程，也可以直接在GitHub中创建。
 
 \mySubsubsection{5.3.2}{How to do it…}
 
+\begin{enumerate}
+\item 
+创建一个新的工作流程 .github/workflows/issue-ops.yml 并命名为 issue-ops：
+
+\begin{shell}
+# Issue ops
+name: issue-ops
+\end{shell}
+
+\item 
+使用工作流程的问题触发器。请注意，我们不是使用创建或编辑事件，而是使用标记。这允许用户在修改请求时重新标记问题：
+
+\begin{shell}
+on:
+  issues:
+    types: [labeled]
+\end{shell}
+
+\item 
+添加一个 issue-ops 作业：
+
+\begin{shell}
+jobs:
+  issue-ops:
+\end{shell}
+
+我们只想针对特定的标签运行此任务。请向任务中添加如下条件：
+
+\begin{shell}
+if: ${{ github.event.label.name == 'repo-request' }}
+\end{shell}
+
+该任务可以在最新的 Ubuntu 镜像上运行：
+
+\begin{shell}
+runs-on: ubuntu-latest
+\end{shell}
+
+\item 
+为了与议题（issues）进行交互，工作流需要具有对议题的写权限。同时，为了使用 GitHub CLI，还需要对内容（contents）具有读权限：
+
+\begin{shell}
+permissions:
+  issues: write
+  contents: read
+\end{shell}
+
+\item 
+在 Marketplace 中有一个动作可以帮助解析以表单形式创建的议题内容。添加 zentered/issue-forms-body-parser 并为其设置一个 id 属性，以便稍后访问输出结果：
+
+\begin{shell}
+steps:
+  - name: Issue Forms Body Parser
+    id: parse
+    uses: zentered/issue-forms-body-parser@v2.0.0
+\end{shell}
+
+\item 
+接下来，添加我们的主脚本。设置 id 以在任务级别访问输出。同时，将 GH\_TOKEN 环境变量设为 GITHUB\_TOKEN。这个令牌将被 CLI 用来与议题进行交互：
+
+\begin{shell}
+- name: Repository Request Validation
+  id: repo-request
+  env:
+    GH_TOKEN: ${{ github.token }}
+  run: |
+\end{shell}
+
+\item 
+首先，使用 jq 从 parse 步骤的输出中读取 name 和 department 的值，并将它们存储在变量中。在 JavaScript 中我们可以直接访问对象，但在 Bash 脚本中我们必须使用 jq：
+
+\begin{shell}
+repo_name=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.name.text')
+repo_dept=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.department.text')
+\end{shell}
+
+将两个变量与你的最终名称组合起来（在我们的例子中，部门是前缀）：
+
+\begin{shell}
+repo_full_name=$repo_dept-$repo_name
+\end{shell}
+
+将名称设置为输出，以便在后续步骤或任务中使用：
+
+\begin{shell}
+echo "REPO_NAME=$repo_full_name" >> "$GITHUB_OUTPUT"
+\end{shell}
+
+\item 
+我们将添加一些验证逻辑。这里我提供两个示例，你可以在工作流文件中查看其余部分：\url{https://github.com/wulfland/GitHubActionsCookbook/blob/main/.github/workflows/issue-ops.yml}。
+
+首先，设置默认的消息和退出码。默认消息由两部分组成：首先，我们想提及创建该议题的用户，然后根据验证结果添加相应的消息：
+
+\begin{shell}
+mention="@${{ github.event.issue.user.login }}: "
+message="Requested repository '$repo_full_name' will be sent for approval."
+exitcode=0
+\end{shell}
+
+接下来，添加一条验证规则：名称不能为空：
+
+\begin{shell}
+# shall not be empty
+if [ -z $repo_full_name ]; then
+  message="Repository name is empty.";
+  exitcode=1;
+fi;
+\end{shell}
+
+此外，再添加一条验证规则：名称只能使用字母数字字符和连字符（如果你希望使用短横线命名格式）：
+
+\begin{shell}
+# shall be alphanumeric and minus only
+if [[ "$repo_full_name" =~ [^\-a-zA-Z0-9] ]]; then
+  message="Repository name shall be alphanumeric and minus only.";
+  exitcode=1;
+fi;
+\end{shell}
+
+\item 
+如果验证失败，则从问题中移除标签，并告知用户修复问题并重新添加标签：
+
+\begin{shell}
+if [ $exitcode -ne 0 ]; then
+  gh issue edit ${{ github.event.issue.number }} \
+    --remove-label repo-request
+  message=$message" Please fix the issue and try again by applying the label 'repo-request' again to the issue.";
+fi;
+\end{shell}
+
+\item 
+最后，在议题上评论该消息，并在验证失败时使任务失败：
+
+\begin{shell}
+gh issue comment ${{ github.event.issue.number }} \
+  -b „$mention $message"
+exit $exitcode
+\end{shell}
+
+\item 
+将 REPO\_NAME 输出设置为步骤中定义的输出。我们将在下一个任务中使用它来创建实际的仓库：
+
+\begin{shell}
+outputs:
+  REPO_NAME: ${{ steps.repo-request.outputs.REPO_NAME }}
+\end{shell}
+
+\item 
+现在，使用表单模板创建一个新的议题。开始时使用一个无效的名称（例如 my\_repo），看看它是如何向议题添加评论的（参见图 5.6）。
+
+\myGraphic{0.4}{content/chapter5/images/6.png}{图 5.6 --- 从工作流中与议题互动}
+
+将名称修复为有效格式（例如 my-repo），然后再次为该议题添加 repo-request 标签。
+
+\end{enumerate}
+
 \mySubsubsection{5.3.3}{How it works…}
+
+让我们来理解其背后的工作流程。
+
+\mySamllsectionNoContent{工作流权限和 GITHUB\_TOKEN}
+
+在每个工作流任务开始时,GitHub 会自动创建一个唯一的 GITHUB\_TOKEN,你可以在工作流中使用该令牌与 GitHub 进行交互。你可以使用此令牌在工作流任务中进行身份验证。
+
+你可以为个人账户、组织以及仓库配置默认权限——默认权限是只读的。最佳实践是保持这一默认设置即只读,并在工作流或任务中明确授予所需的权限。
+
+GITHUB\_TOKEN 的权限既可以在顶级键中配置,以应用于工作流中的所有任务,也可以在特定任务内进行配置。当你在特定任务内添加权限键时,该任务内使用 GITHUB\_TOKEN 的所有操作和运行命令都将获得你指定的访问权限。这样可以确保最小权限原则,提升安全性。
+
+对于每个可用的范围，你可以分配以下权限之一：read（读）、write（写）或 none（无）。
+
+\begin{myNotic}{Note}
+如果你为任何一个范围指定了访问权限，那么所有未明确指定的范围将自动设置为 none！
+\end{myNotic}
+
+你也可以一次性设置所有权限。以下命令会将所有权限设置为只读：
+
+\begin{shell}
+permissions: read-all
+\end{shell}
+
+以下将授予所有范围的写入权限：
+
+\begin{shell}
+permissions: write-all
+\end{shell}
+
+最后这个示例会将所有范围的权限设置为 none：
+
+\begin{shell}
+permissions: {}
+\end{shell}
+
+在我们的示例中，我们需要对 issues 有写权限，并且 GitHub CLI 需要对内容（contents）有读权限：
+
+\begin{shell}
+permissions:
+  issues: write
+  contents: read
+\end{shell}
+
+所有其他未列出的权限将自动被设置为 none。
+
+\mySamllsectionNoContent{步骤和任务的输出}
+
+在第 3 章《构建 GitHub Action》中，你学习了环境文件（environment files）。我们在本示例中使用它们来设置输出内容，以便在后续的任务中使用。我们也通过环境文件访问表单解析器（form parser）提供的数据。
+
+表单解析器是一个来自 Marketplace 的 Action，它帮助我们解析使用议题模板创建的议题正文内容。我们通过设置 id 来访问它的输出结果：
+
+\begin{shell}
+steps:
+- name: Issue Forms Body Parser
+  id: parse
+  uses: zentered/issue-forms-body-parser@v2.0.0
+\end{shell}
+
+在 JavaScript 中（例如在 GitHub Script Action 中），你可以直接访问 JSON 对象：
+
+\begin{shell}
+console.log(data.name.text);
+console.log(data.department.text);
+\end{shell}
+
+而在 Bash 中，你不能像在 JavaScript 中那样直接访问 JSON 属性。你需要使用命令行 JSON 处理工具，例如 jq，来解析 JSON 字符串并访问其属性：
+
+\begin{shell}
+repo_name=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.name.text')
+\end{shell}
+
+\mySamllsectionNoContent{使用 GitHub CLI 在议题上发表评论}
+
+在第 3 章中，你曾使用 octokit 和 REST API 在议题上发表评论。在本示例中，我们将使用 GitHub CLI 来完成相同的操作。
+
+要使 CLI 正常工作，你首先需要检出仓库。你还必须在工作流步骤中将 GH\_TOKEN 环境变量设置为工作流提供的令牌：
+
+\begin{shell}
+env:
+  GH_TOKEN: ${{ github.token }}
+\end{shell}
+
+使用 CLI 非常简单——我们可以利用 @ 加用户名的方式来在评论中提及用户：
+
+\begin{shell}
+mention="@${{ github.event.issue.user.login }}: "
+message="Requested repository '$repo_full_name' will be sent for approval."
+
+gh issue comment ${{ github.event.issue.number }} \
+  -b "$mention $message"
+\end{shell}
+
+
+
+
+
+
+
+
 

@@ -130,7 +130,15 @@ kebab casing.'
 
 要配置模板选择器,请在 .github/ISSUE\_TEMPLATE 文件夹中添加一个 config.yml 文件。将 blank\_issues\_enabled 设置为 true 或 false,并在 contact\_links 数组中添加额外的链接。例如:
 
-\myGraphic{0.4}{content/chapter5/images/5.1.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+blank\_issues\_enabled: false \\
+contact\_links: \\
+\hspace*{1em}- name: \emoji{👥} Discussions \\
+\hspace*{2.2em}url: https://github.com/wulfland/AccelerateDevOps/discussions/new \\
+\hspace*{2.2em}about: Please use discussions for issues that are not a bug, enhancement or feature request.
+}
+\end{tcolorbox}
 
 更多详细信息，请参考官方文档:\url{https://docs.github.com/en/communities/usingtemplates-to-encourage-useful-issues-and-pull-requests/configuringissue-templates-for-your-repository}
 
