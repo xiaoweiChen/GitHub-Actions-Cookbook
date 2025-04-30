@@ -1,44 +1,44 @@
 
-环境用于描述一般部署目标,例如开发,测试,分期或生产。您可以使用保护规则保护环境,并且可以为特定环境提供配置变量和秘密。
+环境用于描述一般的部署目标,例如：开发、测试、暂存或生产。可以使用保护规则来保护环境,并且可以为特定环境提供配置变量和密钥。
 
 \mySubsubsection{1.8.1}{Getting ready}
 
-我们将首先使用Web UI创建一些环境,并添加一些保护规则,秘密和变量。然后,我们将它们添加到现有的工作流程中。
+我们将首先使用 Web UI 创建一些环境，并添加一些保护规则、密钥和变量。然后，将它们添加到现有的工作流中。
 
 \mySubsubsection{1.8.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-导航到Settings | Environments，点击New environment(参见图1.25)：
+导航到\textbf{Settings | Environments}(设置|环境)并点击\textbf{New environment}(新环境)（见图 1.25）：
 
-\myGraphic{0.6}{content/chapter1/images/25.png}{图1.25  ---  存储库中的管理环境}
+\myGraphic{0.6}{content/chapter1/images/25.png}{图1.25 --- 库中管理环境}
 
-输入名称生产，然后单击配置环境(请参见图1.26)：
+输入名称 Production 并点击\textbf{Configure environment}(配置环境)（见图 1.26）：
 
-\myGraphic{0.6}{content/chapter1/images/26.png}{图1.26  ---  创建一个新的环境}
-
-\item 
-将自己添加为必需的审阅者，然后单击“保存保护规则”(请参见图1.27)：
-
-\myGraphic{0.6}{content/chapter1/images/27.png}{图1.27  ---  配置部署保护规则}
+\myGraphic{0.6}{content/chapter1/images/26.png}{图1.26 --- 创建新环境}
 
 \item 
-在部署分支和标签下,选择选定的分支和标签,单击加号符号,并为主分支添加名称模式(请参见图1.28):
+将自己添加为必需的审查者，并点击\textbf{Save protection rule}(保存保护规则)（见图 1.27）：
 
-\myGraphic{0.6}{content/chapter1/images/28.png}{图1.28  ---  配置部署分支和标签}
-
-\item 
-在环境秘密下,单击“添加秘密”,然后添加一个新的my\_secret Secret,其值Open Sesame (请参见图1.29)。使用添加变量重复此操作,然后添加WHO\_TO\_GREET变量与价值Production users:
-
-\myGraphic{0.6}{content/chapter1/images/29.png}{图1.29  ---  将秘密和变量添加到环境中}
+\myGraphic{0.6}{content/chapter1/images/27.png}{图1.27 --- 配置部署保护规则}
 
 \item 
-重复步骤1,创建两个其他环境,测试和负载测试。我们将在接下来的步骤中使用这些环境来展示如何并行执行作业。您不必配置部署分支或必需的审阅者。只需添加一个带有相应值的WHO\_TO\_GREET变量即可。结果应该看起来像图1.30:
+在\textbf{Deployment branches and tags}(部署分支和标签)下，选择\textbf{Selected branches and tags}(选定的分支和标签)，点击加号，并为 main 分支添加一个名称模式（见图 1.28）：
 
-\myGraphic{0.6}{content/chapter1/images/30.png}{图1.30  ---  存储库设置中的多个环境}
+\myGraphic{0.7}{content/chapter1/images/28.png}{图1.28 --- 配置部署分支和标签}
 
 \item 
-现在,返回工作流文件并进行编辑。在最新的Ubuntu映像上运行的First\_job下方添加一个新工作。我们将此工作与测试环境相关联。要在first\_job之后运行这项工作,我们使用需求属性并将其设置为我们依赖的作业:
+在\textbf{Environment secrets}(环境密钥)下，点击\textbf{Add secret}(添加密钥)并添加一个新的 MY\_SECRET 密钥，其值为 Open Sesame（见图 1.29）。重复此操作，使用\textbf{Add variable}(添加变量)添加一个 WHO\_TO\_GREET 变量，其值为 Production users：
+
+\myGraphic{0.7}{content/chapter1/images/29.png}{图1.29 --- 向环境添加密钥和变量}
+
+\item 
+重复步骤 1 并创建两个附加环境，Test 和 Load-Test。我们将在接下来的步骤中使用这些环境来展示如何并行执行作业。不必配置部署分支或必需的审查者，只需添加一个 WHO\_TO\_GREET 变量并设置相应的值即可。结果应该类似于图 1.30：
+
+\myGraphic{0.6}{content/chapter1/images/30.png}{图1.30 --- 设置多个环境}
+
+\item 
+现在，返回工作流程文件并编辑。在 first\_job 下面添加一个名为 Test 的新作业，在最新的 Ubuntu 镜像上运行。我们将此作业与 Test 环境关联，为了在 first\_job 之后运行此作业，可以使用 needs 属性，并将其设置为所依赖的作业：
 
 \begin{shell}
 Test:
@@ -47,7 +47,7 @@ Test:
   needs: first_job
 \end{shell}
 
-要查看环境如何覆盖秘密,我们必须使用一些黑客。当Github搜索日志输出中秘密的值以掩盖其时,我们必须修改实际文本。例如,我们可以使用 \verb|sed 's/./& /g'|命令来做到这一点。这将在秘密的每个字符之间增加一个空白。有了这个小技巧,测试工作的步骤应该看起来像:
+为了查看密钥如何被环境所覆盖，可以使用一个小技巧。由于 GitHub 会搜索日志输出的密钥值对其进行屏蔽，所以必须修改实际文本。例如，可以使用 \verb|sed 's/./& /g'|命令来完成此操作。这将把空格添加到密钥的每个字符之间。通过这个小技巧，Test 作业的步骤如下所示：
 
 \begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
 \scriptsize{
@@ -59,7 +59,7 @@ Test:
 \end{tcolorbox}
 
 \item 
-接下来，添加一个与负载测试环境相关联的新负载测试作业，并在first\_job之后执行：
+接下来，添加一个新的 Load-Test 作业，将其与 Load-Test 环境关联，并在 first\_job 之后执行：
 
 \begin{shell}
 Load-Test:
@@ -68,10 +68,10 @@ Load-Test:
   needs: first_job
 \end{shell}
 
-只需复制测试的步骤即可。无需更改任何内容。
+只需复制 Test 中的步骤即可，无需进行更改。
 
 \item 
-最后的工作是生产工作。除了名称外,环境属性还接受一个URL,后来将显示在工作流设计器中。将其设置为您想要的任何URL。为了显示工作流并行执行后如何再次合并, 我们将在测试和负载测试后运行生产:
+最后一个作业是 Production 作业。除了名称之外，environment 属性还接受一个 URL，该 URL 将在工作流程设计器中显示。将其设置为相应的 URL。为了展示在工作流程并行执行作业后如何再次合并，我们将在 Test 和 Load-Test 之后运行 Production：
 
 \begin{shell}
 Production:
@@ -82,31 +82,31 @@ Production:
   needs: [Test, Load-Test]
 \end{shell}
 
-只需复制以前的作业的步骤即可。
+只需复制前一个作业的步骤即可。
 
 \item 
-将您的更改提交主分支。工作流将自动运行。导航到新的工作流程运行并检查工作流设计器,该设计器很好地显示了并行执行。工作流将在执行生产之前暂停,并等待批准( 请参见图1.31):
+将更改提交到 main 分支，工作流程将自动运行。导航到新的工作流程运行并检查工作流程设计器，其很好地展示了并行执行。工作流程在执行 Production 之前将暂停，并等待批准（请参阅图 1.31）：
 
-\myGraphic{0.6}{content/chapter1/images/31.png}{图1.31  ---  工作流程将在带有所需审阅者的环境之前停止并等待批准}
+\myGraphic{0.6}{content/chapter1/images/31.png}{图1.31 --- 工作流程将在具有必需审查者的环境之前停止，并等待批准}
 
 \item 
-单击“查看部署”,检查生产并添加可选评论。单击批准并部署以开始执行生产作业(请参见图1.32):
+点击\textbf{Review deployment}(审查部署)，选中 \textbf{Production} 并添加可选评论。点击\textbf{Approve and deploy}(批准并部署)开始执行 Production 作业（见图 1.32）：
 
-\myGraphic{0.6}{content/chapter1/images/32.png}{图1.32  ---  批准受保护的环境}
+\myGraphic{0.6}{content/chapter1/images/32.png}{图1.32 --- 批准受保护的环境}
 
-工作流将完全执行,结果看起来像图1.33。请注意,URL显示在生产环境中。另外, 请注意工作流摘要中批准的历史:
+工作流将完全执行，结果应该看起来像图 1.33。请注意，URL 显示在 \textbf{Production} 环境中。同时，请注意工作流程摘要中的批准历史记录：
 
-\myGraphic{0.6}{content/chapter1/images/33.png}{图1.33  ---  工作流程的最后摘要}
+\myGraphic{0.6}{content/chapter1/images/33.png}{图1.33 --- 工作流的最终摘要}
 
-打开单个作业并检查我们添加的步骤的输出(请参见图1.34)。秘密和变量是从存储库中使用的,只有在我们将其设置在环境中时才被覆盖:
+打开各个作业并检查添加的步骤的输出（见图 1.34）。密钥和变量来自代码库，并且只有在设置环境时才会进行覆盖：
 
-\myGraphic{0.6}{content/chapter1/images/34.png}{图1.34  ---  生产秘密只有经批准后才能提供给生产环境使用}
+\myGraphic{0.6}{content/chapter1/images/34.png}{图1.34 --- 生产密钥只有在批准后才对生产环境可用}
 
 \end{enumerate}
 
 \mySubsubsection{1.8.3}{There’s more…}
 
-如果使用GitHub CLI为环境设置秘密或变量,则可以使用-{}-env(-e)参数指定它们。对于组织秘密,您将可见性(-{}-visibility或-v)设置为所有人,私人或选定。对于选定的,您必须使用-{}-repos(-r)指定一个或多个存储库:
+如果正在使用 GitHub CLI 为环境设置密钥或变量，可以使用 -{}-env (-e) 参数指定。对于组织密钥，可以将可见性 (-{}-visibility 或 -v) 设置为 all、private 或 selected。对于 selected,必须使用 -{}-repos (-r) 指定一个或多个代码仓库:
 
 \begin{shell}
 $ gh secret set secret-name --env environment-name
@@ -114,11 +114,11 @@ $ gh secret set secret-name --org org -v private
 $ gh secret set secret-name --org org -v selected -r repo
 \end{shell}
 
-环境的选项比我们在此食谱中使用的更多。您还可以配置一个等待计时器,该等待计时器将在该特定环境中执行部署作业之前暂停工作流程(最多30天)。
+环境比本指南中使用的选项更多。还可以配置一个等待计时器，在工作流执行特定环境的部署作业之前，将工作流暂停 n 分钟（最多 30 天）。
 
-还有一个名为“自定义部署保护规则”的新功能仍在beta中。此功能允许创建可以暂停您部署并等待特定条件的GitHub应用程序。 Datadog,Honeycomb,Sentry,New Relic和Service Now已经有应用程序(请参阅\url{https://doc.github.com/en/actions/deployment/deployment/protecting-deployments/configuring-configuring-configuring-custom-custom-deployment-protection-protection-protection-protection-protection-protection-protection-protection-custom-custom-customdeployment-prection-prection-prection-es})。我们将仔细研究第7章中的自定义部署规则,以GitHub操作发布您的软件。
+还有一个名为“自定义部署保护规则”的新功能仍处于测试阶段。此功能允许创建 GitHub 应用程序，该应用程序可以暂停部署并等待特定条件。 Datadog,Honeycomb,Sentry,New Relic和Service Now已经有应用程序(请参阅\url{https://doc.github.com/en/actions/deployment/deployment/protecting-deployments/configuring-configuring-configuring-custom-custom-deployment-protection-protection-protection-protection-protection-protection-protection-protection-custom-custom-customdeployment-prection-prection-prection-es})。
 
-环境保护规则的真正力量在于部署分支或标记规则。这可以限制不应用于分支保护规则的代码部署到某些环境。这可以包括所有类型的检查 --- 代码所有者批准、代码审查器、部署到某些其他环境、SonarQube质量门，以及许多其他自动代码检查(参见\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-inyour-repository/managing-protected-branches/about-protected-branches}获取更多信息)。
+环境保护规则的力量在于部署分支或标签规则，这可以限制不适用于分支保护规则的代码部署到某些环境。可以包括各种检查 - Codeowners 批准、代码审查者、部署到某些其他环境、SonarQube 质量门和其他许多自动代码检查(请参阅\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-inyour-repository/managing-protected-branches/about-protected-branches})。
 
 
 

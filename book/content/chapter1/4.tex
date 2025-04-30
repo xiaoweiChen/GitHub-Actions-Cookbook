@@ -1,16 +1,17 @@
-当您带上自己的计算时,在自主跑步者上运行工作流是完全免费的。 在公共存储库中运行工作流程也是免费的,即使在Github提供的强大跑步者上也是免费的。 Linux,Windows和MacOS以及不同尺寸的GitHub托管跑步者可用。如果您想用私人存储库来利用这些跑步者,则每分钟就会收取费用。不同的跑步者使用不同的分钟乘数(请参见表1.1)。在Linux上运行工作流程将减少每分钟免费的1分钟 - 如果您超过免费分钟,您将收取0.008美元的费用。 Windows在您的免费分钟内将燃烧的速度是两倍,之后每分钟燃烧的价格为0.08美元。
-MacOS在您的会议分钟内将燃烧的速度更快10倍,并且当您达到所包含的会议记录的限制时,每分钟收取0.016美元的费用:
+因为使用自己的计算资源，所以自我托管运行器上运行工作流完全免费。公共库中运行工作流也免费——即使在 GitHub 也是如此。GitHub 托管的运行器在 Linux、Windows 和 macOS 上可用,并且有不同的规格。如果想在私有库中使用这些运行器,将按分钟计费。不同的运行器使用不同的分钟乘数(见表 1.1)。在 Linux 上运行工作流程将每分钟消耗 1 分钟的免费时长——如果超出免费时长,则需支付 \$0.008。
+
+Windows 将以两倍的速度消耗免费时长,之后每分钟费用为 \$0.08。macOS 将以十倍的速度消耗时长,当达到包含的分钟数限制时,每分钟收费\$0.016
 
 % Please add the following required packages to your document preamble:
 % \usepackage{longtable}
 % Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
 \begin{longtable}{|l|l|l|}
 \hline
-\textbf{Operating system} & \textbf{Minute multiplier} & \textbf{Price per minute} \\ \hline
+\textbf{操作系统} & \textbf{分钟倍率} & \textbf{每分钟价格} \\ \hline
 \endfirsthead
 %
 \multicolumn{3}{c}%
-{{\bfseries Table \thetable\ continued from previous page}} \\
+{{\bfseries Table \thetable\ 上一页续}} \\
 \endhead
 %
 Linux                     & 1                          & \$0.008                   \\ \hline
@@ -19,23 +20,23 @@ macOS                     & 10                         & \$0.016                
 \end{longtable}
 
 \begin{center}
-表1.1  ---  Github托管跑步者的定价
+表1.1 --- GitHub 托管运行器的每分钟定价
 \end{center}
 
-这就是为什么我将Linux用于本书中的大多数示例的原因,以及为什么我始终鼓励客户在Lin ux上运行尽可能多的工作量。
+这就是为什么本书中的大多数示例中使用 Linux，并且我会鼓励我的客户尽可能在 Linux 上运行更多任务的原因。
 
-如果您使用GHEC或团队计划,并且需要具有更多功能的机器,那么您可以利用更大的Github托管跑步者。它们按分钟收费(请参见表1.2),并具有其他功能,例如静态IP范围:
+如果使用 GHEC 或团队计划，并且需要功能更强大的机器，可以使用更大的 GitHub 托管运行器。它们按分钟计费（见表 1.2），并具有静态 IP 范围等功能：
 
 % Please add the following required packages to your document preamble:
 % \usepackage{longtable}
 % Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
 \begin{longtable}{|l|l|l|l|}
 \hline
-\textbf{vCPUs} & \textbf{Linux} & \textbf{Windows} & \textbf{macOS} \\ \hline
+\textbf{虚拟CPU数量} & \textbf{Linux} & \textbf{Windows} & \textbf{macOS} \\ \hline
 \endfirsthead
 %
 \multicolumn{4}{c}%
-{{\bfseries Table \thetable\ continued from previous page}} \\
+{{\bfseries Table \thetable\ 上一页续}} \\
 \endhead
 %
 2              & \$0.008        & \$0.016          &                \\ \hline
@@ -49,15 +50,15 @@ macOS                     & 10                         & \$0.016                
 \end{longtable}
 
 \begin{center}
-表1.2  ---  较大跑步者的每分钟率
+表1.2 --- 更大运行器的每分钟费率
 \end{center}
 
-\begin{myTip}{私人网络}
-除静态IP范围外,您还可以使用Azure专用网络将Github托管的跑步者直接连接到您的资源。在撰写本文时,此功能仍在Beta中,可能会改变。有关更多信息,请参见以下链接: \url{https://docs.github.com/en/enterprise-cloud@latest/admin/configuration/configuringprivate-networking-for-hosted-compute-products/about-networkingfor-hosted-compute-products}
+\begin{myTip}{私有网络}
+除了静态 IP 范围，还可以使用 Azure 私有网络直接将 GitHub 托管的运行器连接到相关资源。在撰写本文时，此功能仍处于测试阶段，可能会发生变化。有关更多信息，请参阅以下链接： \url{https://docs.github.com/en/enterprise-cloud@latest/admin/configuration/configuringprivate-networking-for-hosted-compute-products/about-networkingfor-hosted-compute-products}
 \end{myTip}
 
-GitHub操作还消耗了存储 - 例如,用于日志,工作流伪像或缓存。如果您超过了随附的存储空间,则每天每GB的费用为0.008美元。
+GitHub Actions 还会消耗存储空间 --- 例如，用于日志、工作流程构件或缓存。如果超出包含的存储空间，将收取每天每 GB \$0.008 的费用。
 
-请记住,定价可能会发生变化,并请参阅GITHUB文档以获取最新信息(\url{https://docs.github.com/en/billing/managing-billing-forgithub-actions/about-billing-for-github-actions})。
+价格可能会变化，并参考 GitHub 文档以获取最新信息(\url{https://docs.github.com/en/billing/managing-billing-forgithub-actions/about-billing-for-github-actions})。
 
-并学习GitHub的操作并尝试工作流程 - 只需在公共存储库中做所有事情,您就不必付费,要么进行计算或存储。
+要学习 GitHub Actions 并尝试工作流程 --- 只需在公共库中执行所有操作，则无需支付计算或存储费用。

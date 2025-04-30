@@ -15,14 +15,14 @@ $ docker info | grep Architecture
 \item 
 前往 GitHub 上的一个代码仓库。你可以创建一个新的仓库，或者使用你在第 1 章中创建的 GitHubActionsCookbook 仓库。进入 Settings(设置) > Actions(操作) > Runners(运行器)(路径：/settings/actions/runners)，然后点击 New self-hosted runner(新建自托管运行器)(参见图 4.1)。这将引导你开始设置自己的自托管运行器。
 
-\myGraphic{0.4}{content/chapter4/images/1.png}{图4.1  ---  
+\myGraphic{0.4}{content/chapter4/images/1.png}{图4.1 --- 
 可以通过进入仓库的 Settings(设置) 区域来添加自托管运行器}
 
 这将重定向你到 /settings/actions/runners/new 页面。在这里，为运行器镜像选择 Linux 并根据你的 Docker 环境设置 Architecture(架构) 属性。
 
 请注意每个平台和处理器架构的不同脚本。你可以复制整个脚本用于虚拟机上的安装。然而，由于我们是在 Docker 容器中操作，我们将需要一些额外的步骤。请注意，你也可以单独复制某一行命令(参见图 4.2)。这种灵活性允许你根据实际需求调整安装过程，确保与你的 Docker 环境兼容。在进行容器化部署时，这些额外步骤可能包括修改 Dockerfile 或者调整容器的启动参数以正确配置自托管运行器。
 
-\myGraphic{0.4}{content/chapter4/images/2.png}{图4.2  ---  
+\myGraphic{0.4}{content/chapter4/images/2.png}{图4.2 --- 
 在不同平台上安装自托管运行器的脚本}
 
 \item 
@@ -85,7 +85,7 @@ $ export RUNNER_ALLOW_RUNASROOT="1"
 
 完成上述步骤后，你可以导航回到 Settings > Actions > Runners 查看新注册的运行器。你会看到运行器仍处于离线状态，因为我们还没有启动运行器进程(参见图 4.3)。接下来，你需要启动运行器服务以使它在线并开始接收任务。
 
-\myGraphic{0.4}{content/chapter4/images/3.png}{图4.3  ---  
+\myGraphic{0.4}{content/chapter4/images/3.png}{图4.3 --- 
 一个已配置但未运行的运行器会显示为 离线(Offline) 状态}
 
 \item 
@@ -123,7 +123,7 @@ jobs:
 \item 
 如果你现在停止(kill)你的容器，运行器将在 GitHub 上显示为离线状态。要移除它，请导航回 Settings > Actions > Runners，然后在对应运行器右侧的菜单中选择 Remove runner(参见图 4.4)。
 
-\myGraphic{0.4}{content/chapter4/images/4.png}{图4.4  ---  
+\myGraphic{0.4}{content/chapter4/images/4.png}{图4.4 --- 
 从 GitHub 中移除运行器}
 
 运行对话中提供的脚本来移除运行器：
@@ -221,7 +221,7 @@ $ docker run -d --rm -e RUNNER_NAME=Runner1 -e TOKEN={TOKEN} simple-ubuntu-runne
 
 您将在仓库的“设置”(Settings)区域看到运行器，如图 4.5 所示：
 
-\myGraphic{0.4}{content/chapter4/images/5.png}{图4.5  ---  通过多次运行相同的 Docker 镜像来获得临时运行器，这些运行器将等待传入的任务}
+\myGraphic{0.4}{content/chapter4/images/5.png}{图4.5 --- 通过多次运行相同的 Docker 镜像来获得临时运行器，这些运行器将等待传入的任务}
 
 \end{enumerate}
 

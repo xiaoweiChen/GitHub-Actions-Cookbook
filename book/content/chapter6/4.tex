@@ -25,7 +25,7 @@ https://github.com/OWNER/REPO/actions/workflows/FILE.yml/badge.svg
 
 该徽章将使用工作流程文件中的名称，并在预览中看起来像图 6.4：
 
-\myGraphic{0.4}{content/chapter6/images/4.png}{图6.4  ---  CI 工作流程的徽章}
+\myGraphic{0.4}{content/chapter6/images/4.png}{图6.4 --- CI 工作流程的徽章}
 
 但是，我们希望更进一步，在 README 中添加代码覆盖率的徽章，用代码覆盖率输出来注释拉取请求，并在工作流程中添加摘要。
 
@@ -87,11 +87,11 @@ $ gh pr create –fill
 
 这将触发带有拉取请求触发器的工作流程，您可以在工作流程运行中检查作业摘要，它应该看起来像图 6.5：
 
-\myGraphic{0.4}{content/chapter6/images/5.png}{图6.5  ---  在工作流程摘要中显示代码覆盖率结果}
+\myGraphic{0.4}{content/chapter6/images/5.png}{图6.5 --- 在工作流程摘要中显示代码覆盖率结果}
 
 摘要也被添加为拉取请求的评论(见图 6.6)：
 
-\myGraphic{0.4}{content/chapter6/images/6.png}{图6.6  ---  将代码覆盖率结果添加为拉取请求评论}
+\myGraphic{0.4}{content/chapter6/images/6.png}{图6.6 --- 将代码覆盖率结果添加为拉取请求评论}
 
 \item 
 代码覆盖率的徽章是在测试期间由 npm 包自动创建的。但为了添加徽章(即添加到 README)，我们需要一个地方来托管它。我们将为此使用 GitHub Pages。
@@ -171,7 +171,7 @@ $ gh merge -m
 \item 
 合并拉取请求后,推送到 main 分支将触发新的工作流程运行。完成后,您可以看到包含报告的网站的 URL(见图 6.7):
 
-\myGraphic{0.4}{content/chapter6/images/7.png}{图6.7  ---  检查 Pages 网站}
+\myGraphic{0.4}{content/chapter6/images/7.png}{图6.7 --- 检查 Pages 网站}
 
 \item 
 GitHub 创建的网站在目录的根目录中包含徽章。URL 看起来像这样：https://\{OWNER\}.github.io/package-recipe/badge.svg。Markdown 中的徽章 URL 将看起来像这样：
@@ -188,7 +188,7 @@ GitHub 创建的网站在目录的根目录中包含徽章。URL 看起来像这
 
 徽章将看起来像图 6.8，当您点击它时，您将被重定向到覆盖率报告：
 
-\myGraphic{0.4}{content/chapter6/images/8.png}{图6.8  ---  添加测试覆盖率徽章}
+\myGraphic{0.4}{content/chapter6/images/8.png}{图6.8 --- 添加测试覆盖率徽章}
   
 \end{enumerate}
 
@@ -250,11 +250,11 @@ cancel-in-progress 参数可用于在可用新版本时取消作业并运行该�
 
 自动验证代码并将详细信息带到对开发者有价值的地方非常重要。除了测试结果、代码覆盖率和代码检查工具之外，您还可以集成诸如 SonarQube 或 SonarCloud 之类的解决方案。它们提供了出色的 GitHub 集成，并且对开源项目免费。只需使用您的 GitHub 凭据登录，您就可以配置一个新项目。该项目允许您创建其他徽章，您可以将其添加到您的 README(见图 6.9)：
 
-\myGraphic{0.4}{content/chapter6/images/9.png}{图6.9  ---  在您的 GitHub README 中使用 SonarCloud 徽章}
+\myGraphic{0.4}{content/chapter6/images/9.png}{图6.9 --- 在您的 GitHub README 中使用 SonarCloud 徽章}
 
 Sonar 徽章提供了与您的拉取请求的出色集成，并且可以作为规则集和分支保护规则中的附加状态检查。质量门在拉取请求中报告(见图 6.10)：
 
-\myGraphic{0.4}{content/chapter6/images/10.png}{图6.10  ---  SonarCloud 质量门在拉取请求中的集成}
+\myGraphic{0.4}{content/chapter6/images/10.png}{图6.10 --- SonarCloud 质量门在拉取请求中的集成}
 
 要了解有关SonarCloud集成GitHub的更多信息，请参阅\url{https://docs.sonarsource.com/sonarcloud/getting-started/github/}。
 

@@ -15,7 +15,7 @@ $ git reset --hard HEAD
 
 您也可以在VS代码的GIT窗口中执行此操作(请参见图2.9)：
 
-\myGraphic{0.4}{content/chapter2/images/9.png}{图2.9  ---  丢弃您的本地更改}
+\myGraphic{0.4}{content/chapter2/images/9.png}{图2.9 --- 丢弃您的本地更改}
 
 \mySubsubsection{2.2.2}{How to do it…}
 
@@ -23,7 +23,7 @@ $ git reset --hard HEAD
 \item 
 在VS代码中,单击左下角的MAIN,选择+在命令调色板中创建新分支,输入新workfl ow作为新分支的名称,然后点击[Enter](见图2.10):
 
-\myGraphic{0.4}{content/chapter2/images/10.png}{图2.10  ---  在VS代码中创建一个新分支}
+\myGraphic{0.4}{content/chapter2/images/10.png}{图2.10 --- 在VS代码中创建一个新分支}
 
 另外，您也可以使用以下命令：
 
@@ -34,7 +34,7 @@ $ git switch -c new-workflow
 \item 
 在Explorer窗口中的VS代码中创建一个新的WorkFlow文件。找到并标记.github/WorkFl ow文件夹,然后单击新文件⋯图标。输入Developinbranch。 YML作为文件名,然后单击Enter(请参见图2.11):
 
-\myGraphic{0.4}{content/chapter2/images/11.png}{图2.11  ---  在VS代码中创建一个新的工作流文件}
+\myGraphic{0.4}{content/chapter2/images/11.png}{图2.11 --- 在VS代码中创建一个新的工作流文件}
 
 请注意,VS代码会自动检测到这是一个工作流文件。使用pull\_request和workflow\_dis patch触发器创建一个简单的工作流,该触发器将某些上下文值输出到控制台,如列表2.1:
 
@@ -58,7 +58,7 @@ jobs:
 \item 
 添加新文件(阶段更改)，输入提交消息并提交更改(请参见图2.12)：
 
-\myGraphic{0.4}{content/chapter2/images/12.png}{图2.12  ---  在VS Code中提交新文件}
+\myGraphic{0.4}{content/chapter2/images/12.png}{图2.12 --- 在VS Code中提交新文件}
 
 如果愿意，也可以使用命令行：
 
@@ -77,11 +77,11 @@ $ git push -u origin new-workflow
 \item 
 接下来,我们将为我们的新分支机构创建拉动请求。当我们使用pull\_request触发器时,这将自动运行我们的新工作流程。转到您的浏览器中的存储库,然后导航以拉出请求。git将检测到您已经推出了一个新分支,并将为您提供创建拉动请求的选项(比较和拉请请求,请参见图2.13):
 
-\myGraphic{0.4}{content/chapter2/images/13.png}{图2.13  ---  在浏览器中创建一个新的pull请求}
+\myGraphic{0.4}{content/chapter2/images/13.png}{图2.13 --- 在浏览器中创建一个新的pull请求}
 
 只需要保留默认的标题(你之前添加的提交信息)，然后点击Create pull request(见图2.14)：
 
-\myGraphic{0.4}{content/chapter2/images/14.png}{图2.14  ---  创建带有标题和描述的拉取请求}
+\myGraphic{0.4}{content/chapter2/images/14.png}{图2.14 --- 创建带有标题和描述的拉取请求}
 
 您还可以使用GitHub CLI创建拉动请求：
 
@@ -96,13 +96,13 @@ $ gh pr create --fill
 \item 
 打开您的拉请请求，并注意它已自动执行工作流程(请参见图2.15)：
 
-\myGraphic{0.4}{content/chapter2/images/15.png}{图2.15  ---  由于pull\_request触发器，工作流将自动运行}
+\myGraphic{0.4}{content/chapter2/images/15.png}{图2.15 --- 由于pull\_request触发器，工作流将自动运行}
 
 您还可以在“操作”选项卡中查看工作流,但是您无法手动运行工作流程。 即使使用WorkFlow\_DisPatch触发器,运行工作流的按钮也只有在将工作流与该触发器合并为MAIN时可用。之后,您还可以在分支上手动运行它。
 
 但是,您可以在VS代码中运行工作流程。在必要时使用右上角的刷新图标,打开GitHub操作扩展,并刷新工作流窗口。 现在,您应该看到新的工作流程,并且可以使用箭头按钮手动触发它(请参见图2.16):
 
-\myGraphic{0.4}{content/chapter2/images/16.png}{图2.16  ---  在VS Code中手动运行工作流}
+\myGraphic{0.4}{content/chapter2/images/16.png}{图2.16 --- 在VS Code中手动运行工作流}
 \end{enumerate}
 
 \mySubsubsection{2.2.3}{How it works…}

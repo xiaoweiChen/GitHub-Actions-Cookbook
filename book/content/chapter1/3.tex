@@ -1,17 +1,19 @@
-本书中的所有示例均在\url{https://github.com} - github的Software-as-a-Service(SaaS)产品上完成。注册GitHub是免费的,并为用户提供无限的私人和公共存储库。 GITHUB上几乎所有功能都可以免费用于开源项目(公共存储库),但它们可能需要私人存储库的付费许可证。在公共存储库中,您有无限的行动。这就是为什么在公共存储库中完成所有食谱很重要的原因 - 如果没有,您每月将迅速燃烧。
+本书中的所有示例可在 \url{https://github.com} 上完成，这是 GitHub 提供的“软件即服务”(SaaS)版本。注册 GitHub 完全免费，用户可以拥有无限的私有和公共库。
 
-GitHub的定价模型基于每月的每用户计费系统,由三个层组成:免费,团队和企业(见图1.2):
+对于开源项目(公共库)，GitHub 上几乎所有功能都可以免费使用；但对于私有仓库，则需要购买付费许可证。公共库中，对于 GitHub Actions的使用并无时间限制，建议将所有示例操作都在公共库中进行--- 否则，可能会迅速耗尽每月仅有 2,000 分钟的免费额度。
 
-\myGraphic{0.6}{content/chapter1/images/2.png}{图1.2  ---  GitHub定价层}
+GitHub 的定价模型按月进行计费，包含三个层级：免费版(Free)、团队版(Team) 和 企业版(Enterprise)(见图 1.2)：
 
-如前所述,公共存储库是完全免费的 - 包括GitHub动作,软件包和安全功能,例如Disperabot和Secret Scanning。私人存储库也是免费的,但仅具有有限的协作功能。它不包括受保护的分支机构,清算者和一些高级拉的请求功能。对于私人存储库,您可以在免费层中免费提供2,000分钟。 要释放协作功能,您需要以每月4美元的价格获得团队许可证。 然后,团队计划还包括3,000分钟的GitHub动作。
+\myGraphic{0.6}{content/chapter1/images/2.png}{图1.2 --- GitHub定价层级}
 
-GitHub Enterprise计划带来了所有企业功能,例如具有安全断言标记语言(SAML)的单登录(SSO)和用于跨域身份管理(SCIM),企业托管用户和IP允许列表的系统。它还配备了50,000分钟的GitHub操作,但每月每月的价格也21美元。
+如前所述，公共库完全免费 -- 包括 GitHub Actions、Packages 以及 Dependabot 和 Secret Scanning 等安全特性。私有库同样免费，但仅限于有限的协作功能，不包括受保护的分支、代码所有者(Codeowners)及一些高级拉取请求(PR)功能。对于私有库，免费版每月有 2,000 分钟的 GitHub Actions 使用额度。
 
-除SaaS产品外,GitHub还提供了自我托管的设备 - GitHub Enterprise Server(GHES)。它可用于Hyper-V,OpenStack KVM或VMware ESXI上的AWS,GCP,Azure或本地。 GHE仅适用于企业计划。您还可以将GHE与GitHub Enterprise Cloud(GHEC)相结合,并共享两个托管选项的许可。
+要解锁更多的协作功能，需要获取 团队版 许可证，每个用户每月费用为 4 美元。团队版 方案还包括 3,000 分钟的 GitHub Actions 使用时限。
 
-\begin{myTip}{GHES和GITHUB Actions}
-请记住,如果您运行GHES,则不能将GitHub托管跑步者用于工作流程。 您将必须为您的工作流提供自己的跑步者,并确保他们安全并清理工作流量。通常,这是在带有Actions Runner Controller(ARC - \url{https://github.com/actions/actions/actions-runner-controller})的Kubernetes上完成的。您将在工作流运行时第4章中了解更多有关此信息的信息。
+GitHub Enterprise 方案则提供了所有企业级特性，例如：通过 Security Assertion Markup Language (SAML) 和跨域身份管理系统 (SCIM) 实现的单点登录 (SSO)、企业托管用户和 IP 白名单等。还提供了 50,000 分钟的 GitHub Actions 使用时限 --- 但每位用户每月需支付 21 美元。
+
+\begin{myTip}{GHES 与 GitHub Actions}
+如果使用的是 GHES(GitHub Enterprise Server)，则无法使用 GitHub 托管的运行器来运行工作流。需要自行提供工作流所需的运行器，并确保其安全性，以及清理其工作流产生的产物(artifacts)。通常情况下，这可以通过 Kubernetes 配合 Actions Runner Controller(ARC – \url{https://github.com/actions/actions-runner-controller})完成。我们将在第 4 章中了解到更多。
 \end{myTip}
 
 

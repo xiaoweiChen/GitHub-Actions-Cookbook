@@ -9,7 +9,7 @@
 \item 
 前往 \url{https://github.com/actions/typescript-action}，然后点击右上角的 \textbf{Use this template | Create a new repository}(如图 3.6 所示)：
 
-\myGraphic{0.4}{content/chapter3/images/6.png}{图3.6  ---  从 typescript-action 模板创建一个新的仓库}
+\myGraphic{0.4}{content/chapter3/images/6.png}{图3.6 --- 从 typescript-action 模板创建一个新的仓库}
 
 \item 
 选择您的 GitHub 账户作为拥有者，将其命名为 TypeScriptActionRecipe，保持其可见性为 Public(公开)，然后点击 Create repository(创建仓库)。
@@ -189,11 +189,11 @@ Check dist (.github/workflows/check-dist.yml) 是一个简单的工作流，它�
 
 test-typescript 作业将会失败，因为我们没有调整单元测试，但第二个作业应该会成功。此时，您可以检查您的作业总结；它应该看起来像图 3.7 中所示的内容：
 
-\myGraphic{0.4}{content/chapter3/images/7.png}{图3.7  ---  使用工具包创建的作业总结}
+\myGraphic{0.4}{content/chapter3/images/7.png}{图3.7 --- 使用工具包创建的作业总结}
 
 另外，检查工作流日志中输出参数的值(请参见图3.8)：
 
-\myGraphic{0.4}{content/chapter3/images/8.png}{图3.8  ---  工作流日志中TypeScript动作的输出}
+\myGraphic{0.4}{content/chapter3/images/8.png}{图3.8 --- 工作流日志中TypeScript动作的输出}
 
 \begin{myTip}{修复单元测试}
 我并未在本书中包含调整单元测试的教程，因为本书的重点是 GitHub Actions 而不是 TypeScript。但如果您想修复测试，可以先查看以下示例：\url{https://github.com/wulfland/TypeScriptActionRecipe/blob/main/__tests__/main.test.ts}。
@@ -251,11 +251,11 @@ $ gh pr create --fill
 \item 
 检查您创建的拉取请求，并注意日志中来自 core.setFailed 和 core.error 的输出(参见图 3.9)：
 
-\myGraphic{0.4}{content/chapter3/images/9.png}{图3.9  ---  工作流日志中失败动作的输出}
+\myGraphic{0.4}{content/chapter3/images/9.png}{图3.9 --- 工作流日志中失败动作的输出}
 
 另外，请注意，注释在工作流文件中显示(请参见图3.10)：
 
-\myGraphic{0.4}{content/chapter3/images/10.png}{图3.10  ---  工具包的注释}
+\myGraphic{0.4}{content/chapter3/images/10.png}{图3.10 --- 工具包的注释}
 
 围绕 TypeScript 和工具包的工具使得开发 GitHub Actions 变得更加便捷，并且在编写高质量的动作时提供了巨大的帮助
 \end{enumerate}

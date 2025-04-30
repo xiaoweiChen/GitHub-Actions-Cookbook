@@ -9,7 +9,7 @@ Act取决于Docker运行工作流程。确保您正在运行Docker。
 
 首次运行ACT时,它将要求您选择用于默认的Docker映像。 它将将该信息保存到~/。actrc 有不同的图像。有可用的小图像(节点:16-buster-slim)只能支持Nodejs,仅此而已。大图像大小超过18 GB。请记住这一点。但是,借助当今的磁盘空间和互联网,您将使用大像获得最佳结果。对于当前的工作流程,您应该至少选择中型图像(请参见图2.25):
 
-\myGraphic{0.4}{content/chapter2/images/25.png}{图2.25  ---  在ACT的第一次运行中选择容器图像}
+\myGraphic{0.4}{content/chapter2/images/25.png}{图2.25 --- 在ACT的第一次运行中选择容器图像}
 
 \mySubsubsection{2.6.2}{How to do it…}
 
@@ -33,7 +33,7 @@ $ act pull_request
 
 工作流将以与服务器上的拉请求中的方式相同的方式执行和失败。结果应该看起来像图2.26：
 
-\myGraphic{0.4}{content/chapter2/images/26.png}{图2.26  ---  Workflow linting失败，与服务器上的错误相同}
+\myGraphic{0.4}{content/chapter2/images/26.png}{图2.26 --- Workflow linting失败，与服务器上的错误相同}
 
 不难看出，在将更改推送到服务器之前，能够本地运行您的工作流程是多么强大。然而，根据您的工作流程，结果可能并非 100\% 可靠，并且您可能需要使用一个超过 20GB 的大型 Docker 镜像。
 

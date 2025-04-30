@@ -16,7 +16,7 @@
 \item 
 将自己添加为必填审阅人(Required reviewer)，并且不要允许管理员绕过该规则(参见图 5.7)。
 
-\myGraphic{0.4}{content/chapter5/images/7.png}{图 5.7  ---  配置环境保护规则}
+\myGraphic{0.4}{content/chapter5/images/7.png}{图 5.7 --- 配置环境保护规则}
 
 \item 
 点击 Save protection rules(保存保护规则)。
@@ -60,7 +60,7 @@ Administration(管理): Read and write(读写)
 \item 
 返回到你的仓库中的 Environments(环境) 设置页面。添加一个新的密钥 PRIVATE\_KEY，内容为你之前下载的私钥文件内容。同时，添加一个 APP\_ID 变量，并填入你的应用的 ID(参见图 5.8)。
 
-\myGraphic{0.4}{content/chapter5/images/8.png}{图 5.8  ---  向环境中添加变量和密钥}
+\myGraphic{0.4}{content/chapter5/images/8.png}{图 5.8 --- 向环境中添加变量和密钥}
 
 \item 
 编辑你的工作流文件，添加一个额外的 create-repo 任务。让该任务依赖于前一个任务(needs: issue-ops)，并为其分配我们之前创建的环境(environment: repo-creation)：
@@ -152,16 +152,16 @@ steps:
 \item 
 提交并推送工作流文件，然后创建一个新的 Repository Request 问题。根据你的通知设置，你会收到一条通知，提示你审查该工作流，因为你已被配置为该环境的必填审阅人。该工作流效果如图 5.9 所示：
 
-\myGraphic{0.4}{content/chapter5/images/9.png}{图 5.9  ---  使用环境进行手动工作流审批}
+\myGraphic{0.4}{content/chapter5/images/9.png}{图 5.9 --- 使用环境进行手动工作流审批}
 
 \item 
 点击 Review deployments(审查部署),选择相应的环境,然后点击 Approve and deploy(批准并部署)(参见图 5.10)。
 
-\myGraphic{0.4}{content/chapter5/images/10.png}{图 5.10  ---  批准部署到环境}
+\myGraphic{0.4}{content/chapter5/images/10.png}{图 5.10 --- 批准部署到环境}
 
 工作流将会创建仓库，并通过在议题中发表评论的方式通知发起请求的用户(参见图 5.11)。
 
-\myGraphic{0.4}{content/chapter5/images/11.png}{图 5.11  ---  工作流使用议题评论通知用户仓库创建成功}
+\myGraphic{0.4}{content/chapter5/images/11.png}{图 5.11 --- 工作流使用议题评论通知用户仓库创建成功}
 
 检查链接是否有效以及仓库是否已正确创建。
 
@@ -287,7 +287,7 @@ $ gh project field-list <ID> --owner <OWNER> --format json | jq
 
 将这些内部 ID 作为变量存储在环境中，如图 5.12 所示。
 
-\myGraphic{0.4}{content/chapter5/images/12.png}{图 5.12  ---  使用内部项目 ID 来引用字段和选项}
+\myGraphic{0.4}{content/chapter5/images/12.png}{图 5.12 --- 使用内部项目 ID 来引用字段和选项}
 
 在工作流中添加一个额外的步骤，并设置以下环境变量：
 
@@ -349,11 +349,11 @@ gh project item-edit --id $issue_id \
 
 现在你可以在 GitHub Projects 中跟踪你的仓库请求状态(图 5.13)。
 
-\myGraphic{0.4}{content/chapter5/images/13.png}{图 5.13  ---  在 GitHub Projects 中跟踪 IssueOps 的状态}
+\myGraphic{0.4}{content/chapter5/images/13.png}{图 5.13 --- 在 GitHub Projects 中跟踪 IssueOps 的状态}
 
 每个议题的卡片上也会显示这些元数据(见图 5.14)。
 
-\myGraphic{0.4}{content/chapter5/images/14.png}{图 5.14  ---  GitHub Issues 中的 GitHub Projects 卡片}
+\myGraphic{0.4}{content/chapter5/images/14.png}{图 5.14 --- GitHub Issues 中的 GitHub Projects 卡片}
 
 GitHub Projects 非常适合用于跟踪议题状态，但使用 GraphQL API 或 CLI 对其进行自动化操作并不容易。然而，如果你希望在 IssueOps 方面做更多事情，这绝对是一个值得投入的方向。
 

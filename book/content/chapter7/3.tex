@@ -46,11 +46,11 @@ $ az ad sp create --id <appId>
 \item 
 接着,打开Azure门户,在Microsoft Entra中,找到“App registrations”下的release-recipe。在“Certificates \& secrets”|“Federated credentials”|“Add credentials”下添加OIDC信任。填写表单。将组织设置为您的GitHub用户名,输入存储库名称,并将实体类型选择为“Environment”(参见图7.1):
 
-\myGraphic{0.4}{content/chapter7/images/1.png}{图7.1  ---  在Microsoft Entra中连接您的GitHub账户}
+\myGraphic{0.4}{content/chapter7/images/1.png}{图7.1 --- 在Microsoft Entra中连接您的GitHub账户}
 
 为凭证命名并点击添加。记下release-recipe应用程序的应用程序(客户端)ID和目录租户ID(参见图7.2)。稍后您将需要这些信息:
 
-\myGraphic{0.4}{content/chapter7/images/2.png}{图7.2  ---  来自应用程序注册的客户端和租户ID}
+\myGraphic{0.4}{content/chapter7/images/2.png}{图7.2 --- 来自应用程序注册的客户端和租户ID}
 
 \item 
 然后,在工作订阅中为服务主体分配角色。在门户中打开订阅。在访问控制(IAM)| 角色分配 | 添加 | 添加角色分配下( Access control (IAM) | Role assignment | Add | Add role assignment),按照向导操作。选择角色 - 例如,贡献者 - 并点击下一步。选择用户、组或服务主体,并选择您之前创建的服务主体。
@@ -63,7 +63,7 @@ $ az ad sp create --id <appId>
 
 当使用OIDC时,您不必在GitHub中存储云凭据,您对工作流程可以访问的资源有更细粒度的控制,并且您有旋转的、短时效的令牌,这些令牌将在工作流程运行后过期。图7.3显示了OIDC工作原理的概述:
 
-\myGraphic{0.4}{content/chapter7/images/3.png}{图7.3  ---  与云提供商集成的OIDC}
+\myGraphic{0.4}{content/chapter7/images/3.png}{图7.3 --- 与云提供商集成的OIDC}
 
 步骤如下：
 

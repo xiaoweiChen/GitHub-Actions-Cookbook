@@ -10,14 +10,14 @@ GitHub Actions 的强大之处在于其社区 --- 分享即是关爱。因此，
 \item 
 在浏览器中导航到您仓库的根目录。GitHub 会检测到您的仓库包含一个 action.yml 文件，并会在蓝色横幅中建议您发布一个版本(见图 3.12)：
 
-\myGraphic{0.4}{content/chapter3/images/12.png}{图3.12  ---  起草一个发布版本以将操作发布到市场}
+\myGraphic{0.4}{content/chapter3/images/12.png}{图3.12 --- 起草一个发布版本以将操作发布到市场}
 
 这与进入 Releases 并点击 Draft a new release(/releases/new)是相同的。
 
 \item 
 在对话框中，GitHub 会显示一些警告，以帮助您改进市场列表(见图 3.13)：
 
-\myGraphic{0.4}{content/chapter3/images/13.png}{图3.13  ---  发布操作到市场的指南}
+\myGraphic{0.4}{content/chapter3/images/13.png}{图3.13 --- 发布操作到市场的指南}
 
 点击可用图标和颜色的链接，各选一个。我将选择铃铛(bell)和紫色(purple)。
 
@@ -42,12 +42,12 @@ author: 'Michael Kaufmann'
 \item 
 返回浏览器并刷新新版本发布窗口。检查应该现在没有任何警告，并且看起来像图 3.14 所示的内容：
 
-\myGraphic{0.4}{content/chapter3/images/14.png}{图3.14  ---  检查成功，因为该操作具有唯一的名称、品牌标识、描述以及一个 README 文件。}
+\myGraphic{0.4}{content/chapter3/images/14.png}{图3.14 --- 检查成功，因为该操作具有唯一的名称、品牌标识、描述以及一个 README 文件。}
 
 \item 
 单击选择标签，输入v1.0，然后单击创建新标签(请参见图3.15)：
 
-\myGraphic{0.4}{content/chapter3/images/15.png}{图3.15  ---  创建或选择一个标签以创建发布版本}
+\myGraphic{0.4}{content/chapter3/images/15.png}{图3.15 --- 创建或选择一个标签以创建发布版本}
 
 \item 
 将 v1.0 添加为发布的标题。请注意，您可以自动生成该版本的发布说明。然而，只有在使用拉取请求(pull requests)时，生成的结果才会非常好。您也可以手动添加描述。
@@ -55,7 +55,7 @@ author: 'Michael Kaufmann'
 \item 
 点击 Publish release(发布版本)。在发布的版本中，您将看到 Marketplace 和 Latest 标签(见图 3.16)：
 
-\myGraphic{0.4}{content/chapter3/images/16.png}{图3.16  ---  存储库中发行版的内容}
+\myGraphic{0.4}{content/chapter3/images/16.png}{图3.16 --- 存储库中发行版的内容}
 
 \item 
 单击市场标签。这将带您进入您的市场上市。
@@ -63,17 +63,17 @@ author: 'Michael Kaufmann'
 \item 
 请注意，在您的 action.yml 文件中 branding 部分指定的颜色和图标会显示在操作名称旁边。您仓库的 README.md 文件将构成市场列表的主要内容。在右侧，您会看到一个 Delist 按钮(用于将操作从市场中移除)、一个版本选择器以及一些重要链接。第一个链接会带您返回到您的仓库(有关列表区域的详细信息，请参见图 3.17)：
 
-\myGraphic{0.4}{content/chapter3/images/17.png}{图3.17  ---  市场上架}
+\myGraphic{0.4}{content/chapter3/images/17.png}{图3.17 --- 市场上架}
 
 \item 
 返回您的仓库，重复相同的步骤，创建一个名为 v1.1 的新版本。请注意，这次对话框中会有一个标志，显示这是最新的发布版本(见图 3.18)。如果您忘记了这一点，GitHub 将不会将该版本标记为最新版本 --- 这与您选择的版本号标签无关：
 
-\myGraphic{0.4}{content/chapter3/images/18.png}{图3.18  ---  在创建或编辑版本时，您必须手动将某个版本设置为最新版本。}
+\myGraphic{0.4}{content/chapter3/images/18.png}{图3.18 --- 在创建或编辑版本时，您必须手动将某个版本设置为最新版本。}
 
 \item 
 最后，创建一个新的工作流文件或在浏览器中编辑现有的工作流。在右侧的市场窗口中，输入您操作的名称。您的操作应该会立即被找到。请注意，GitHub 会根据您的发布版本自动生成安装说明(见图 3.19)：
 
-\myGraphic{0.4}{content/chapter3/images/19.png}{图3.17  ---  工作流编辑器中的列表}
+\myGraphic{0.4}{content/chapter3/images/19.png}{图3.17 --- 工作流编辑器中的列表}
 
 \item 
 如果您不想将其保存在市场上，则将其贴上您的动作，如图3.17所示。
