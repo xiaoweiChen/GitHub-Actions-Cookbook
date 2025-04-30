@@ -77,25 +77,25 @@ $ gh pr merge -m --auto
 一旦您的拉取请求被合并，转到您存储库的Code选项卡上的Releases，然后点击Draft a new Release。
 
 \item 
-点击“ Choose a tag”，输入 v1.0.0，然后点击“ Create new tag”。不要在 Markdown 中添加发布内容，只需点击Generate release notes（见图 6.14）：
+点击“ Choose a tag”，输入 v1.0.0，然后点击“ Create new tag”。不要在 Markdown 中添加发布内容，只需点击Generate release notes(见图 6.14)：
 
-\myGraphic{0.4}{content/chapter6/images/14.png}{图6.14 --- 为标签草拟新发布并生成发布说明}
+\myGraphic{0.4}{content/chapter6/images/14.png}{图6.14  ---  为标签草拟新发布并生成发布说明}
 
 这将根据您的拉取请求生成发布的详细信息。点击 Publish release以创建发布。发布应该看起来像图 6.15：
 
-\myGraphic{0.4}{content/chapter6/images/15.png}{图6.15 ---  GitHub 发布的详细信息}
+\myGraphic{0.4}{content/chapter6/images/15.png}{图6.15  ---   GitHub 发布的详细信息}
 
 \item 
-默认情况下，它还应该包含源代码作为 .zip 和 .tar 归档文件（见图 6.16）：
+默认情况下，它还应该包含源代码作为 .zip 和 .tar 归档文件(见图 6.16)：
 
-\myGraphic{0.4}{content/chapter6/images/16.png}{图6.16 --- 发布的资产包含源代码作为 .zip 和 .tar 归档文件}
+\myGraphic{0.4}{content/chapter6/images/16.png}{图6.16  ---  发布的资产包含源代码作为 .zip 和 .tar 归档文件}
 
 \item 
 发布的创建将触发工作流程,它将把版本 1.0.0 的软件包发布到您的存储库(请注意,这来自您的 package.json 文件,而不是标签!)。
 
 软件包看起来像图 6.17：
 
-\myGraphic{0.4}{content/chapter6/images/17.png}{图6.17 --- 存储库中的软件包}
+\myGraphic{0.4}{content/chapter6/images/17.png}{图6.17  ---  存储库中的软件包}
 
 它包含安装说明、有关您存储库的信息以及带有我们徽章的 README 文件。
 
@@ -115,16 +115,16 @@ $ gh pr merge -m --auto
 
 \begin{itemize}
 \item 
-主版本号（Major version）：一个数字标识符，如果不向后兼容且有破坏性更改，则该标识符会增加。更新到新的主版本号必须谨慎处理！主版本号为零表示初始开发。
+主版本号(Major version)：一个数字标识符，如果不向后兼容且有破坏性更改，则该标识符会增加。更新到新的主版本号必须谨慎处理！主版本号为零表示初始开发。
 
 \item 
-次版本号（Minor version）：一个数字标识符，如果添加了新功能，但版本与之前版本向后兼容，并且如果您需要新功能，可以更新而不会破坏任何内容，则该标识符会增加。
+次版本号(Minor version)：一个数字标识符，如果添加了新功能，但版本与之前版本向后兼容，并且如果您需要新功能，可以更新而不会破坏任何内容，则该标识符会增加。
 
 \item 
-补丁号（Patch）：一个数字标识符，如果您发布了向后兼容的错误修复，则该标识符会增加。应该始终安装新的补丁。
+补丁号(Patch)：一个数字标识符，如果您发布了向后兼容的错误修复，则该标识符会增加。应该始终安装新的补丁。
 
 \item 
-预发布版本（Pre-version）：使用连字符附加的文本标识符。标识符必须仅使用 ASCII 字母数字字符和连字符（[0-9A-Za-z-]）。文本越长，预发布版本越小（即 -alpha < -beta < -rc）。预发布版本始终小于正常版本（1.0.0-alpha < 1.0.0）。
+预发布版本(Pre-version)：使用连字符附加的文本标识符。标识符必须仅使用 ASCII 字母数字字符和连字符([0-9A-Za-z-])。文本越长，预发布版本越小(即 -alpha < -beta < -rc)。预发布版本始终小于正常版本(1.0.0-alpha < 1.0.0)。
 \end{itemize}
 
 有关完整规范，请参阅 \url{https://semver.org/}。
@@ -143,7 +143,7 @@ GitHub 发布是可以打包并供更广泛的受众下载和使用的可部署�
 
 \mySubsubsection{6.6.4}{There’s more…}
 
-软件的发布和版本控制很大程度上取决于您的工作流程——尤其是您如何处理分支和标签。在我们的示例中,我假设您通过直接创建发布来启动发布流程。您也可以使用推送标签来触发工作流程:
+软件的发布和版本控制很大程度上取决于您的工作流程 --- 尤其是您如何处理分支和标签。在我们的示例中,我假设您通过直接创建发布来启动发布流程。您也可以使用推送标签来触发工作流程:
 
 \begin{shell}
 on:

@@ -2,7 +2,7 @@
 
 \mySubsubsection{5.2.1}{Getting ready}
 
-我们将把问题模板添加到你在前几章中使用的仓库中。你可以将仓库克隆到本地并在 Visual Studio Code 中操作，或者你也可以直接在浏览器中完成这部分操作——这无关紧要。你可以参考我的仓库中的示例（\url{https://github.com/wulfland/GitHubActionsCookbook}）。
+我们将把问题模板添加到你在前几章中使用的仓库中。你可以将仓库克隆到本地并在 Visual Studio Code 中操作，或者你也可以直接在浏览器中完成这部分操作 --- 这无关紧要。你可以参考我的仓库中的示例(\url{https://github.com/wulfland/GitHubActionsCookbook})。
 
 \mySubsubsection{5.2.2}{How to do it…}
 
@@ -29,7 +29,7 @@ labels:
   - 'issue-ops'
 \end{shell}
 
-注意，这些标签必须存在于仓库中。如果它们不存在，请创建它们（可以使用 gh label list 来检查）：
+注意，这些标签必须存在于仓库中。如果它们不存在，请创建它们(可以使用 gh label list 来检查)：
 
 \begin{shell}
 $ gh label create repo-request
@@ -62,11 +62,11 @@ projects: 'wulfland/19
 请注意,创建问题的人需要对该项目具有写入权限。
 如果你没有项目,那么只需创建一个新项目。点击右上角的 + 图标,然后选择新建项目(见图 5.1)。
 
-\myGraphic{0.4}{content/chapter5/images/1.png}{图 5.1 --- 创建一个新项目}
+\myGraphic{0.4}{content/chapter5/images/1.png}{图 5.1  ---  创建一个新项目}
 
 为项目选择一个模板或从头开始。对于一个用于管理存储库请求的简单项目,你可以从一个简单的看板(Board)开始(见图 5.2)。
 
-\myGraphic{0.4}{content/chapter5/images/2.png}{图 5.2 --- 选择一个模板或从头开始}
+\myGraphic{0.4}{content/chapter5/images/2.png}{图 5.2  ---  选择一个模板或从头开始}
 
 例如“存储库请求”，然后点击创建项目(Create project)。从项目的 URL 中获取项目 ID：https://github.com/users/\{owner\}/projects/\{id\}。
 
@@ -108,13 +108,13 @@ kebab casing.'
 将文件提交到你的仓库。
 
 \item 
-现在，在“问题| 新建问题”(Issues | New issue)下，你可以挑选你的模板并点击开始(Get started)（见图 5.3）。
+现在，在“问题| 新建问题”(Issues | New issue)下，你可以挑选你的模板并点击开始(Get started)(见图 5.3)。
 
-\myGraphic{0.4}{content/chapter5/images/3.png}{图 5.3 --- 使用模板创建问题}
+\myGraphic{0.4}{content/chapter5/images/3.png}{图 5.3  ---  使用模板创建问题}
 
 请注意,标签、项目和被指派人会自动设置,控件也会渲染为必填字段,并设置为正确的默认值。
 
-\myGraphic{0.4}{content/chapter5/images/4.png}{图 5.4 --- 使用问题模板创建新问题,填写表单并保存新问题}
+\myGraphic{0.4}{content/chapter5/images/4.png}{图 5.4  ---  使用问题模板创建新问题,填写表单并保存新问题}
 
 填写表单并保存新问题。
 
@@ -122,7 +122,7 @@ kebab casing.'
 
 \mySubsubsection{5.2.3}{How it works…}
 
-问题和拉取请求模板是引导用户创建问题或拉取请求时的强大工具。你可以通过用户界面生成这些模板，使它们更容易被发现（参见GitHub文档：\url{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issuesand-pull-requests/syntax-for-issue-forms}）。模板可以是纯Markdown格式的，但使用本指南中提到的新自定义模板，你可以创建包含多种表单元素（如markdown、文本区域、输入框、下拉菜单和复选框）的丰富表单。你还可以添加验证并提供默认值。对于GitHub表单模式的完整语法，请参考此链接 \url{https://docs.github.com/en/communities/using-templates-toencourage-useful-issues-and-pull-requests/syntax-for-githubs-formschema}。请注意，在填写完表单后，数据将以Markdown形式添加到问题或拉取请求的正文中。模板仅在用户创建问题或拉取请求时支持他们，之后编辑时就只是Markdown了。
+问题和拉取请求模板是引导用户创建问题或拉取请求时的强大工具。你可以通过用户界面生成这些模板，使它们更容易被发现(参见GitHub文档：\url{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issuesand-pull-requests/syntax-for-issue-forms})。模板可以是纯Markdown格式的，但使用本指南中提到的新自定义模板，你可以创建包含多种表单元素(如markdown、文本区域、输入框、下拉菜单和复选框)的丰富表单。你还可以添加验证并提供默认值。对于GitHub表单模式的完整语法，请参考此链接 \url{https://docs.github.com/en/communities/using-templates-toencourage-useful-issues-and-pull-requests/syntax-for-githubs-formschema}。请注意，在填写完表单后，数据将以Markdown形式添加到问题或拉取请求的正文中。模板仅在用户创建问题或拉取请求时支持他们，之后编辑时就只是Markdown了。
 
 \mySubsubsection{5.2.4}{There’s more…}
 

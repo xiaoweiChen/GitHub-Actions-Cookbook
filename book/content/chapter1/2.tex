@@ -1,4 +1,4 @@
-GitHub围绕着分散的GIT版本控制系统(VCS)构建,该系统在改变软件的开发方式方面发挥了重要作用。但是,GitHub不仅仅是托管GIT存储库,而且已经发展成为一个整体DevOps平台,在以下领域具有功能:
+GitHub 基于去中心化的 Git 版本控制系统(VCS)构建，改变了软件开发的方式。而 GitHub 并不仅只是托管 Git 仓库的平台 --- 已经发展成为一个全面的 DevOps 平台，具备以下领域的功能：
 
 \begin{itemize}
 \item 
@@ -11,43 +11,43 @@ GitHub围绕着分散的GIT版本控制系统(VCS)构建,该系统在改变软�
 工作流和CI/CD 
 
 \item
-开发人员的生产率
+开发者生产力
 
 \item
-客户端应用程序
+客户端应用
 
 \item
-安全
+安全性
 \end{itemize}
 
-从一开始,Github就以开发人员为中心的方法优先考虑,从而使平台最重要的是Webhooks 和apis。开发人员可以利用其余或GraphQl API来操纵GitHub平台的所有方面。除此之外, 开发人员还可以将GitHub用作身份提供商(IDP)访问其应用程序。这种方法促进了与其他工具和平台的无缝集成,使Github成为当今的现状:世界构建软件的地方。
+GitHub 的初心是以开发者为中心，因此该平台高度重视 Webhook 和 API 的使用。开发者可以使用 REST 或 GraphQL API 来与 GitHub 平台进行互动。此外，开发者还可以将 GitHub 用作身份提供者(IdP，identity provider)，用于访问其应用。这种方式促进了与其他工具和平台的无缝集成，使 GitHub 成为一个全球开发者共建软件的平台。
 
-要了解GitHub动作的力量,必须考虑到可以使用它来自动化整个生态系统中的各种任务, 而不仅仅是代码。这包括以下内容:
+要理解 GitHub Actions 的强大功能，必须知道可以在整个生态系统中自动化的各种任务 --- 不仅限于代码。这包括：
 
 \begin{itemize}
 \item
-计划和跟踪:Github提供问题和里程碑,GitHub讨论以及用于计划和跟踪的GitHub项目。它还与其他流行的计划和跟踪解决方案(例如Jira,Trello或Azure Boards)无缝集成。
+计划与追踪：GitHub 提供了 Issues(问题)、Milestones(里程碑)、GitHub Discussions(讨论区)以及 GitHub Projects(项目管理)，用于进行项目规划和进度跟踪，还能与 Jira、Trello 或 Azure Boards 等计划与追踪工具无缝集成。
 
 \item
-客户端应用程序:GitHub提供了可视化工作室代码作为代码编辑器,可以直接在浏览器(\url{https://github.dev})中访问,iOS和Android平台的移动应用程序可以从任何地方进行协作,跨平台桌面应用程序,并且可且可固定的CLI可用。
+客户端应用：GitHub 提供了可直接在浏览器中访问的代码编辑器 Visual Studio Code(\url{https://github.dev})，还有适用于 iOS 和 Android 平台的移动应用，可随时随地参与协作，以及跨平台的桌面应用，并且 CLI(命令行接口)也具有良好的扩展性。
 
-它还与所有常见的IDS(例如Visual Studio,Visual Studio Code和Eclipse)以及Slack和Teams等流行的聊天平台集成在一起。
-
-\item
-安全性:GitHub Advanced Security通过DiDeNTABOT,秘密扫描和使用CodeQl的代码扫描提供软件供应链安全性。它还支持与Snyk,VeraCode或CheckMarx等工具的集成, 并且可以将其集成到Microsoft的DevOps中。
+GitHub 还集成了所有主流 IDE，如 Visual Studio、Visual Studio Code 和 Eclipse，并支持 Slack 和 Teams 等聊天平台。
 
 \item
-开发人员的生产力:GitHub提供了虚拟容器化的开发环境 - GitHub代码 - 以及GitHub Copilot,这是AI驱动的助手,可以帮助您编写和理解代码。 GitHub还提供代码搜索,命令调色板以及其他可以进一步提高开发人员生产率的功能。
+安全性：GitHub 高级安全(Advanced Security)提供软件供应链安全功能，包括 Dependabot、密钥扫描(Secret Scanning)，以及 CodeQL 的代码扫描。还可以与 Snyk、Veracode 或 Checkmarx 等工具集成，并集成到 Microsoft 的 Defender for DevOps 中。
 
 \item
-工作流和CI/CD:除了GitHub动作之外,GitHub还支持市场上大多数CI/CD工具。此外,GitHub使用Open ID Connect(OIDC)提供了与CI/CD工作流的所有主要云提供商的安全集成。 GitHub软件包提供了一个包装注册表,该包装登记处支持各种包装格式和本机NPM支持 - 但所有其他主要的软件包注册表也与GitHub集成在一起。
+开发者生产力：GitHub 能提供了一个虚拟的、基于容器的开发环境 --- GitHub Codespaces，以及由 AI 驱动的助手 GitHub Copilot，可以帮助开发者编写和理解代码。GitHub 还提供代码搜索、命令面板等功能，进一步提升开发者的生产力。
+
+\item
+工作流与 CI/CD：除了 GitHub Actions 外，GitHub 还支持市场上大多数 CI/CD 工具。此外，GitHub 提供了与各大云服务商的安全集成，通过 Open ID Connect (OIDC) 实现 CI/CD 工作流的身份验证。GitHub Packages 提供了一个支持多种包格式(包括原生 npm 支持)的包注册表 --- 而且所有主流的包注册表也都可以与 GitHub 集成。
 \end{itemize}
 
-GitHub动作可用于在整个GitHub生态系统上自动化任务并构建解决方案（见图1.1）：
+GitHub Actions 可用于在 GitHub 生态系统中自动化任务，并构建解决方案(见图 1.1)：
 
-\myGraphic{0.6}{content/chapter1/images/1.png}{图1.1 --- GitHub生态系统及其集成}
+\myGraphic{0.45}{content/chapter1/images/1.png}{图1.1 --- GitHub 生态系统及其集成}
 
-在本书中,我将提供所有主要领域的工作流程的实用食谱,以便您能够自动化各种现实世界的开发任务。
+在本书中，我将为提供所有主要领域的实用工作流示例，帮助各位读者自动化各种实际开发任务。
 
 
 

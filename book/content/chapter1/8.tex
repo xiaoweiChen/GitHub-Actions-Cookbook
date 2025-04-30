@@ -9,33 +9,33 @@
 
 \begin{enumerate}
 \item 
-导航到Settings | Environments，点击New environment（参见图1.25）：
+导航到Settings | Environments，点击New environment(参见图1.25)：
 
-\myGraphic{0.6}{content/chapter1/images/25.png}{图1.25 --- 存储库中的管理环境}
+\myGraphic{0.6}{content/chapter1/images/25.png}{图1.25  ---  存储库中的管理环境}
 
-输入名称生产，然后单击配置环境（请参见图1.26）：
+输入名称生产，然后单击配置环境(请参见图1.26)：
 
-\myGraphic{0.6}{content/chapter1/images/26.png}{图1.26 --- 创建一个新的环境}
+\myGraphic{0.6}{content/chapter1/images/26.png}{图1.26  ---  创建一个新的环境}
 
 \item 
-将自己添加为必需的审阅者，然后单击“保存保护规则”（请参见图1.27）：
+将自己添加为必需的审阅者，然后单击“保存保护规则”(请参见图1.27)：
 
-\myGraphic{0.6}{content/chapter1/images/27.png}{图1.27 --- 配置部署保护规则}
+\myGraphic{0.6}{content/chapter1/images/27.png}{图1.27  ---  配置部署保护规则}
 
 \item 
 在部署分支和标签下,选择选定的分支和标签,单击加号符号,并为主分支添加名称模式(请参见图1.28):
 
-\myGraphic{0.6}{content/chapter1/images/28.png}{图1.28 --- 配置部署分支和标签}
+\myGraphic{0.6}{content/chapter1/images/28.png}{图1.28  ---  配置部署分支和标签}
 
 \item 
 在环境秘密下,单击“添加秘密”,然后添加一个新的my\_secret Secret,其值Open Sesame (请参见图1.29)。使用添加变量重复此操作,然后添加WHO\_TO\_GREET变量与价值Production users:
 
-\myGraphic{0.6}{content/chapter1/images/29.png}{图1.29 --- 将秘密和变量添加到环境中}
+\myGraphic{0.6}{content/chapter1/images/29.png}{图1.29  ---  将秘密和变量添加到环境中}
 
 \item 
 重复步骤1,创建两个其他环境,测试和负载测试。我们将在接下来的步骤中使用这些环境来展示如何并行执行作业。您不必配置部署分支或必需的审阅者。只需添加一个带有相应值的WHO\_TO\_GREET变量即可。结果应该看起来像图1.30:
 
-\myGraphic{0.6}{content/chapter1/images/30.png}{图1.30 --- 存储库设置中的多个环境}
+\myGraphic{0.6}{content/chapter1/images/30.png}{图1.30  ---  存储库设置中的多个环境}
 
 \item 
 现在,返回工作流文件并进行编辑。在最新的Ubuntu映像上运行的First\_job下方添加一个新工作。我们将此工作与测试环境相关联。要在first\_job之后运行这项工作,我们使用需求属性并将其设置为我们依赖的作业:
@@ -87,20 +87,20 @@ Production:
 \item 
 将您的更改提交主分支。工作流将自动运行。导航到新的工作流程运行并检查工作流设计器,该设计器很好地显示了并行执行。工作流将在执行生产之前暂停,并等待批准( 请参见图1.31):
 
-\myGraphic{0.6}{content/chapter1/images/31.png}{图1.31 --- 工作流程将在带有所需审阅者的环境之前停止并等待批准}
+\myGraphic{0.6}{content/chapter1/images/31.png}{图1.31  ---  工作流程将在带有所需审阅者的环境之前停止并等待批准}
 
 \item 
 单击“查看部署”,检查生产并添加可选评论。单击批准并部署以开始执行生产作业(请参见图1.32):
 
-\myGraphic{0.6}{content/chapter1/images/32.png}{图1.32 --- 批准受保护的环境}
+\myGraphic{0.6}{content/chapter1/images/32.png}{图1.32  ---  批准受保护的环境}
 
 工作流将完全执行,结果看起来像图1.33。请注意,URL显示在生产环境中。另外, 请注意工作流摘要中批准的历史:
 
-\myGraphic{0.6}{content/chapter1/images/33.png}{图1.33 --- 工作流程的最后摘要}
+\myGraphic{0.6}{content/chapter1/images/33.png}{图1.33  ---  工作流程的最后摘要}
 
 打开单个作业并检查我们添加的步骤的输出(请参见图1.34)。秘密和变量是从存储库中使用的,只有在我们将其设置在环境中时才被覆盖:
 
-\myGraphic{0.6}{content/chapter1/images/34.png}{图1.34 --- 生产秘密只有经批准后才能提供给生产环境使用}
+\myGraphic{0.6}{content/chapter1/images/34.png}{图1.34  ---  生产秘密只有经批准后才能提供给生产环境使用}
 
 \end{enumerate}
 
@@ -118,7 +118,7 @@ $ gh secret set secret-name --org org -v selected -r repo
 
 还有一个名为“自定义部署保护规则”的新功能仍在beta中。此功能允许创建可以暂停您部署并等待特定条件的GitHub应用程序。 Datadog,Honeycomb,Sentry,New Relic和Service Now已经有应用程序(请参阅\url{https://doc.github.com/en/actions/deployment/deployment/protecting-deployments/configuring-configuring-configuring-custom-custom-deployment-protection-protection-protection-protection-protection-protection-protection-protection-custom-custom-customdeployment-prection-prection-prection-es})。我们将仔细研究第7章中的自定义部署规则,以GitHub操作发布您的软件。
 
-环境保护规则的真正力量在于部署分支或标记规则。这可以限制不应用于分支保护规则的代码部署到某些环境。这可以包括所有类型的检查——代码所有者批准、代码审查器、部署到某些其他环境、SonarQube质量门，以及许多其他自动代码检查（参见\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-inyour-repository/managing-protected-branches/about-protected-branches}获取更多信息）。
+环境保护规则的真正力量在于部署分支或标记规则。这可以限制不应用于分支保护规则的代码部署到某些环境。这可以包括所有类型的检查 --- 代码所有者批准、代码审查器、部署到某些其他环境、SonarQube质量门，以及许多其他自动代码检查(参见\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-inyour-repository/managing-protected-branches/about-protected-branches}获取更多信息)。
 
 
 

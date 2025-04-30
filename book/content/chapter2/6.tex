@@ -9,7 +9,7 @@ Act取决于Docker运行工作流程。确保您正在运行Docker。
 
 首次运行ACT时,它将要求您选择用于默认的Docker映像。 它将将该信息保存到~/。actrc 有不同的图像。有可用的小图像(节点:16-buster-slim)只能支持Nodejs,仅此而已。大图像大小超过18 GB。请记住这一点。但是,借助当今的磁盘空间和互联网,您将使用大像获得最佳结果。对于当前的工作流程,您应该至少选择中型图像(请参见图2.25):
 
-\myGraphic{0.4}{content/chapter2/images/25.png}{图2.25 --- 在ACT的第一次运行中选择容器图像}
+\myGraphic{0.4}{content/chapter2/images/25.png}{图2.25  ---  在ACT的第一次运行中选择容器图像}
 
 \mySubsubsection{2.6.2}{How to do it…}
 
@@ -33,7 +33,7 @@ $ act pull_request
 
 工作流将以与服务器上的拉请求中的方式相同的方式执行和失败。结果应该看起来像图2.26：
 
-\myGraphic{0.4}{content/chapter2/images/26.png}{图2.26 --- Workflow linting失败，与服务器上的错误相同}
+\myGraphic{0.4}{content/chapter2/images/26.png}{图2.26  ---  Workflow linting失败，与服务器上的错误相同}
 
 不难看出，在将更改推送到服务器之前，能够本地运行您的工作流程是多么强大。然而，根据您的工作流程，结果可能并非 100\% 可靠，并且您可能需要使用一个超过 20GB 的大型 Docker 镜像。
 
@@ -41,7 +41,7 @@ $ act pull_request
 
 Act 使用 Docker 容器来本地运行您的工作流程。它从.github/workflows/ 读取您的 GitHub Actions，并确定需要运行的一系列操作。根据工作流程文件中的定义，它使用 Docker API 来拉取或构建必要的镜像，然后基于所定义的依赖关系确定执行路径。一旦确定了执行路径，Act 就会使用 Docker API 根据之前准备好的镜像为每个操作运行容器。环境变量和文件系统都配置为与 GitHub 提供的相匹配。
 
-如果您的工作流程使用 GITHUB\_TOKEN，则需要提供一个个人访问令牌（PAT）；Act 将使用它来与 GitHub 进行通信。确保您提供的 PAT 拥有适当的权限以执行所需的操作。这样可以保证 Act 在处理涉及与 GitHub 交互的任务时不会遇到权限不足的问题。
+如果您的工作流程使用 GITHUB\_TOKEN，则需要提供一个个人访问令牌(PAT)；Act 将使用它来与 GitHub 进行通信。确保您提供的 PAT 拥有适当的权限以执行所需的操作。这样可以保证 Act 在处理涉及与 GitHub 交互的任务时不会遇到权限不足的问题。
 
 \begin{shell}
 $ act -s GITHUB_TOKEN=[insert personal access token]

@@ -5,7 +5,7 @@
 
 创建一个名为DockeractionRecipe的新存储库。使其公开,以免您使用任何动作分钟并使用数文件进行初始化(请参见图3.1):
 
-\myGraphic{0.4}{content/chapter3/images/1.png}{图3.1 --- 为Docker容器操作创建一个新的存储库}
+\myGraphic{0.4}{content/chapter3/images/1.png}{图3.1  ---  为Docker容器操作创建一个新的存储库}
 
 在本地克隆仓库并使用 VS Code 或 GitHub Codespaces 打开它。
 
@@ -30,7 +30,7 @@ CMD echo "Hello World"
 $ docker run $(docker build -q .)
 \end{shell}
 
-它将创建一个镜像（docker build）并运行它（docker run）。你应该能够在控制台上看到“Hello World”。
+它将创建一个镜像(docker build)并运行它(docker run)。你应该能够在控制台上看到“Hello World”。
 
 \item 
 要更加灵活,让我们将脚本代码移至自己的文件中。创建一个称为入门点的新文件.sh并添加以下内容:
@@ -51,21 +51,21 @@ ENTRYPOINT ["/entrypoint.sh"]
 \end{shell}
 
 \item 
-请注意，我添加了 \verb|chmod +x entrypoint.sh| 命令以使脚本可执行。否则，如果您尝试在本地运行容器，它将失败，并显示错误信息：\verb|exec: /entrypoint.sh": permission denied|（权限被拒绝）。在所有基于 Unix 的系统上，您可以直接运行 \verb|chmod +x entrypoint.sh|，该属性会在提交到 git 时附加到文件中。而在 Windows 上，您可以使用 git 来设置文件权限：
+请注意，我添加了 \verb|chmod +x entrypoint.sh| 命令以使脚本可执行。否则，如果您尝试在本地运行容器，它将失败，并显示错误信息：\verb|exec: /entrypoint.sh": permission denied|(权限被拒绝)。在所有基于 Unix 的系统上，您可以直接运行 \verb|chmod +x entrypoint.sh|，该属性会在提交到 git 时附加到文件中。而在 Windows 上，您可以使用 git 来设置文件权限：
 
 \begin{shell}
 $ git add entrypoint.sh
 $ git update-index --chmod=+x entrypoint.sh
 \end{shell}
   
-再次运行 Docker 容器。您应该会再次看到“Hello World”——这次是从脚本文件中输出的：
+再次运行 Docker 容器。您应该会再次看到“Hello World” --- 这次是从脚本文件中输出的：
 
 \begin{shell}
 $ docker run $(docker build -q .)
 \end{shell}
 
 \item 
-在动作中，我们希望使用一个输入参数。因此，我们将对脚本进行参数化。将单词 "World" 替换为传递给 Docker 的所有参数（使用 \$@ 表示所有参数）：
+在动作中，我们希望使用一个输入参数。因此，我们将对脚本进行参数化。将单词 "World" 替换为传递给 Docker 的所有参数(使用 \$@ 表示所有参数)：
 
 \begin{shell}
 #!/bin/sh -l
@@ -123,7 +123,7 @@ jobs:
 \item 
 提交并推送所有更改。推送触发器将自动运行您的工作流，您可以检查操作的输出结果。它应该如图 3.2 所示那样显示。
 
-\myGraphic{0.4}{content/chapter3/images/2.png}{图3.2 --- 工作流程中的动作输出}
+\myGraphic{0.4}{content/chapter3/images/2.png}{图3.2  ---  工作流程中的动作输出}
 
 通过Docker守护程序和传递给动作的参数检查动作的输出。
 \end{enumerate}
@@ -143,11 +143,11 @@ JavaScript动作
 复合动作
 \end{itemize}
 
-Docker 容器操作仅在 Linux 上运行，而 JavaScript 操作和复合操作可以在任何平台上使用。所有操作都由名为 action.yml（或 action.yaml）的文件定义，该文件包含了定义操作的元数据。此文件不能被命名为其他名称，意味着一个操作必须位于其自己的仓库或文件夹中。action.yml 文件中的 run 部分定义了操作的类型。
+Docker 容器操作仅在 Linux 上运行，而 JavaScript 操作和复合操作可以在任何平台上使用。所有操作都由名为 action.yml(或 action.yaml)的文件定义，该文件包含了定义操作的元数据。此文件不能被命名为其他名称，意味着一个操作必须位于其自己的仓库或文件夹中。action.yml 文件中的 run 部分定义了操作的类型。
 
-Docker 容器操作将其所有依赖项包含在容器内，因此非常一致。它们允许您使用任何编程语言开发操作——唯一的限制是它必须在 Linux 上运行。由于检索或构建镜像以及启动容器所需的时间，Docker 容器操作比 JavaScript 操作要慢。
+Docker 容器操作将其所有依赖项包含在容器内，因此非常一致。它们允许您使用任何编程语言开发操作 --- 唯一的限制是它必须在 Linux 上运行。由于检索或构建镜像以及启动容器所需的时间，Docker 容器操作比 JavaScript 操作要慢。
 
-Docker 容器操作可以引用容器注册表（如 Docker Hub 或 GitHub Packages）中的镜像，也可以在运行时构建您与其他操作文件一起提供的 Dockerfile。在这种情况下，您必须在 action.yml 文件中将镜像名称指定为 Dockerfile。
+Docker 容器操作可以引用容器注册表(如 Docker Hub 或 GitHub Packages)中的镜像，也可以在运行时构建您与其他操作文件一起提供的 Dockerfile。在这种情况下，您必须在 action.yml 文件中将镜像名称指定为 Dockerfile。
 
 \mySubsubsection{3.2.4}{There’s more…}
 

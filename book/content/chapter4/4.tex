@@ -77,13 +77,13 @@ $ kubectl get pods
 
 验证您是否可以在 GitHub 中看到该运行器(设置/操作/运行器)。请注意,每次工作流程运行后名称都会更改(见图 4.13):
 
-\myGraphic{0.4}{content/chapter4/images/13.png}{图4.13 --- GitHub 上的 ARC 运行器}
+\myGraphic{0.4}{content/chapter4/images/13.png}{图4.13  ---  GitHub 上的 ARC 运行器}
 
-运行你之前配方中的 .github/workflows/self-hosted.yml 工作流程，并检查输出。注意，它是在你的 AKS 集群中执行的（见图 4.14）：
+运行你之前配方中的 .github/workflows/self-hosted.yml 工作流程，并检查输出。注意，它是在你的 AKS 集群中执行的(见图 4.14)：
 
-\myGraphic{0.4}{content/chapter4/images/14.png}{图4.14 --- GitHub 上的 ARC 运行器}
+\myGraphic{0.4}{content/chapter4/images/14.png}{图4.14  ---  GitHub 上的 ARC 运行器}
 
-自托管的 GitHub Actions 工作流程由部署在 Kubernetes 集群中的 ARC（Actions Runner Controller）执行。
+自托管的 GitHub Actions 工作流程由部署在 Kubernetes 集群中的 ARC(Actions Runner Controller)执行。
 \end{enumerate}
 
 \mySubsubsection{4.4.3}{How it works…}
@@ -117,13 +117,13 @@ ARC 支持在企业、组织和仓库级别创建运行器。您可以使用 Git
 逃逸你的容器/沙盒或访问工作流程范围之外的文件
 
 \item 
-通过操纵依赖缓存（缓存投毒）来危害你的依赖项 
+通过操纵依赖缓存(缓存投毒)来危害你的依赖项 
 
 \item 
 窃取数据或机密并将其发送到控制服务器。
 \end{itemize}
 
-你可以在工作流中使用 StepSecurity 提供的 Harden-Runner 动作（\url{https://github.com/stepsecurity/harden-runner}）。它将根据诸如出站网络流量等策略监控你的工作流，例如：
+你可以在工作流中使用 StepSecurity 提供的 Harden-Runner 动作(\url{https://github.com/stepsecurity/harden-runner})。它将根据诸如出站网络流量等策略监控你的工作流，例如：
 
 \begin{shell}
 steps:
@@ -145,7 +145,7 @@ allowed-endpoints: >
 
 你可以在仪表板的“运行时安全”选项卡下访问安全洞察和运行时检测信息。
 
-请注意，这不是免费软件。对于 \url{https://github.com} 上的公共存储库，提供免费的社区许可证；但对于私有存储库或 GitHub Enterprise Server (GHES)，你需要购买许可证（详情请参见 \url{https://www.stepsecurity.io/pricing}）。
+请注意，这不是免费软件。对于 \url{https://github.com} 上的公共存储库，提供免费的社区许可证；但对于私有存储库或 GitHub Enterprise Server (GHES)，你需要购买许可证(详情请参见 \url{https://www.stepsecurity.io/pricing})。
 
 
 

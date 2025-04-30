@@ -36,9 +36,9 @@
 **内容包括**
 
 * 使用VS Code和Copilot编写和调试GitHub Actions工作流
-* 在GitHub提供的虚拟机（Linux、Windows和macOS）上运行工作流，或者在开发者的基础设施中托管运行器
+* 在GitHub提供的虚拟机(Linux、Windows和macOS)上运行工作流，或者在开发者的基础设施中托管运行器
 * 学习如何通过GitHub Actions保护工作流
-* 通过使用GitHub的强大工具（如CLI、API、SDK和访问令牌）自动化工作流以提高生产力
+* 通过使用GitHub的强大工具(如CLI、API、SDK和访问令牌)自动化工作流以提高生产力
 * 通过分阶段或环形部署，以安全可靠的方式部署至云和服务
 
 **适读人群**
@@ -48,7 +48,7 @@
 
 ## 作者简介
 
-Michael Kaufmann相信开发者和工程师能够在工作中感到快乐和高效。他热爱DevOps、GitHub、Azure和现代工作方式。Microsoft授予他Microsoft区域总监(RD)和Microsoft最有价值专家(MVP)称号——后者属于DevOps和GitHub类别。Michael同时也是德国Xebia Microsoft服务公司的创始人兼总经理，这是一家咨询公司，通过支持客户进行云、DevOps和数字化转型来帮助他们成为数字领导者。Michael通过书籍、培训，以及经常在国际会议上进行分享。
+Michael Kaufmann相信开发者和工程师能够在工作中感到快乐和高效。他热爱DevOps、GitHub、Azure和现代工作方式。Microsoft授予他Microsoft区域总监(RD)和Microsoft最有价值专家(MVP)称号 --- 后者属于DevOps和GitHub类别。Michael同时也是德国Xebia Microsoft服务公司的创始人兼总经理，这是一家咨询公司，通过支持客户进行云、DevOps和数字化转型来帮助他们成为数字领导者。Michael通过书籍、培训，以及经常在国际会议上进行分享。
 
 ## 本书相关
 
@@ -65,6 +65,8 @@ Michael Kaufmann相信开发者和工程师能够在工作中感到快乐和高�
   * 为了内容中表格和目录索引能正常生成，至少需要连续编译两次
 
   * Latex中的中文字体([思源宋体](https://github.com/notofonts/noto-cjk/releases))和英文字体([Hack](https://github.com/source-foundry/Hack-windows-installer/releases/tag/v1.6.0))，需要安装后自行配置。如何配置请参考主book/css.tex顶部关于字体的信息。
+
+  * 本书的Latex编译生成，在Windows 11中文版下测试通过。若在其他平台或不同语言版本遇到了Latex的编译问题，请自行解决。
 
 * vscode中配置LaTeX：https://blog.csdn.net/Ruins_LEE/article/details/123555016
 

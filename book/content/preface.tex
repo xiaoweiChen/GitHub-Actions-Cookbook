@@ -1,10 +1,10 @@
-随着来自世界各地的数百万开发人员，以各种类型和规模的项目在Github平台上进行进行合作，GitHub不仅仅是托管和共享代码的平台，它已成为开源社区的核心。借助GitHub操作，其拥有自己的工作流平台，可以自动化各种重复的工程任务 - 从从持续集成（CI）和持续部署（CD）到 IssueOps、问题的自动分类和 ChatOps。
+随着来自世界各地的数百万开发人员，以各种类型和规模的项目在Github平台上进行进行合作，GitHub不仅仅是托管和共享代码的平台，它已成为开源社区的核心。借助GitHub操作，其拥有自己的工作流平台，可以自动化各种重复的工程任务 - 从从持续集成(CI)和持续部署(CD)到 IssueOps、问题的自动分类和 ChatOps。
 
-本书将展示如何在日常生活中充分利用 GitHub Actions。这是一本实用的书 --- 会让你动手实践，并在每个示例中结合理论进行讲解。
+本书将展示如何在日常生活中充分利用 GitHub Actions。这是一本实用的书  ---  会让你动手实践，并在每个示例中结合理论进行讲解。
 
 \mySubsectionNoFile{}{适读人群}
 
-如果正在寻找一种学习GitHub动作的实用方法，那么本书将非常适合您，无论您是软件开发人员还是DevOps工程师。如果已经独自发挥了动作，但想了解更多；或有其他CI/CD工具的经验，例如Jenkins或Azure Pipelines；或者对于相关领域从未涉及 --- 没关系，本书会在这方面对您进行帮助。
+如果正在寻找一种学习GitHub动作的实用方法，那么本书将非常适合您，无论您是软件开发人员还是DevOps工程师。如果已经独自发挥了动作，但想了解更多；或有其他CI/CD工具的经验，例如Jenkins或Azure Pipelines；或者对于相关领域从未涉及  ---  没关系，本书会在这方面对您进行帮助。
 
 翻开本书之前，您应该至少了解一种编程或脚本语言、作为版本控制系统的Git，以及包括Docker、Linux和Windows文件系统、认证等知识。
 
@@ -12,52 +12,37 @@
 
 第1章，\textit{GitHub Actions工作流}，介绍GitHub Actions工作流及其功能，将学习YAML基础、触发工作流的事件和表达式，以及如何从市场中使用GitHub Actions进行任务的自动化。
 
-第2章，\textit{编写与调试工作流}，将介绍编写工作流的最佳实践：如何使用Visual Studio Code和GitHub Codespaces及各种插件，高效创建、编辑和运行工作流；使用强大的代码检查工具排查错误，在分支中开发工作流并在本地运行。还将会了解如何调试工作流，并启用高级日志记录。
+第2章，\textit{编写与调试工作流}，介绍编写工作流的最佳实践：如何使用Visual Studio Code和GitHub Codespaces及各种插件，高效创建、编辑和运行工作流；使用强大的代码检查工具排查错误，在分支中开发工作流并在本地运行。还将会了解如何调试工作流，并启用高级日志记录。
 
-第3章，\textit{构建GitHub Actions}，介绍不同类型的GitHub Actions，并了解如何使用输入和输出。这里，我们将编写自己的Docker容器动作、TypeScript动作和复合动作。
+第3章，\textit{构建GitHub Actions}，介绍不同类型的GitHub Actions，并了解如何使用输入和输出。将尝试自行编写Docker容器动作、TypeScript动作和复合动作。
 
-第4章工作流运行时，关于工作流的不同运行时选项。您将学习如何在Docker容器和Kuberne tes中使用GitHub Actions Controller(GHAC)在Docker容器和Kubernetes中使用不同的GitHu b托管跑步者，以及如何设置和扩展短暂的自托运动员。
+第4章，\textit{工作流运行时}，介绍了工作流的不同运行时选项。将了解如何使用由GitHub托管的运行器，以及如何在Docker容器和Kubernetes中使用GitHub Actions Controller (GHAC) 进行设置和扩展临时的、自托管的运行器。
 
-第5章，使用GitHub操作在GitHub中自动化任务，将向您展示如何使用essue-ops自动化GitHu b中常见任务。您将学习如何使用GitHub应用程序进行身份验证，使用GitHub\_Token和Work flow权限，使用GitHub CLI来自动化任务，使用环境进行批准和检查，并使用可重复使用的工作流和复合操作来共享工作流程和杂志的逻辑。
+第5章，\textit{使用GitHub Actions自动化任务}，将展示如何使用Issue-Ops在GitHub内自动化常见任务。将了解如何通过GitHub Apps进行身份验证，使用GITHUB\_TOKEN和工作流权限，使用GitHub CLI自动化任务，使用环境进行审批和检查，以及使用可重用的工作流和组合操作，在不同工作流和库之间共享逻辑。
 
-第6章构建和验证您的代码是关于CI的。您将学习如何使用相同的工作流程构建和测试代码的不同版本，使用CodeQl中的代码中的安全漏洞，将软件材料清单(SBOM)附加到您的版本中，自动化软件的版本操作，并使用缓存来加快工作流程。
+第6章，\textit{构建和验证代码}，主要介绍持续集成(CI)。将了解如何使用同一工作流构建和测试不同版本的代码，使用CodeQL查找代码中的安全漏洞，将软件物料清单(SBOM)添加到发布中，自动化软件版本控制，并使用缓存加快工作流的速度。
 
-第7章，使用GitHub操作发布您的软件，涵盖连续交付和连续部署。您将学习如何使用Open ID Connect(OIDC)安全地部署到云以及如何将容器部署到Kubernetes - 无论是Microsoft A zure Kubernetes服务(AKS)，Google Kubernetes Engine(GKE)还是Elastic Container Servi ces(ECS)。您还将学习如何将依赖关系与github操作一起使用，以完全自动化依赖关系的更新。
+第7章，\textit{使用GitHub Actions发布软件}，涵盖了持续交付和持续部署(CD)。将了解如何使用OpenID Connect (OIDC) 安全地部署到云端，以及如何将容器部署到Kubernetes  ---  无论是Microsoft Azure Kubernetes服务(AKS)、Google Kubernetes引擎(GKE)，还是Elastic Container Services(ECS)。此外，还将了解如何将Dependabot与GitHub Actions结合使用，以完全自动化更新依赖项。
 
 \mySubsectionNoFile{}{环境配置}
 
-您将需要以下内容：
+\begin{longtable}{|p{3cm}|p{12cm}|} % 设置列宽
+\hline
+\textbf{软件要求} & \textbf{操作系统} \\ \hline
+\endfirsthead
 
-% Please add the following required packages to your document preamble:
-% \usepackage{longtable}
-% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
-\begin{longtable}{|l|l|}
-  \hline
-  \textbf{\begin{tabular}[c]{@{}l@{}}Software/hardware\\ covered in the book\end{tabular}} &
-  \textbf{OS requirements} \\ \hline
-  \endfirsthead
-  %
-  \multicolumn{2}{c}%
-  {{\bfseries Table \thetable\ continued from previous page}} \\
-  \endhead
-  %
-  GitHub &
-    \begin{tabular}[c]{@{}l@{}}All operating systems are compatible. You will need an account\\ on https://github.com.\end{tabular} \\ \hline
-  \begin{tabular}[c]{@{}l@{}}Visual Studio\\ Code\end{tabular} &
-    \begin{tabular}[c]{@{}l@{}}All operating systems are compatible. If you want， you can use GitHub\\ Codespaces for all recipes. In this case， you don’t have to install anything\\ locally. If you want to work locally， then you’ll need Visual Studio Code\\ (https://code.visualstudio.com/download) and the\\ subsequent tools.\end{tabular} \\ \hline
-  Git &
-    \begin{tabular}[c]{@{}l@{}}Only required if you work locally. All operating systems are compatible.\\ You should have an up-to-date version of Git installed (at least\\ version 2.23).\end{tabular} \\ \hline
-  GitHub CLI &
-    \begin{tabular}[c]{@{}l@{}}Only required if you work locally. Install the GitHub CLI (https://\\ cli.github.com/).\end{tabular} \\ \hline
-  Node.js &
-    \begin{tabular}[c]{@{}l@{}}Only required if you work locally. You’ll need an up-to-date version of\\ Node.js (I’m using 21 at the time of writing). All operating systems are\\ compatible. Download the latest version here: https://nodejs.\\ org/en/download/current.\end{tabular} \\ \hline
-  Docker &
-    \begin{tabular}[c]{@{}l@{}}Only required if you work locally. Get Docker for all operating systems\\ here: https://docs.docker.com/get-docker/.\end{tabular} \\ \hline
-  \begin{tabular}[c]{@{}l@{}}Azure and the\\ Azure CLI\end{tabular} &
-    \begin{tabular}[c]{@{}l@{}}For some chapters， you’ll need an Azure account and the Azure CLI. A\\ free test version will be sufficient (https://azure.microsoft.\\ com/en-us/free). If you want to work locally， you’ll also need the\\ Azure CLI.\end{tabular} \\ \hline
-  \end{longtable}
+\multicolumn{2}{c}{{\bfseries Table \thetable\ 上一页续}} \\ \hline
+\endhead
 
-所有食谱都可以使用公共存储库中的免费GitHub帐户来完成。您可以使用github代码在虚拟环境中执行任何操作。这将消耗您每月的120个免费小时(与GitHub Pro一起使用180个小时)。请注意。使用免费时间后，您必须每分钟为代码付费。
+GitHub & 适用于所有操作系统，需要在 \url{https://github.com} 上拥有一个账户。 \\ \hline
+Visual Studio Code & 适用于所有操作系统。可以选择使用 GitHub Codespaces 来完成所有示例，无需配置本地环境。如果想要在本地进行实践，则需要安装 Visual Studio Code(下载地址：\url{https://code.visualstudio.com/download})以及其他一些后续的工具。 \\ \hline
+Git & 仅在本地实践时需要。适用于所有操作系统，应该安装最新版本的 Git(至少版本 2.23)。 \\ \hline
+Node.js & 仅在本地实践时需要。需要安装最新版本的 Node.js(本书撰写时使用的是版本21)。适用于所有操作系统，可以从这里下载最新版本：\url{https://nodejs.org/en/download/current}。 \\ \hline
+Docker & 仅在本地实践时需要。可以在此处获取适用于所有操作系统的 Docker：\url{https://docs.docker.com/get-docker/}。 \\ \hline
+Azure 和 Azure CLI & 某些章节需要一个 Azure 账户和 Azure CLI，免费试用版即可(\url{https://azure.microsoft.com/en-us/free})。如果想在本地进行实践，还需要安装 Azure CLI。\\ \hline
+\end{longtable}
+
+所有示例都可以使用免费的 GitHub 账户在公共仓库中完成。你可以使用 GitHub Codespaces 在虚拟环境中完成所有操作。这将消耗你每月 120 小时的免费时长(GitHub Pro 用户为 180 小时)，请注意这一点。一旦免费时长用尽，你将需要按分钟支付 Codespaces 的使用费用。
 
 \mySubsectionNoFile{}{下载源码}
 

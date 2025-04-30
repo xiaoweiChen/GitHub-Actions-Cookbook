@@ -1,4 +1,4 @@
-在本示例中，我们将使用环境审批（environment approvals），在创建仓库之前获取审批。我们还将使用一个 GitHub App 进行身份验证，因为通常在组织范围内创建仓库的操作无法通过 GITHUB\_TOKEN 完成。你必须使用一个 GitHub App 或具有适当权限范围的个人访问令牌（PAT）。
+在本示例中，我们将使用环境审批(environment approvals)，在创建仓库之前获取审批。我们还将使用一个 GitHub App 进行身份验证，因为通常在组织范围内创建仓库的操作无法通过 GITHUB\_TOKEN 完成。你必须使用一个 GitHub App 或具有适当权限范围的个人访问令牌(PAT)。
 
 \mySubsubsection{5.4.1}{Getting ready}
 
@@ -8,62 +8,62 @@
 
 \begin{enumerate}
 \item 
-在你的仓库中，进入 Settings（设置） → Environments（环境），然后点击 New environment（新建环境）。
+在你的仓库中，进入 Settings(设置) → Environments(环境)，然后点击 New environment(新建环境)。
 
 \item 
-将环境命名为 repo-creation，然后点击 Configure environment（配置环境）。
+将环境命名为 repo-creation，然后点击 Configure environment(配置环境)。
 
 \item 
-将自己添加为必填审阅人（Required reviewer），并且不要允许管理员绕过该规则（参见图 5.7）。
+将自己添加为必填审阅人(Required reviewer)，并且不要允许管理员绕过该规则(参见图 5.7)。
 
-\myGraphic{0.4}{content/chapter5/images/7.png}{图 5.7 --- 配置环境保护规则}
-
-\item 
-点击 Save protection rules（保存保护规则）。
+\myGraphic{0.4}{content/chapter5/images/7.png}{图 5.7  ---  配置环境保护规则}
 
 \item 
-下一步是创建一个应用进行身份验证。我们建议你使用一个组织来尝试本示例——当然你也可以使用个人账户。前往 \url{https://github.com/settings/apps}，然后点击 New GitHub App（新建 GitHub 应用）。
+点击 Save protection rules(保存保护规则)。
 
 \item 
-为其设置一个唯一名称（例如 \{你的用户名\}-repo-creation），并将 Homepage URL 设置为你的仓库地址。
+下一步是创建一个应用进行身份验证。我们建议你使用一个组织来尝试本示例 --- 当然你也可以使用个人账户。前往 \url{https://github.com/settings/apps}，然后点击 New GitHub App(新建 GitHub 应用)。
 
 \item 
-在 Repository permissions（仓库权限） 部分，选择以下权限：
+为其设置一个唯一名称(例如 \{你的用户名\}-repo-creation)，并将 Homepage URL 设置为你的仓库地址。
+
+\item 
+在 Repository permissions(仓库权限) 部分，选择以下权限：
 
 \begin{itemize}
 \item 
-Administration（管理）: Read and write（读写）
+Administration(管理): Read and write(读写)
 
 \item 
-Contents（内容）: Read and write（读写）
+Contents(内容): Read and write(读写)
 
 \item 
-Issues（议题）: Read and write（读写）
+Issues(议题): Read and write(读写)
 \end{itemize}
 
-在 Organization permissions（组织权限） 部分，选择：
+在 Organization permissions(组织权限) 部分，选择：
 
 \begin{itemize}
 \item 
-Administration（管理）: Read and write（读写）
+Administration(管理): Read and write(读写)
 \end{itemize}
 
 \item 
-点击 Save（保存） 应用。在你新创建的应用页面中，点击 Generate a private key（生成私钥）。私钥将会自动下载到你的本地设备。
+点击 Save(保存) 应用。在你新创建的应用页面中，点击 Generate a private key(生成私钥)。私钥将会自动下载到你的本地设备。
 
 \item 
-从应用的 General（常规） 页面复制 App ID。
+从应用的 General(常规) 页面复制 App ID。
 
 \item 
-在 GitHub 的应用页面中，选择 Install App 并点击 Install（安装）。选择你的组织或账户，点击 Install，保留默认的 All repositories（所有仓库） 选项，再次点击 Install。
+在 GitHub 的应用页面中，选择 Install App 并点击 Install(安装)。选择你的组织或账户，点击 Install，保留默认的 All repositories(所有仓库) 选项，再次点击 Install。
 
 \item 
-返回到你的仓库中的 Environments（环境） 设置页面。添加一个新的密钥 PRIVATE\_KEY，内容为你之前下载的私钥文件内容。同时，添加一个 APP\_ID 变量，并填入你的应用的 ID（参见图 5.8）。
+返回到你的仓库中的 Environments(环境) 设置页面。添加一个新的密钥 PRIVATE\_KEY，内容为你之前下载的私钥文件内容。同时，添加一个 APP\_ID 变量，并填入你的应用的 ID(参见图 5.8)。
 
-\myGraphic{0.4}{content/chapter5/images/8.png}{图 5.8 --- 向环境中添加变量和密钥}
+\myGraphic{0.4}{content/chapter5/images/8.png}{图 5.8  ---  向环境中添加变量和密钥}
 
 \item 
-编辑你的工作流文件，添加一个额外的 create-repo 任务。让该任务依赖于前一个任务（needs: issue-ops），并为其分配我们之前创建的环境（environment: repo-creation）：
+编辑你的工作流文件，添加一个额外的 create-repo 任务。让该任务依赖于前一个任务(needs: issue-ops)，并为其分配我们之前创建的环境(environment: repo-creation)：
 
 \begin{shell}
 create-repo:
@@ -152,16 +152,16 @@ steps:
 \item 
 提交并推送工作流文件，然后创建一个新的 Repository Request 问题。根据你的通知设置，你会收到一条通知，提示你审查该工作流，因为你已被配置为该环境的必填审阅人。该工作流效果如图 5.9 所示：
 
-\myGraphic{0.4}{content/chapter5/images/9.png}{图 5.9 --- 使用环境进行手动工作流审批}
+\myGraphic{0.4}{content/chapter5/images/9.png}{图 5.9  ---  使用环境进行手动工作流审批}
 
 \item 
 点击 Review deployments(审查部署),选择相应的环境,然后点击 Approve and deploy(批准并部署)(参见图 5.10)。
 
-\myGraphic{0.4}{content/chapter5/images/10.png}{图 5.10 --- 批准部署到环境}
+\myGraphic{0.4}{content/chapter5/images/10.png}{图 5.10  ---  批准部署到环境}
 
-工作流将会创建仓库，并通过在议题中发表评论的方式通知发起请求的用户（参见图 5.11）。
+工作流将会创建仓库，并通过在议题中发表评论的方式通知发起请求的用户(参见图 5.11)。
 
-\myGraphic{0.4}{content/chapter5/images/11.png}{图 5.11 --- 工作流使用议题评论通知用户仓库创建成功}
+\myGraphic{0.4}{content/chapter5/images/11.png}{图 5.11  ---  工作流使用议题评论通知用户仓库创建成功}
 
 检查链接是否有效以及仓库是否已正确创建。
 
@@ -211,15 +211,15 @@ environment:
 必需的审阅者：你可以列出最多六位用户或团队作为必需的审阅者来批准引用该环境的工作流任务。审阅者必须至少对仓库有读取访问权限。只需要一位必需的审阅者批准作业即可继续。
 
 \item 
-等待计时器：可以在最初触发作业后暂停工作流一段时间。时间（以分钟为单位）必须是介于 0 到 43,200（30天）之间的整数。你可以使用 API 在这段时间内取消工作流。
+等待计时器：可以在最初触发作业后暂停工作流一段时间。时间(以分钟为单位)必须是介于 0 到 43,200(30天)之间的整数。你可以使用 API 在这段时间内取消工作流。
 
 \item 
-部署分支和标签：使用部署分支和标签限制哪些分支和标签可以部署到环境。环境的部署分支和标签选项包括无限制、仅受保护的分支或选定的分支和标签。在设置中,你可以添加名称模式以针对单个或一组分支或标签——例如 main 或 release/*。将环境连接到分支保护规则非常强大,因为你可以为此设置更多的保护规则——比如强制执行代码所有者或特定环境的部署。
+部署分支和标签：使用部署分支和标签限制哪些分支和标签可以部署到环境。环境的部署分支和标签选项包括无限制、仅受保护的分支或选定的分支和标签。在设置中,你可以添加名称模式以针对单个或一组分支或标签 --- 例如 main 或 release/*。将环境连接到分支保护规则非常强大,因为你可以为此设置更多的保护规则 --- 比如强制执行代码所有者或特定环境的部署。
 \end{itemize}
 
 环境还具有特定的密钥和变量，允许你在同一个工作流中使用不同的配置。
 
-此外还有 自定义部署规则（Custom Deployment Rules） 来保护你的环境。本书撰写时，该功能仍处于公开测试阶段。自定义部署规则本质上是 GitHub Apps，它允许你编写自己的集成逻辑。这使得 Datadog、Honeycomb 和 ServiceNow 等服务可以为部署提供自动化审批。
+此外还有 自定义部署规则(Custom Deployment Rules) 来保护你的环境。本书撰写时，该功能仍处于公开测试阶段。自定义部署规则本质上是 GitHub Apps，它允许你编写自己的集成逻辑。这使得 Datadog、Honeycomb 和 ServiceNow 等服务可以为部署提供自动化审批。
 
 要了解更多关于环境的信息，请参阅：\url{https://docs.github.com/en/actions/ deployment/targeting-different-environments/using-environments-fordeployment}。
 
@@ -251,13 +251,13 @@ steps:
 
 \mySubsubsection{5.4.4}{There’s more…}
 
-Issue 是与用户交互的好方式——但你也可能希望将自动化的状态存储在其他地方。你可以选择更新一个 YAML 或 Markdown 文件，或者调用一个外部系统。
+Issue 是与用户交互的好方式 --- 但你也可能希望将自动化的状态存储在其他地方。你可以选择更新一个 YAML 或 Markdown 文件，或者调用一个外部系统。
 
 不过，你也可以使用 GitHub Projects 来可视化这些 Issue。这样，Issue 就代表了一个自动化对象在其生命周期中的状态。
 
 GitHub Projects 非常灵活，你可以在其中包含来自不同仓库的议题和拉取请求。这也意味着它相对复杂，你需要使用内部 ID 来引用字段。
 
-在修改工作流之前，先对你正在跟踪议题的项目运行以下命令（以我的为例，项目的 ID 是 19，所有者是 wulfland）：
+在修改工作流之前，先对你正在跟踪议题的项目运行以下命令(以我的为例，项目的 ID 是 19，所有者是 wulfland)：
 
 \begin{shell}
 $ gh project field-list <ID> --owner <OWNER> --format json | jq
@@ -287,7 +287,7 @@ $ gh project field-list <ID> --owner <OWNER> --format json | jq
 
 将这些内部 ID 作为变量存储在环境中，如图 5.12 所示。
 
-\myGraphic{0.4}{content/chapter5/images/12.png}{图 5.12 --- 使用内部项目 ID 来引用字段和选项}
+\myGraphic{0.4}{content/chapter5/images/12.png}{图 5.12  ---  使用内部项目 ID 来引用字段和选项}
 
 在工作流中添加一个额外的步骤，并设置以下环境变量：
 
@@ -301,7 +301,7 @@ $ gh project field-list <ID> --owner <OWNER> --format json | jq
     PROJECTOWNER: ${{ vars.PROJECT_OWNER}}
 \end{shell}
 
-首先，你需要获取项目的内部 ID，因为后续命令中需要用到它。普通的项目编号（数字）并不能在所有命令中使用：
+首先，你需要获取项目的内部 ID，因为后续命令中需要用到它。普通的项目编号(数字)并不能在所有命令中使用：
 
 \begin{shell}
 run: |
@@ -347,13 +347,13 @@ gh project item-edit --id $issue_id \
   --project-id $project_id
 \end{shell}
 
-现在你可以在 GitHub Projects 中跟踪你的仓库请求状态（图 5.13）。
+现在你可以在 GitHub Projects 中跟踪你的仓库请求状态(图 5.13)。
 
-\myGraphic{0.4}{content/chapter5/images/13.png}{图 5.13 --- 在 GitHub Projects 中跟踪 IssueOps 的状态}
+\myGraphic{0.4}{content/chapter5/images/13.png}{图 5.13  ---  在 GitHub Projects 中跟踪 IssueOps 的状态}
 
-每个议题的卡片上也会显示这些元数据（见图 5.14）。
+每个议题的卡片上也会显示这些元数据(见图 5.14)。
 
-\myGraphic{0.4}{content/chapter5/images/14.png}{图 5.14 --- GitHub Issues 中的 GitHub Projects 卡片}
+\myGraphic{0.4}{content/chapter5/images/14.png}{图 5.14  ---  GitHub Issues 中的 GitHub Projects 卡片}
 
 GitHub Projects 非常适合用于跟踪议题状态，但使用 GraphQL API 或 CLI 对其进行自动化操作并不容易。然而，如果你希望在 IssueOps 方面做更多事情，这绝对是一个值得投入的方向。
 

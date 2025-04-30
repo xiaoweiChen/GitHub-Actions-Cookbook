@@ -48,13 +48,13 @@ $GITHUB_STEP_SUMMARY
 \end{shell}
 
 \item 
-提交并推送所有更改。构建将自动运行并且应该会成功。检查工作流日志，确保输出参数已正确传递给后续步骤（请参见图 3.3）：
+提交并推送所有更改。构建将自动运行并且应该会成功。检查工作流日志，确保输出参数已正确传递给后续步骤(请参见图 3.3)：
 
-\myGraphic{0.4}{content/chapter3/images/3.png}{图3.3 --- Docker容器操作的输出}
+\myGraphic{0.4}{content/chapter3/images/3.png}{图3.3  ---  Docker容器操作的输出}
 
 另外,请查看摘要页面上的工作摘要,该页面已渲染了我们的Markdown/HTML(见3.4):
 
-\myGraphic{0.4}{content/chapter3/images/4.png}{图3.4 --- 工作流摘要页面上的工作摘要}
+\myGraphic{0.4}{content/chapter3/images/4.png}{图3.4  ---  工作流摘要页面上的工作摘要}
 
 \item 
 最后,我们要确保如果返回了意外的值,CI 构建会失败。打开 entrypoint.sh 文件,将 42 修改为其他值(例如 7)。
@@ -68,9 +68,9 @@ $ git push -u origin fail-ci-build
 $ gh pr create --fill
 \end{shell}
 
-拉取请求的检查将会失败，并且会注释对应的文件（如图 3.5 所示）：
+拉取请求的检查将会失败，并且会注释对应的文件(如图 3.5 所示)：
 
-\myGraphic{0.4}{content/chapter3/images/5.png}{图3.5 --- 如果输出值不符合预期，CI 构建将会使拉取请求失败。}
+\myGraphic{0.4}{content/chapter3/images/5.png}{图3.5  ---  如果输出值不符合预期，CI 构建将会使拉取请求失败。}
 
 请注意 GitHub 是如何标记更改并注释具体行的。
 
@@ -82,13 +82,13 @@ $ gh pr create --fill
 
 \mySamllsectionNoContent{环境文件}
 
-将输出值传递给后续步骤和作业是通过将名称-值对写入环境文件来实现的——即 \$GITHUB\_OUTPUT：
+将输出值传递给后续步骤和作业是通过将名称-值对写入环境文件来实现的 --- 即 \$GITHUB\_OUTPUT：
 
 \begin{shell}
 echo "{name}={value}" >> "$GITHUB_OUTPUT"
 \end{shell}
 
->{}> 操作符将名称-值对追加到文件的末尾。文件的路径和名称存储在 \$GITHUB\_OUTPUT 环境变量中。您可以通过步骤上下文（steps context）中步骤的 outputs 属性来访问该输出：
+>{}> 操作符将名称-值对追加到文件的末尾。文件的路径和名称存储在 \$GITHUB\_OUTPUT 环境变量中。您可以通过步骤上下文(steps context)中步骤的 outputs 属性来访问该输出：
 
 \begin{shell}
 "${{ steps.<step-id>.outputs.<name> }}"
@@ -125,7 +125,7 @@ steps:
 echo "{markdown content}" >> $GITHUB_STEP_SUMMARY
 \end{shell}
 
-步骤是相互隔离的，并且被限制为 1 MiB（1.04858 MB），以防止来自单个步骤的格式错误的 Markdown 影响后续步骤的 Markdown 渲染。工作总结最多可以包含来自 20 个步骤的内容，超出后的步骤输出将不会显示。
+步骤是相互隔离的，并且被限制为 1 MiB(1.04858 MB)，以防止来自单个步骤的格式错误的 Markdown 影响后续步骤的 Markdown 渲染。工作总结最多可以包含来自 20 个步骤的内容，超出后的步骤输出将不会显示。
 
 在接下来的教程中，我们将使用工具包向工作总结写入更复杂的内容。
 
@@ -133,7 +133,7 @@ echo "{markdown content}" >> $GITHUB_STEP_SUMMARY
 
 \mySamllsectionNoContent{表达式和有条件执行}
 
-在第 1 章和第 2 章中，我们使用了表达式（\$\{\{ ... \}\}）从上下文对象中输出值。在本教程中，我们在步骤的 if 属性中使用表达式来实现条件执行：
+在第 1 章和第 2 章中，我们使用了表达式(\$\{\{ ... \}\})从上下文对象中输出值。在本教程中，我们在步骤的 if 属性中使用表达式来实现条件执行：
 
 \begin{shell}
 - name: Test the container
@@ -167,7 +167,7 @@ echo "{markdown content}" >> $GITHUB_STEP_SUMMARY
 \end{longtable}
 
 \begin{center}
-表 3.1 --- 表达式运算符
+表 3.1  ---  表达式运算符
 \end{center}
 
 GitHub 提供了一组内置函数,您可以在表达式中使用它们。这些函数可以帮助您搜索字符串、格式化输出或处理数组。有关可用函数的列表,请参见表 3.2:
@@ -202,12 +202,12 @@ hashFiles(path) &
 \end{longtable}
 
 \begin{center}
-表3.2 --- GitHub中表达式的内置函数
+表3.2  ---  GitHub中表达式的内置函数
 \end{center}
 
 \mySubsubsection{3.3.4}{There’s more…}
 
-还有一些特殊函数可以用于检查当前作业的状态。在以下示例中，最后一个步骤仅会在作业的前一个步骤失败时执行——也就是说，它返回了一个非零值：
+还有一些特殊函数可以用于检查当前作业的状态。在以下示例中，最后一个步骤仅会在作业的前一个步骤失败时执行 --- 也就是说，它返回了一个非零值：
 
 \begin{shell}
 steps:

@@ -12,12 +12,12 @@
 在您的存储库中,导航到Settings | Secrets and Variables | Actions。您可以在存储库中查看所有现有的秘密,并且可以在Secrets(settings/
 secrets/actions)和Variables(settings/variables/actions;请参见图1.20)之间切换选项卡:
 
-\myGraphic{0.6}{content/chapter1/images/20.png}{图1.20 --- 为存储库配置秘密和变量}
+\myGraphic{0.6}{content/chapter1/images/20.png}{图1.20  ---  为存储库配置秘密和变量}
 
 \item 
-单击New repository secret 将打开New secret 对话框（settings/secrets/actions/new；请参见图1.21）：
+单击New repository secret 将打开New secret 对话框(settings/secrets/actions/new；请参见图1.21)：
 
-\myGraphic{0.6}{content/chapter1/images/21.png}{图1.21 --- 添加一个新秘密}
+\myGraphic{0.6}{content/chapter1/images/21.png}{图1.21  ---  添加一个新秘密}
 
 将my\_secret添加为秘密名称和一个随机单词,例如abracadabra作为秘密,然后单击“ Add secret”。秘密将在日志中掩盖!因此,不要使用可能在随机作业或步骤的其他输出中发生的常见单词。
 
@@ -33,7 +33,7 @@ secrets/actions)和Variables(settings/variables/actions;请参见图1.20)之间�
 \item 
 从上一个食谱打开.github/workflows/myfirstworkflow.yml文件,然后单击“编辑”图标(请参见图1.22):
 
-\myGraphic{0.6}{content/chapter1/images/22.png}{图1.22 --- 编辑myfirstworkflow.yml}
+\myGraphic{0.6}{content/chapter1/images/22.png}{图1.22  ---  编辑myfirstworkflow.yml}
 
 将单词World更改为\verb|${{vars.WHO_TO_GREET}}|表达式，并使用\verb|${{ secrets.MY_SECRET }} |添加新行:
 
@@ -48,7 +48,7 @@ secrets/actions)和Variables(settings/variables/actions;请参见图1.20)之间�
 \item 
 提交更改。工作流将自动运行。检查工作流日志中的输出。看起来应该像图1.23：
 
-\myGraphic{0.6}{content/chapter1/images/23.png}{图1.23 --- 日志中秘密和变量的输出}
+\myGraphic{0.6}{content/chapter1/images/23.png}{图1.23  ---  日志中秘密和变量的输出}
 
 \end{enumerate}
 
@@ -69,7 +69,7 @@ secrets/actions)和Variables(settings/variables/actions;请参见图1.20)之间�
 
 这三个级别像层次结构一样工作:您可以通过为同一键提供新值来覆盖较低级别的变量或秘密。图1.24说明了层次结构:
 
-\myGraphic{0.6}{content/chapter1/images/24.png}{图1.24 --- 配置变量和秘密的层次结构}
+\myGraphic{0.6}{content/chapter1/images/24.png}{图1.24  ---  配置变量和秘密的层次结构}
 
 组织的秘密和变量的工作方式与存储库相同。您可以在Settings | Secrets and variables | Actions下创建一个秘密或变量。新的组织秘密或变量可以具有以下访问策略:
 

@@ -46,7 +46,7 @@ runs-on: ubuntu-latest
 \end{shell}
 
 \item 
-为了与议题（issues）进行交互，工作流需要具有对议题的写权限。同时，为了使用 GitHub CLI，还需要对内容（contents）具有读权限：
+为了与议题(issues)进行交互，工作流需要具有对议题的写权限。同时，为了使用 GitHub CLI，还需要对内容(contents)具有读权限：
 
 \begin{shell}
 permissions:
@@ -83,7 +83,7 @@ repo_name=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.name.text')
 repo_dept=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.department.text')
 \end{shell}
 
-将两个变量与你的最终名称组合起来（在我们的例子中，部门是前缀）：
+将两个变量与你的最终名称组合起来(在我们的例子中，部门是前缀)：
 
 \begin{shell}
 repo_full_name=$repo_dept-$repo_name
@@ -116,7 +116,7 @@ if [ -z $repo_full_name ]; then
 fi;
 \end{shell}
 
-此外，再添加一条验证规则：名称只能使用字母数字字符和连字符（如果你希望使用短横线命名格式）：
+此外，再添加一条验证规则：名称只能使用字母数字字符和连字符(如果你希望使用短横线命名格式)：
 
 \begin{shell}
 # shall be alphanumeric and minus only
@@ -155,11 +155,11 @@ outputs:
 \end{shell}
 
 \item 
-现在，使用表单模板创建一个新的议题。开始时使用一个无效的名称（例如 my\_repo），看看它是如何向议题添加评论的（参见图 5.6）。
+现在，使用表单模板创建一个新的议题。开始时使用一个无效的名称(例如 my\_repo)，看看它是如何向议题添加评论的(参见图 5.6)。
 
-\myGraphic{0.4}{content/chapter5/images/6.png}{图 5.6 --- 从工作流中与议题互动}
+\myGraphic{0.4}{content/chapter5/images/6.png}{图 5.6  ---  从工作流中与议题互动}
 
-将名称修复为有效格式（例如 my-repo），然后再次为该议题添加 repo-request 标签。
+将名称修复为有效格式(例如 my-repo)，然后再次为该议题添加 repo-request 标签。
 
 \end{enumerate}
 
@@ -171,11 +171,11 @@ outputs:
 
 在每个工作流任务开始时,GitHub 会自动创建一个唯一的 GITHUB\_TOKEN,你可以在工作流中使用该令牌与 GitHub 进行交互。你可以使用此令牌在工作流任务中进行身份验证。
 
-你可以为个人账户、组织以及仓库配置默认权限——默认权限是只读的。最佳实践是保持这一默认设置即只读,并在工作流或任务中明确授予所需的权限。
+你可以为个人账户、组织以及仓库配置默认权限 --- 默认权限是只读的。最佳实践是保持这一默认设置即只读,并在工作流或任务中明确授予所需的权限。
 
 GITHUB\_TOKEN 的权限既可以在顶级键中配置,以应用于工作流中的所有任务,也可以在特定任务内进行配置。当你在特定任务内添加权限键时,该任务内使用 GITHUB\_TOKEN 的所有操作和运行命令都将获得你指定的访问权限。这样可以确保最小权限原则,提升安全性。
 
-对于每个可用的范围，你可以分配以下权限之一：read（读）、write（写）或 none（无）。
+对于每个可用的范围，你可以分配以下权限之一：read(读)、write(写)或 none(无)。
 
 \begin{myNotic}{Note}
 如果你为任何一个范围指定了访问权限，那么所有未明确指定的范围将自动设置为 none！
@@ -199,7 +199,7 @@ permissions: write-all
 permissions: {}
 \end{shell}
 
-在我们的示例中，我们需要对 issues 有写权限，并且 GitHub CLI 需要对内容（contents）有读权限：
+在我们的示例中，我们需要对 issues 有写权限，并且 GitHub CLI 需要对内容(contents)有读权限：
 
 \begin{shell}
 permissions:
@@ -211,7 +211,7 @@ permissions:
 
 \mySamllsectionNoContent{步骤和任务的输出}
 
-在第 3 章《构建 GitHub Action》中，你学习了环境文件（environment files）。我们在本示例中使用它们来设置输出内容，以便在后续的任务中使用。我们也通过环境文件访问表单解析器（form parser）提供的数据。
+在第 3 章《构建 GitHub Action》中，你学习了环境文件(environment files)。我们在本示例中使用它们来设置输出内容，以便在后续的任务中使用。我们也通过环境文件访问表单解析器(form parser)提供的数据。
 
 表单解析器是一个来自 Marketplace 的 Action，它帮助我们解析使用议题模板创建的议题正文内容。我们通过设置 id 来访问它的输出结果：
 
@@ -222,7 +222,7 @@ steps:
   uses: zentered/issue-forms-body-parser@v2.0.0
 \end{shell}
 
-在 JavaScript 中（例如在 GitHub Script Action 中），你可以直接访问 JSON 对象：
+在 JavaScript 中(例如在 GitHub Script Action 中)，你可以直接访问 JSON 对象：
 
 \begin{shell}
 console.log(data.name.text);
@@ -246,7 +246,7 @@ env:
   GH_TOKEN: ${{ github.token }}
 \end{shell}
 
-使用 CLI 非常简单——我们可以利用 @ 加用户名的方式来在评论中提及用户：
+使用 CLI 非常简单 --- 我们可以利用 @ 加用户名的方式来在评论中提及用户：
 
 \begin{shell}
 mention="@${{ github.event.issue.user.login }}: "

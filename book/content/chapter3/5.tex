@@ -1,5 +1,5 @@
 
-除了 Docker 容器操作和 JavaScript/TypeScript 操作之外，还有第三种操作类型——复合操作（Composite Actions）。复合操作可以封装其他操作。在这个指南中，你将创建一个简单的复合操作，并在工作流中使用它——既可以与 Bash 脚本配合使用，也可以与 GitHub 脚本一起使用。
+除了 Docker 容器操作和 JavaScript/TypeScript 操作之外，还有第三种操作类型 --- 复合操作(Composite Actions)。复合操作可以封装其他操作。在这个指南中，你将创建一个简单的复合操作，并在工作流中使用它 --- 既可以与 Bash 脚本配合使用，也可以与 GitHub 脚本一起使用。
 
 \mySubsubsection{3.5.1}{Getting ready}
 
@@ -17,7 +17,7 @@ description: 'Greets the user and returns 42.'
 \end{shell}
 
 \item 
-在 action.yml 文件中添加一个名为 who-to-greet 的输入和一个名为 answer 的输出。请注意，要访问输出，您需要步骤 ID（step ID），我们将在下一步中添加它:
+在 action.yml 文件中添加一个名为 who-to-greet 的输入和一个名为 answer 的输出。请注意，要访问输出，您需要步骤 ID(step ID)，我们将在下一步中添加它:
 
 \begin{shell}
 inputs:
@@ -57,7 +57,7 @@ name: CI Workflow
 on: [push, pull_request]
 \end{shell}
 
-在工作流文件中添加一个作业（job），该作业会检出仓库并运行复合操作，同时传递一个输入参数。为步骤指定一个 ID，以便访问输出。以下是完整的配置示例：
+在工作流文件中添加一个作业(job)，该作业会检出仓库并运行复合操作，同时传递一个输入参数。为步骤指定一个 ID，以便访问输出。以下是完整的配置示例：
 
 \begin{shell}
 jobs:
@@ -87,9 +87,9 @@ jobs:
 
 \mySubsubsection{3.5.3}{How it works…}
 
-复合操作是步骤和其他操作的封装器。您可以使用它们来捆绑多个运行命令或操作——无论这些操作是由您自己创建的还是来自市场上的——并且您可以为组织中的用户提供其他操作的默认值。
+复合操作是步骤和其他操作的封装器。您可以使用它们来捆绑多个运行命令或操作 --- 无论这些操作是由您自己创建的还是来自市场上的 --- 并且您可以为组织中的用户提供其他操作的默认值。
 
-在 action.yml 文件的 runs 部分中，复合操作包含了步骤——就像您在普通工作流中设置的一样。您可以使用 inputs 上下文访问输入参数。输出参数可以通过步骤的 outputs 上下文，在 steps 上下文中访问。
+在 action.yml 文件的 runs 部分中，复合操作包含了步骤 --- 就像您在普通工作流中设置的一样。您可以使用 inputs 上下文访问输入参数。输出参数可以通过步骤的 outputs 上下文，在 steps 上下文中访问。
 
 \mySubsubsection{3.5.4}{There’s more…}
 

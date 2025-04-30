@@ -361,15 +361,15 @@
 % Latex如何在文本模式批量处理下划线
 % https://zhuanlan.zhihu.com/p/615108006
 
-% 判断是否为 macOS（Apple Color Emoji 存在）
+% 判断是否为 macOS(Apple Color Emoji 存在)
 \IfFontExistsTF{Apple Color Emoji}{
 \newfontfamily\emojifont{Apple Color Emoji}
 }{
-    % 判断是否为 Windows（Segoe UI Emoji 存在）
+    % 判断是否为 Windows(Segoe UI Emoji 存在)
 \IfFontExistsTF{Segoe UI Emoji}{
     \newfontfamily\emojifont{Segoe UI Emoji}
 }{
-    % 否则可能是 Linux（Noto Color Emoji）
+    % 否则可能是 Linux(Noto Color Emoji)
     \IfFontExistsTF{Noto Color Emoji}{
         \newfontfamily\emojifont{Noto Color Emoji}
     }{

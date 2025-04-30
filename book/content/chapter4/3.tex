@@ -8,44 +8,44 @@
 
 \begin{enumerate}
 \item 
-前往 https://github.com/settings/apps。点击 New GitHub App（新建 GitHub 应用）。
+前往 https://github.com/settings/apps。点击 New GitHub App(新建 GitHub 应用)。
 
 \item 
-将 GitHub App Name 设置为 auto-scale-runners，并将 Homepage URL 设置为您正在使用的仓库的 URL（参见图 4.6）：
+将 GitHub App Name 设置为 auto-scale-runners，并将 Homepage URL 设置为您正在使用的仓库的 URL(参见图 4.6)：
 
-\myGraphic{0.4}{content/chapter4/images/6.png}{图4.6 --- 设置新应用的名称和URL}
-
-\item 
-跳过 Identifying and authorizing users（识别和授权用户）以及 Post installation（安装后）部分，直接进入 Webhook 配置。
+\myGraphic{0.4}{content/chapter4/images/6.png}{图4.6  ---  设置新应用的名称和URL}
 
 \item 
-打开另一个浏览器标签页，访问 \url{https://smee.io}，然后点击 Start new channel（启动新频道）。复制生成的 Webhook Proxy URL 值。
+跳过 Identifying and authorizing users(识别和授权用户)以及 Post installation(安装后)部分，直接进入 Webhook 配置。
 
 \item 
-返回到创建 GitHub 应用的标签页，将刚刚复制的 Webhook Proxy URL 粘贴到 Webhook URL 字段中。在 Webhook secret 字段中设置一个您以后能记住的字符串（参见图 4.7）。
-
-\myGraphic{0.4}{content/chapter4/images/7.png}{图4.7 ---  配置Webhook}
+打开另一个浏览器标签页，访问 \url{https://smee.io}，然后点击 Start new channel(启动新频道)。复制生成的 Webhook Proxy URL 值。
 
 \item 
-在 Permissions（权限） 下的 Repository permissions（仓库权限） 中，将 Actions（操作） 设置为 Read-only（只读），并将 Administration（管理） 设置为 Read and write（读写）（参见图 4.8）。
+返回到创建 GitHub 应用的标签页，将刚刚复制的 Webhook Proxy URL 粘贴到 Webhook URL 字段中。在 Webhook secret 字段中设置一个您以后能记住的字符串(参见图 4.7)。
 
-\myGraphic{0.4}{content/chapter4/images/8.png}{图4.8 --- 配置应用程序的存储库权限}
-
-\item 
-在 Subscribe to events（订阅事件） 部分，勾选 Workflow job（工作流作业）（参见图 4.9）。
-
-\myGraphic{0.4}{content/chapter4/images/9.png}{图4.9 --- 订阅 Workflow job Webhook 事件}
+\myGraphic{0.4}{content/chapter4/images/7.png}{图4.7  ---   配置Webhook}
 
 \item 
-在 Where can this GitHub App be installed（此 GitHub 应用可以安装在哪里） 下，选择 Only on this account（仅在此账户上），然后点击 Create GitHub App（创建 GitHub 应用）。
+在 Permissions(权限) 下的 Repository permissions(仓库权限) 中，将 Actions(操作) 设置为 Read-only(只读)，并将 Administration(管理) 设置为 Read and write(读写)(参见图 4.8)。
+
+\myGraphic{0.4}{content/chapter4/images/8.png}{图4.8  ---  配置应用程序的存储库权限}
 
 \item 
-在您新创建的应用中，点击 Generate a private key（生成私钥）。私钥将会自动下载。将其移动到您的仓库中。
+在 Subscribe to events(订阅事件) 部分，勾选 Workflow job(工作流作业)(参见图 4.9)。
+
+\myGraphic{0.4}{content/chapter4/images/9.png}{图4.9  ---  订阅 Workflow job Webhook 事件}
 
 \item 
-从应用的 General（通用） 标签页中复制 App ID 值（参见图 4.10）。
+在 Where can this GitHub App be installed(此 GitHub 应用可以安装在哪里) 下，选择 Only on this account(仅在此账户上)，然后点击 Create GitHub App(创建 GitHub 应用)。
 
-\myGraphic{0.4}{content/chapter4/images/10.png}{图4.10 --- 获取 App ID 值}
+\item 
+在您新创建的应用中，点击 Generate a private key(生成私钥)。私钥将会自动下载。将其移动到您的仓库中。
+
+\item 
+从应用的 General(通用) 标签页中复制 App ID 值(参见图 4.10)。
+
+\myGraphic{0.4}{content/chapter4/images/10.png}{图4.10  ---  获取 App ID 值}
 
 \item 
 在您的存储库中，创建一个名为 .env 的新文件，并添加 APP\_ID、WEBHOOK\_SECRET 和 PRIVATE\_KEY\_PATH 变量，赋予它们相应的值：
@@ -66,14 +66,14 @@ $ echo ".env" >> .gitignore
 \end{shell}
 
 \item 
-在github的应用中，选择“安装应用”，然后单击安装（请参见图4.11）：
+在github的应用中，选择“安装应用”，然后单击安装(请参见图4.11)：
 
-\myGraphic{0.4}{content/chapter4/images/11.png}{图4.11 --- 安装应用程序}
+\myGraphic{0.4}{content/chapter4/images/11.png}{图4.11  ---  安装应用程序}
 
 \item 
-在出现的对话中，选择您的存储库，然后单击Install（安装）（请参见图4.12）：
+在出现的对话中，选择您的存储库，然后单击Install(安装)(请参见图4.12)：
 
-\myGraphic{0.4}{content/chapter4/images/12.png}{图4.12 --- 在存储库中安装应用程序}
+\myGraphic{0.4}{content/chapter4/images/12.png}{图4.12  ---  在存储库中安装应用程序}
 
 接下来，我们将创建一个服务器，当它收到来自 webhook 的有效负载时会运行。前往您的存储库并初始化它：
 
@@ -206,7 +206,7 @@ console.log('Press Ctrl + C to quit.')
 \end{shell}
 
 \item 
-我们准备好了！打开一个新的终端，并使用您的频道 URL（第 4 步）启动 Smee 客户端：
+我们准备好了！打开一个新的终端，并使用您的频道 URL(第 4 步)启动 Smee 客户端：
 
 \begin{shell}
 $ npx smee -u https://smee.io/{ID} -t http://localhost:3000/api/webhook

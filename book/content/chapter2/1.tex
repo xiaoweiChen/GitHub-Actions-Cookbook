@@ -16,7 +16,7 @@ $ git config --global user.name
 
 请记住,我们在公共存储库中工作。如果要保留电子邮件地址,请使用\url{https://github.com/settings/emails}的邮件地址(请参见图2.1):
 
-\myGraphic{0.4}{content/chapter2/images/1.png}{图2.1 --- 在公共存储库中保留您的电子邮件地址}
+\myGraphic{0.4}{content/chapter2/images/1.png}{图2.1  ---  在公共存储库中保留您的电子邮件地址}
 
 此电子邮件地址由您的GitHub用户ID和users.noreply.github.com域中的名称组成：
 
@@ -24,7 +24,7 @@ $ git config --global user.name
 $ git config --global user.email 5276337+wulfland@users.noreply.github.com
 \end{shell}
 
-\myGraphic{0.4}{content/chapter2/images/2.png}{图2.2 --- 在本地克隆您的存储库}
+\myGraphic{0.4}{content/chapter2/images/2.png}{图2.2  ---  在本地克隆您的存储库}
 
 我使用SSH来验证,因为我可以在1Password中管理我的SSH键,但是您也可以使用HTTPS 和PAT令牌。您可以在此处在本地找到有关克隆存储库的更多信息:\url{https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository}。
 
@@ -32,9 +32,9 @@ $ git config --global user.email 5276337+wulfland@users.noreply.github.com
 
 \begin{enumerate}
 \item 
-打开VS Code。通过键入[Shift]+[Command]+[X]或[Ctrl]+[Shift]+[X]打开扩展窗口，或者只需单击左侧栏中的扩展图标（参见图2.3）。搜索github的动作，并安装github与验证的徽章（\url{https://marketplace.visualstudio.com/items?itemName=GitHub.vscodegithub-actions}）的动作。如果有必要，重启VS Code，然后用你的GitHub账号登录：
+打开VS Code。通过键入[Shift]+[Command]+[X]或[Ctrl]+[Shift]+[X]打开扩展窗口，或者只需单击左侧栏中的扩展图标(参见图2.3)。搜索github的动作，并安装github与验证的徽章(\url{https://marketplace.visualstudio.com/items?itemName=GitHub.vscodegithub-actions})的动作。如果有必要，重启VS Code，然后用你的GitHub账号登录：
 
-\myGraphic{0.4}{content/chapter2/images/3.png}{图2.3 --- 安装VS Code的GitHub操作扩展}
+\myGraphic{0.4}{content/chapter2/images/3.png}{图2.3  ---  安装VS Code的GitHub操作扩展}
 
 扩展名提供以下功能：
 
@@ -66,30 +66,30 @@ $ git config --global user.email 5276337+wulfland@users.noreply.github.com
 \item 
 击左侧的GitHub操作图标(请参见图2.4),然后检查当前的分支窗口。您可以在当前分支中看到所有工作流程。每个运行都有工作流的名称和带有哈希的运行ID。您可以扩展工作流程以查看作业和步骤。您可以在VS Code中直接打开作业日志,也可以在浏览器中打开步骤日志:
 
-\myGraphic{0.4}{content/chapter2/images/4.png}{图2.4 --- 检查工作流程在当前分支中运行}
+\myGraphic{0.4}{content/chapter2/images/4.png}{图2.4  ---  检查工作流程在当前分支中运行}
 
 \item 
 工作流窗口显示主分支中存储库中的所有工作流程。 您可以将工作流固定到列表的顶部,打开工作流文件进行编辑,或者如果它具有Workflow\_disPatch触发器,则运行Workflow的触发器(请参见图2.5):
 
-\myGraphic{0.4}{content/chapter2/images/5.png}{图2.5 --- 工作流窗口允许您触发和打开工作流程}
+\myGraphic{0.4}{content/chapter2/images/5.png}{图2.5  ---  工作流窗口允许您触发和打开工作流程}
 
 打开工作流文件。
 
 \item 
 接下来,在工作流文件中使用自动完成。删除第15行中的VAR背后的值。请注意,扩展名知道您的所有变量和秘密(见图2.6):
 
-\myGraphic{0.4}{content/chapter2/images/6.png}{图2.6 --- 自动完成知道您的所有秘密和变量}
+\myGraphic{0.4}{content/chapter2/images/6.png}{图2.6  ---  自动完成知道您的所有秘密和变量}
 
 它还具有完整的工作流语法。您可以在工作流文件中的任何一点上按[Control] + [spac e]以获取有效元素的列表。
 
 VS Code检测工作流文件中的问题并为其提供快速修复(请参见图2.7):
 
-\myGraphic{0.4}{content/chapter2/images/7.png}{图2.7 --- VS Code为问题提供了快速修复}
+\myGraphic{0.4}{content/chapter2/images/7.png}{图2.7  ---  VS Code为问题提供了快速修复}
 
 \item 
 在“设置”窗口中,您可以从存储库中找到所有环境,秘密和变量。您不能创建新的环境,但是可以在环境或存储库中添加秘密和变量,然后编辑或删除它们(请参见图2.8 ):
 
-\myGraphic{0.4}{content/chapter2/images/8.png}{图2.8 --- 从VS Code内部管理环境，秘密和变量}
+\myGraphic{0.4}{content/chapter2/images/8.png}{图2.8  ---  从VS Code内部管理环境，秘密和变量}
 
 \end{enumerate}
 

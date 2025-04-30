@@ -1,4 +1,4 @@
-在这个指南中，我们将创建一个简单的持续集成 (CI) 流水线，用于构建和验证代码，并将其集成到拉取请求验证中。我们将在后续的指南中使用这段代码——这就是为什么我们使用一个非常简单的 JavaScript 包。
+在这个指南中，我们将创建一个简单的持续集成 (CI) 流水线，用于构建和验证代码，并将其集成到拉取请求验证中。我们将在后续的指南中使用这段代码 --- 这就是为什么我们使用一个非常简单的 JavaScript 包。
 
 \mySubsubsection{6.2.1}{Getting ready}
 
@@ -55,7 +55,7 @@ module.exports = function greet () {
 我们正在创建一个简单的包，它只会返回 Hello world!。
 
 \item 
-添加一个新的 tests/index.test.js 文件（带有两个下划线）。添加以下测试：
+添加一个新的 tests/index.test.js 文件(带有两个下划线)。添加以下测试：
 
 \begin{shell}
 describe('index.js', () => {
@@ -202,7 +202,7 @@ steps:
       fetch-depth:0 # Default: 1
 \end{shell}
 
-其他选项包括 lfs，用于确定是否应下载 Git 大文件存储 (LFS) 文件（默认值为 false），或者 submodules：
+其他选项包括 lfs，用于确定是否应下载 Git 大文件存储 (LFS) 文件(默认值为 false)，或者 submodules：
 
 \begin{shell}
 steps:
@@ -268,15 +268,15 @@ Haskell
 
 大多数检出操作还支持使用不同的注册表来下载依赖项。对于 Node，参数是 registry-url，它将使用提供的 URL 和来自 env.NODE\_AUTH\_TOKEN 的令牌连接到特定注册表。
 
-检出操作通常还会缓存依赖项。在许多情况下，使用相应的设置操作比您自己实现缓存更有效（我们将在本章后面提供一个指南）。
+检出操作通常还会缓存依赖项。在许多情况下，使用相应的设置操作比您自己实现缓存更有效(我们将在本章后面提供一个指南)。
 
 \mySubsubsection{6.2.4}{There’s more…}
 
-最好将验证工作流程与分支保护规则集结合使用——您可以添加一个代码检查工具以提高质量。
+最好将验证工作流程与分支保护规则集结合使用 --- 您可以添加一个代码检查工具以提高质量。
 
 \mySamllsectionNoContent{超级代码检查工具}
 
-在第2章《编写和调试工作流程》中，我们使用了一个代码检查工具来验证和注释我们在拉取请求中的工作流程。代码也可以这样做。有一个叫做 superlinter 的 GitHub 操作（见 \url{https://github.com/super-linter/super-linter}），它基本上将所有可用的代码检查工具结合在一个操作中。您可以像这样使用它来检查您的代码：
+在第2章《编写和调试工作流程》中，我们使用了一个代码检查工具来验证和注释我们在拉取请求中的工作流程。代码也可以这样做。有一个叫做 superlinter 的 GitHub 操作(见 \url{https://github.com/super-linter/super-linter})，它基本上将所有可用的代码检查工具结合在一个操作中。您可以像这样使用它来检查您的代码：
 
 \begin{shell}
 permissions:
@@ -313,15 +313,15 @@ super-linter/super-linter/slim@[VERSION]
 
 在第二章《编写和调试工作流程》中,我还向您介绍了分支保护。您可以使用规则保护存储库中的一个或多个分支,并强制执行提交必须通过拉取请求合并,并且某些检查必须成功。除了手动审查之外,您还可以要求状态检查成功(见图 6.1):
 
-\myGraphic{0.4}{content/chapter6/images/1.png}{图6.1 ---  将 GitHub Action 工作流程作业添加为受保护分支的状态检查}
+\myGraphic{0.4}{content/chapter6/images/1.png}{图6.1  ---   将 GitHub Action 工作流程作业添加为受保护分支的状态检查}
 
 状态检查可以是工作流程中的一个作业 - 或任何使用状态 API 报告状态集成的。您可以为下一个指南中的存储库中的 main 分支启用策略，并将状态检查策略设置为工作流程的作业。有关受保护分支的更多信息，请参阅 \url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches}。
 
 \mySamllsectionNoContent{规则集}
 
-规则集是分支保护的更强大的继任者。它们与受保护分支具有相同的权力。您还可以像在受保护分支中一样定义状态检查（见图 6.2）：
+规则集是分支保护的更强大的继任者。它们与受保护分支具有相同的权力。您还可以像在受保护分支中一样定义状态检查(见图 6.2)：
 
-\myGraphic{0.4}{content/chapter6/images/2.png}{图6.2 ---  在规则集中将 GitHub Action 工作流程作业添加为状态检查}
+\myGraphic{0.4}{content/chapter6/images/2.png}{图6.2  ---   在规则集中将 GitHub Action 工作流程作业添加为状态检查}
 
 大多数可以在规则集中使用的规则与分支保护规则相似，并且可以在不改变现有规则的情况下组合使用。
 
