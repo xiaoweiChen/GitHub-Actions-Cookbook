@@ -1,117 +1,114 @@
 
-在此食谱中,我们将添加一个诱使操作,该动作将检查工作流程并直接在拉请请求中提供馈。
+全新的仓库中，最好在主分支上创建工作流。如果必须在开发人员正在工作的活跃库中创建工作流，并且不想影响到其他人的工作，那么可以在一个分支中编写工作流程，并通过拉取请求将其合并回主分支。
+
+然而，某些触发器可能不会按预期工作。如果想要使用 workflow\_dispatch 触发器手动运行工作流，第一个操作必须是合并带有触发器的工作流程回主分支，或者使用 API 来触发工作流程。之后，可以在一个分支中编写工作流程，并在通过 UI 触发工作流程时选择该分支。
+
+如果工作流需要 webhook 触发器，如 push、pull\_request 或 pull\_request\_target，根据计划如何使用这些触发器，可能需要在仓库的分支中创建工作流程。这样，可以在不干扰开发人员工作的前提下测试和调试工作流程，完成时可以将其合并回原始仓库。
 
 \mySubsubsection{2.3.1}{Getting ready}
 
-打开您为打开拉的请求的分支中的工作流文件。不要合并更改。
+如果尝试前一个示例中的工作流后仍有本地更改，请撤销所有更改，使库保持一个干净的状态。可以通过执行以下命令来实现：
+
+\begin{shell}
+$ git reset --hard HEAD
+\end{shell}
+
+也可以在 VS Code 的 Git 窗口中这样做（见图 2.9）：
+
+\myGraphic{0.7}{content/chapter2/images/9.png}{图2.9 --- 丢弃本地更改}
 
 \mySubsubsection{2.3.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-去市场并搜索Actionlint。我们正在寻找的动作来自Devops-actions。该操作需要访问工流文件,这意味着您必须先使用结帐操作查看存储库。将以下两个步骤添加到工作结束
+在 VS Code 中，点击左下角的 main，选择命令面板中的 \textbf{+ Create new branch… }，输入 new-workflow 作为新分支的名称，然后按 [Enter]（见图 2.10）：
+
+\myGraphic{0.6}{content/chapter2/images/10.png}{图2.10 --- 在 VS Code 中创建一个新分支}
+
+或者，可以使用以下命令：
 
 \begin{shell}
-  - uses: actions/checkout@v4.1.0
-  - uses: devops-actions/actionlint@v0.1.2
+$ git switch -c new-workflow
 \end{shell}
 
 \item 
-由于我们希望采取行动来注释“拉”请求中的错误,因此我们必须给予工作流写入访以拉动请求。稍后我将解释这是如何工作的。目前,只需在这样的工作中添加部分权限
+在 VS Code 的 资源管理器 窗口中创建一个新的工作流文件。找到并标记 .github/workflow 文件夹，然后点击 \textbf{New file…}(新建文件…) 图标。输入 DevelopInBranch.yml 作为文件名，然后点击回车（见图 2.11）：
+
+\myGraphic{0.6}{content/chapter2/images/11.png}{图2.11 --- 在 VS Code 中创建一个新的工作流文件}
+
+请注意，VS Code 会自动检测这是一个工作流文件。创建具有 pull\_request 和 workflow\_dispatch 触发器的工作流，该触发器将一些上下文值输出到控制台，如清单 2.1 所示：
+
+\filename{清单2.1 - 在分支中创建的工作流}
 
 \begin{shell}
+# workflow to show how to develop workflows in branches
+name: Develop in a branch
+
+on: [pull_request, workflow_dispatch]
 jobs:
   job1:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
+    steps:
+      - run: |
+          echo "Workflow triggered in branch '${{ github.ref }}'."
+          Echo "Workflow triggered by event '${{ github.event_name }}'."
+          Echo "Workflow triggered by actor '${{ github.actor}}''."
 \end{shell}
 
 \item 
-将更改提交给分支新工作流,然后将它们推到遥控器上。这将触发构建,工作流程应没有错误的情况下完成。
+添加新文件（暂存更改），输入提交信息，并提交更改（见图 2.12）：
 
-\item 
-要测试覆盖过程,我们将添加一些恶意代码。如果您在运行事件中使用用户控制的输,例如拉请请求的标题,则攻击者可能能够通过在标题中注入脚本来利用这一点。如果有一个公共存储库,并且人们可以从叉子中提出拉请请求,这一点尤其重要。假设您使Echo输出拉动请求的标题:
+\myGraphic{0.6}{content/chapter2/images/12.png}{图2.12 --- 在 VS Code 中提交新文件}
+
+也可以使用命令行：
 
 \begin{shell}
-  - run: echo "${{ github.event.pull_request.title }}"
-\end{shell}
-
-创建带有标题 \verb|"Hi";ls $GITHUB_WORKSPACE;echo "-" | 的拉请请求,将执行以下命令:
-
-\begin{shell}
-$ echo "Hi";ls $GITHUB_WORKSPACE;echo "-"
-\end{shell}
-
-脚本\verb|ls $ GITHUB_WORKSPACE|将在没有错误的情况下执行,从那里,您可以找到其他方来注入更有害的脚本。
-
-将以下行添加到工作中的步骤:
-
-\begin{shell}
-steps:
-  - run: echo "PR title is '${{ github.event.pull_request.title
-}}'.
+$ git add .
+$ git commit -m "Added a workflow file in local branch"
 \end{shell}
 
 \item 
-将更改提交给分支新工作流,然后将它们推到遥控器上。这次,工作流程应该失败, 且拉动请求的检查显示错误,如图2.17:
+在 VS Code 中，可以通过点击 \textbf{Publish Branch}(发布分支) 直接推送更改。使用命令行，可以这样：
 
-\myGraphic{0.4}{content/chapter2/images/17.png}{图2.17 --- 如果您的工作流程中存在潜在的脚本攻击，则覆盖可能会失败。}
+\begin{shell}
+$ git push -u origin new-workflow
+\end{shell}
 
 \item 
-在“拉”请求中,导航到文件更改。请注意,伸缩措施已在包含潜在脚本注入攻击的确行号上注释了拉的请求(请参见图2.18):
+接下来，我们将为新分支创建一个拉取请求。因为使用了 pull\_request 触发器，这将自动运行新工作流。在浏览器中转到库并导航到 \textbf{Pull requests}(拉取请求)。Git 检测到已经推送了一个新分支，并会提供给创建拉取请求的选项（比较 \& 拉取请求，见图 2.13）：
 
-\myGraphic{0.4}{content/chapter2/images/18.png}{图2.18 --- 工作流文件中的拉请求注释}
+\myGraphic{0.6}{content/chapter2/images/13.png}{图2.13 --- 浏览器中创建一个新的拉取请求}
+
+只需保留默认标题（你之前添加的提交信息）然后点击 、\textbf{Create pull request}(创建拉取请求)（见图 2.14）：
+
+\myGraphic{0.6}{content/chapter2/images/14.png}{图2.14 --- 创建一个带有标题和描述的拉取请求}
+
+也可以使用 GitHub CLI 创建拉取请求：
+
+\begin{shell}
+$ gh pr create --fill
+\end{shell}
+
+\begin{myTip}{GitHub CLI}
+在本书中，将大量使用 GitHub CLI (\url{https://cli.github.com/})，其适用于所有平台，可以通过许多包管理器（Homebrew、WinGet、RPM 等）获取。有关更多安装说明，请参阅 \url{https://github.com/cli/cli#installation}。安装后，需要使用 \verb|gh auth login| 进行身份验证（请参阅 \url{https://cli.github.com/manual/gh_auth_login}）。
+\end{myTip}
+
+\item 
+打开你的拉取请求，已经自动执行了工作流程作为检查（见图 2.15）：
+
+\myGraphic{0.6}{content/chapter2/images/15.png}{图2.15 --- 由于 pull\_request 触发器，工作流将自动运行}
+
+你还可以在\textbf{Actions}(操作)选项卡中看到工作流，但不能手动运行工作流。即使有 workflow\_dispatch 触发器，只有该触发器的工作流与 main 合并后，运行工作流程的按钮才可用。之后，也将能够在分支上手动运行。
+
+不过，可以在 VS Code 中运行工作流程。打开 \textbf{GitHub Actions} 扩展，请使用右上角的刷新图标刷新\textbf{Workflows}(工作流)窗口。现在应该看到新的工作流，并且可以使用箭头按钮手动触发（见图 2.16）：
+
+\myGraphic{0.6}{content/chapter2/images/16.png}{图2.16 --- 在 VS Code 中手动运行工作流}
 \end{enumerate}
 
 \mySubsubsection{2.3.3}{How it works…}
 
-Action DevOps-Actions/ActionLint(\url{https://github.com/marketplace/action/rhysd-actionLint})是rhysd(这是github用户)ActionLint容器的包装器(请参阅\url{https://github.com.com.com/rhysdactionlint})。您可以在本地或网络上运行ActionLint。它有大量检查在工作流程上执行的检(请参阅\url{https://github.com/rhysd/actionlint/blob/blob/main/docs/checks.md},有关完整列)。该动作是一个包装器,可针对存储库中发现的所有工作流程运行动作皮棉。因此, 必须先检查存储库。然后,该操作使用问题匹配器(请参阅\url{https://github.com/actions/toolkit/blob/main/doc/docs/resasure-matchers.md})来注释您的工作流程中的工作流程。问题匹配者使用正则表达式模式从结果文件中读取发现并注释您的拉请求。它们被工作流命令添匹配器和删除匹配器激活和停用。可以使用工作流命令在工作流程步骤和操作中,与工作流和跑步机通信。它们可用于将消息写入工作流日志, 值传递给其他步骤或操作,设置环境变量或编写调试消息。
+当涉及到某些触发器时，存在一些限制。但总的来说，在单独的分支中开发工作流，并使用拉取请求协作更改，这种方法非常有效。
 
-WorkFlow命令使用ECHO命令具有特定格式:
+\mySubsubsection{2.3.4}{There’s more…}
 
-\begin{shell}
-  echo "::workflow-command param1={data},param2={data}::{command value}"
-\end{shell}
-
-如果您使用的是JavaScript,则该工具包(\url{https://github.com/actions/toolkit})提供了许多可以用的包装器,而不是使用echo来写入标准输出。在后续部分中,您将学习一些有用的工流命令的示例,以写入工作流日志和注释文件。
-
-使用以下工作流命令添加问题匹配器:
-
-\begin{shell}
-  echo "::add-matcher::$GITHUB_ACTION_PATH/actionlint-matcher.json"
-\end{shell}
-
-该命令接受结果文件的路径作为参数。您可以通过移除匹配器并传入所有者来禁用匹配功能：remove-matcher。
-
-\begin{shell}
-  echo "::remove-matcher owner= actionlint::"
-\end{shell}
-
-为了访问拉动请求,工作流使用 GITHUB\_TOKEN,这是一个特殊的令牌,它是由github自动创建,可以通过github上下文(github.token)或秘密上下文(secrets.GITHUB\_TOKEN)访问。即使作流不提供输入或环境变量,也可以通过GitHub操作访问令牌。代币可用于访问GitHub 源时的工作流程。默认权限可以设置为允许(读取和写入)或限制(仅读取),但可以工作流中调整权限。您可以在Set up job | GITHUB\_
-TOKEN Permissions下的工作流登录中的工作流权限最好的做法是始终明确设置工作流程的权限。 所有其他权限将自动设置为无。可以为个工作或整个工作流程设置权限。
-
-在我们的情况下，我们授予工作流程许可以阅读内容并写入以拉请求：
-
-\begin{shell}
-permissions:
-  contents: read
-  pull-requests: write
-\end{shell}
-
-\mySubsubsection{2.3.4}{There's more…}
-
-在此食谱中,我们只需在工作流程中添加pull\_request触发器即可添加工作流程衬里作为拉的求的检查。但是,即使支票失败,我们仍然可以将更改合并回主分支。为了防止与绒毛误合并的工作流程,您可以启用分支保护(请参见\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches})或者创建规则集(请参见\url{https://docs.github.com/en/repositories/configuringbranches-and-merges-in-your-repository/managing-rulesets/about-rulesets})。与代码所有者一起(请参阅\url{ https://docs.github.com/en/repositories/managingyour-repositorys-settings-and-features/customizing-your-repository/bout-code-owners}),您可以确保工作流程仅由团队或人返回您的主要分支,而无需仔细检查错误的错误。
-
-
-
-
-
-
-
-
-
-
-
-
+为了进一步发展，我们将向工作流程添加一个代码检查工具，能够在库中的所有工作流程中找出错误、安全问题，以及缺陷。

@@ -1,25 +1,97 @@
 
-在上一个食谱中,我们看到您可以重新运行失败的作业或启用调试日志记录的所有作业。但是,您还可以在存储库基础上启用或禁用Debug登录。
+基于现有结果文件，问题匹配器所能做到的，也可以通过使用工作流命令将单个警告或错误事件写入日志来实现。在这个示例中，我们将向工作流程添加一些输出，并对工作流文件进行注释。
 
-\mySubsubsection{2.5.1}{How to do it…}
+\mySubsubsection{2.5.1}{Getting ready}
 
-我们可以通过在我们的存储库中添加一个称为ACTIONS\_STEP\_DEBUG的变量并将值设置为true或fa se来启用或禁用调试记录。这将为我们的工作流日志和所有调试消息添加一个非常详细的出,这将从所有操作中显示。
+确保仍然打开着上一个示例中的拉取请求。只需使用 VS Code 添加其他更改，推送将自动触发工作流程。
 
-您可以使用Web,GitHub CLI或VS代码配置变量。要使用Web设置变量,在存储库中,请导到Settings | Secrets and variables | Actions,然后选择Variables(/settings/variables/actions)。单击 New repository variable (将您将您重定向//settings/variables/actions/new),输入ACTIONS\_STEP\_DEBUG作为名称为true为值,然后单击Add variable。
+\mySubsubsection{2.5.2}{How to do it…}
 
-要使用CLI设置它,只需执行以下行:
+\begin{enumerate}
+\item 
+在 VS Code 中的 new-workflow 分支中打开 .github/workflows/DevelopInBranch.yml，并在检出操作之前直接添加以下代码：
 
 \begin{shell}
-$ gh variable set ACTIONS_STEP_DEBUG --body true
+- run: |
+  echo "::debug::This is a debug message."
+  echo "::notice::This is a notice message."
+  echo "::warning::This is a warning message."
+  echo "::error::This is an error message."
 \end{shell}
 
-如果要在VS代码中设置变量,只需打开操作扩展名,导航到 Variables |
-Repository Variables,单击+符号请参见图2.24),Enter ACTIONS\_STEP\_DEBUG,然后命中[Enter];输入true并再次点击[Enter]。在VS代码中,使用更新选项更改变量也非常方便:
+这将会将不同类型的消息写入工作流日志和工作流摘要。
 
-\myGraphic{0.4}{content/chapter2/images/24.png}{图2.24 --- 在VS代码中设置步骤调试到true}
+\item 
+提交并推送更改。这将自动触发一个新的工作流运行。
 
-运行您的工作流程并检查详细的输出。
+\item 
+打开工作流日志并检查输出。它应该看起来像图 2.19：
 
-\mySubsubsection{2.5.2}{How it works…}
+\myGraphic{0.6}{content/chapter2/images/19.png}{图2.19 --- 将消息写入工作流日志}
 
-您还可以通过将变量ACTIONS\_RUNNER\_DEBUG设置为true来激活跑步者的其他日志。跑步者的调日志将从工作流中下载的工作流中包含在日志存档中。如果您想了解有关监视和故障排除的更多信息,则可以参考\url{https://docs.github.com/en/actions/monitoring-andtroubleshooting-workflows/enabling-debug-logging}。
+请注意，调试消息是不可见的。检查工作流摘要，看看它是否包含了我们的消息，以及来自代码检查的错误（结果应该看起来像图 2.20）：
+
+\myGraphic{0.6}{content/chapter2/images/20.png}{图2.20 --- 摘要中的工作流注释}
+
+\item 
+为了看到调试消息的作用，可以使用启用调试日志重新运行工作流作业。在工作流摘要中，点击 \textbf{Re-run jobs | Re-run all jobs}(重新运行作业 | 重新运行所有作业)，选择 \textbf{ Enable debug logging}(启用调试日志)，然后点击 \textbf{Re-run jobs}(重新运行作业)（如图 2.21 所示）
+
+\myGraphic{0.6}{content/chapter2/images/21.png}{图2.21 --- 启用调试日志记录后重新运行作业}
+
+\item 
+再次检查工作流程日志，看看其他的消息（如图 2.22 所示）：
+
+\myGraphic{0.6}{content/chapter2/images/22.png}{图2.22 --- 启用调试日志的工作流程日志}
+
+\item 
+但是，请注意，notice、warning 和 error 不只是写入日志。我们可以使用它们来注释文件。将以下代码添加到工作流中：
+
+\begin{shell}
+- run: |
+  echo "::notice file=.github/workflows/DevelopInBranch.yml,line=19,col=11,endColumn=51::There is a debug message that is not always visible!"
+  echo "::warning file=.github/workflows/DevelopInBranch.yml,line=19,endline=21::A lot of messages"
+  echo "::error title=Script Injection,file=.github/workflows/DevelopInBranch.yml,line=13,col=37,endColumn=68::Potentialscript injection"
+\end{shell}
+
+这将在第 19 行添加一个 notice 注释，在第 19 到 21 行添加一个警告，并在第 13 行的 37 到 68 列添加一个错误。如果行号和缩进不同，请调整这些值！
+
+\item 
+提交并推送更改。打开拉取请求，并在 \textbf{Files changed }(文件更改) 选项卡中查看注释（见图 2.23）：
+
+\myGraphic{0.6}{content/chapter2/images/23.png}{图2.23 --- 拉取请求更改中的工作流注释}
+\end{enumerate}
+
+\mySubsubsection{2.5.3}{How it works…}
+
+与匹配器的工作方式相同，可以创建警告和错误消息，并输出到日志中。这些消息将创建一个注释，该注释可以将消息与存储库中的特定文件关联起来。可选地，消息也可以指定文件中的位置：
+
+\begin{shell}
+::notice file={name},line={line},endLine={el},title={title}::{message}
+::warning
+file={name},line={line},endLine={el},title={title}::{message}
+::error file={name},line={line},endLine={el},title={title}::{message}
+\end{shell}
+
+参数如下：
+
+\begin{itemize}
+\item 
+标题 (Title): 消息的自定义标题
+
+\item 
+文件 (File): 引发错误或警告的文件名
+
+\item 
+列 (Col): 列/字符编号，从 1 开始
+
+\item 
+结束列 (EndColumn): 结束列编号
+
+\item 
+行 (Line): 文件中的行号，从 1 开始
+
+\item 
+结束行 (EndLine): 结束行号
+\end{itemize}
+
+唯一不能注释文件的命令是调试消息，此工作流命令仅接受消息作为参数。

@@ -1,0 +1,70 @@
+﻿
+每次提交工作流并在服务器上运行可能是一个缓慢的过程，特别是对于复杂的工作流。这个示例中，将学习如何使用 act (\url{https://github.com/nektos/act}) 在本地运行工作流程。
+
+\mySubsubsection{2.7.1}{Getting ready}
+
+Act 依赖于 Docker 来运行工作流程，请确保 Docker 已经良好的在本地环境中运行。
+
+可以使用不同的包管理器安装 act (\url{https://github.com/nektos/act#installationthrough-package-managers})，只需选择适合环境的包管理器，并按照说明进行操作即可。
+
+首次运行 act 时，它会要求使用者选择一个用作默认值的 Docker 镜像，并把该信息保存到 ~/.actrc。有不同的镜像可供选择，有小镜像（node:16-buster-slim）只支持 NodeJS 而不支持更多。大镜像的大小超过 18 GB。鉴于现今的磁盘空间和互联网，使用大镜像会获得最佳结果。为了运行当前的工作流，可以选择中等大小的镜像（见图 2.25）：
+
+\myGraphic{0.6}{content/chapter2/images/25.png}{图2.25 --- 首次运行 act 时选择容器镜像}
+
+\mySubsubsection{2.7.2}{How to do it…}
+
+在当前仓库中打开命令提示符，查看新的工作流分支。act 使用工作流程触发器来执行工作流程，并且默认为 push。由于当前工作流只有 pull\_request 触发器，所以必须指定。使用 -l 选项，act 将列出仓库中所有具有相应触发器的工作流程和作业。执行以下命令：
+
+\begin{shell}
+$ act pull_request -l
+\end{shell}
+
+检查工作流程和作业。要进行“模拟运行”\footnote{dry run:是指在不实际执行操作的前提下,通过模拟流程或系统来验证其逻辑、流程或代码的正确性。}，可以使用 -n 选项：
+
+\begin{shell}
+$ act pull_request -n
+\end{shell}
+
+因为未执行工作流的检查，工作流成功完成。要在容器中真正执行工作流，请运行以下命令：
+
+\begin{shell}
+$ act pull_request
+\end{shell}
+
+工作流将执行并在 检查步骤中失败，就像在服务器上的 pull request 中一样。结果应该类似于图 2.26：
+
+\myGraphic{0.6}{content/chapter2/images/26.png}{图2.26 --- 工作流检查与服务器上相同的错误失败}
+
+我认为在将更改推送到服务器之前，能够在本地运行工作流程是非常强大的。然而，根据工作流，结果可能不是 100\% 可靠的，还可能需要使用超过 20 GB 的大 Docker 镜像。
+
+\mySubsubsection{2.7.3}{How it works…}
+
+act 使用 docker 容器在本地运行工作流，从 .github/workflows/ 读取 GitHub Actions，并确定需要运行的操作集。它使用 Docker API 来拉取或构建在工作流文件中定义的必要镜像，并最终根据定义的依赖关系确定执行路径。当确定了执行路径，可使用 Docker API 来为每个操作运行基于先前准备的镜像的容器，环境变量和文件系统都配置都可为与 GitHub 提供的相匹配。
+
+如果你的工作流程使用 GITHUB\_TOKEN，那么你必须提供一个个人访问令牌 (PAT)；act 将使用它与 GitHub 通信：
+
+\begin{shell}
+$ act -s GITHUB_TOKEN=[insert personal access token]
+\end{shell}
+
+可以使用 GitHub CLI 的 \verb|gh auth token| 自动将令牌从 CLI 传递给 act：
+
+\begin{shell}
+$ act -s GITHUB_TOKEN="$(gh auth token)"
+\end{shell}
+
+\mySubsubsection{2.7.4}{There’s more…}
+
+act 的问题在于默认 GitHub 托管运行器的镜像非常巨大。为了获得良好的本地性能，不可能包含这些运行器上安装的所有工具。对于 90\% 的工作流程来说这非必须，因为操作在 NodeJS 中运行或带来自己的容器，尤其是在 run 步骤的自定义脚本中使用命令行工具时，这是一个问题。
+
+act 使用自定义镜像作为工作流作业运行得很好，可以像这样为作业分配自定义 Docker 镜像，而非依赖 GitHub 托管运行器的工具：
+
+\begin{shell}
+jobs:
+  container-test-job:
+    runs-on: ubuntu-latest
+    container:
+      image: custom-image:latest
+\end{shell}
+
+这样，本地执行和服务器上的执行基本上是一样的。这也是一个不错的选择，如果必须长期保持构建环境，可以在这里了解更多关于在容器中运行作业的信息：\url{https://docs.github.com/en/actions/using-jobs/running-jobs-in-a-container}。

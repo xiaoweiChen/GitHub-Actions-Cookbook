@@ -1,97 +1,119 @@
 
-基于现有结果文件的问题匹配者也可以通过使用WorkFlow命令将单个警告或错误事件编写日志中来实现。在此食谱中,我们将在工作流程中添加一些输出并注释工作流文件。
+在这个示例中，我们将添加一个代码检查操作，将检查工作流，并直接在拉取请求中给出反馈。
 
 \mySubsubsection{2.4.1}{Getting ready}
 
-确保您仍然从上一个食谱打开的拉动请求。只需使用VS代码添加其他更改,推动将自动触工作流程。
+打开开放的拉取请求中拥有的分支上的工作流程文件，先不要合并更改。
 
 \mySubsubsection{2.4.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-打开 github/workflows/developinbranch.yml在vs代码中的新工作流分支中,并在结帐操之前直接添加以下代码:
+转到市场并搜索 actionlint，找的操作来自 devops-actions。该操作需要访问工作流文件，所以必须使用checkout操作检出库。在作业的末尾添加以下两个步骤：
 
 \begin{shell}
-- run: |
-  echo "::debug::This is a debug message."
-  echo "::notice::This is a notice message."
-  echo "::warning::This is a warning message."
-  echo "::error::This is an error message."
+- uses: actions/checkout@v4.1.0
+- uses: devops-actions/actionlint@v0.1.2
 \end{shell}
 
-这将为工作流日志和工作流程摘要写不同类型的消息。
-
 \item 
-提交并推动更改。这将自动触发新的工作流程。
-
-\item 
-打开工作流日志并检查输出。它应该看起来像图2.19：
-
-\myGraphic{0.4}{content/chapter2/images/19.png}{图2.19 --- 将消息写入工作流日志}
-
-请注意,调试消息不可见。检查工作流程摘要,并包含在那里的消息以及我们的覆盖的错误(结果应如图2.20):
-
-\myGraphic{0.4}{content/chapter2/images/20.png}{图2.20 --- 摘要中的工作流注释}
-
-\item 
-要查看在行动中的调试消息,我们可以通过启用调试日志记录来重新运行工作流程。在工作流摘要中,单击重Re-run jobs | Re-run all jobs,选择“Enable debug logging”,然后击 Re-run jobs (如图2.21所示):
-
-\myGraphic{0.4}{content/chapter2/images/21.png}{图2.21 --- 启用了带有调试记录的重播作业}
-
-\item 
-再次检查工作流日志，并查看其他消息(如图2.22所示)：
-
-\myGraphic{0.4}{content/chapter2/images/22.png}{图2.22 --- 带有调试登录的工作流日志}
-
-\item 
-但是,注意,警告和错误不仅可以写入日志。我们可以使用它们来注释文件。将以下段添加到工作流程:
+由于我们希望该操作在拉取请求中注释错误，必须给工作流写入拉取请求的权限，稍后再对此进行解释。现在，只需向作业添加一个 permissions ：
 
 \begin{shell}
-- run: |
-  echo "::notice file=.github/workflows/DevelopInBranch.yml,line=19,col=11,endColumn=51::There is a debug message that is not always visible!"
-  echo "::warning file=.github/workflows/DevelopInBranch.yml,line=19,endline=21::A lot of messages"
-  echo "::error title=Script Injection,file=.github/workflows/DevelopInBranch.yml,line=13,col=37,endColumn=68::Potentialscript injection"
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 \end{shell}
 
-这将为第19行添加通知注释,对第19至21行的警告,以及第37至68列第13行的错误。如果您的行号和凹痕不同,请调整值!
+\item 
+将更改提交到 new-workflow 分支并推送到远程。这将触发构建，工作流就应该能够无错误地完成。
 
 \item 
-提交并推动更改。打开拉动请求,并查看“文件更改”选项卡中的注释(请参见图2.23 ):
+为了测试代码检查过程，需要添加一些恶意代码。如果在运行事件中使用用户控制的输入，例如：拉取请求的标题，攻击者可能会通过在标题中注入脚本来利用这一点。如果一个公共库，人们可以从分支创建拉取请求，这会变得相当危险。假设使用 echo 输出拉取请求的标题：
 
-\myGraphic{0.4}{content/chapter2/images/23.png}{图2.23 --- 拉动请求中的工作流注释更改}
+\begin{shell}
+  - run: echo "${{ github.event.pull_request.title }}"
+\end{shell}
+
+创建一个标题为 \verb|"Hi";ls $GITHUB_WORKSPACE;echo "-" | 的拉取请求将执行以下命令：
+
+\begin{shell}
+$ echo "Hi";ls $GITHUB_WORKSPACE;echo "-"
+\end{shell}
+
+脚本\verb|ls $ GITHUB_WORKSPACE|将在无错误的情况下执行，还可以找到其他方法来注入更有害的内容。
+
+在作业的步骤中，添加以下行：
+
+\begin{shell}
+steps:
+  - run: echo "PR title is '${{ github.event.pull_request.title
+}}'.
+\end{shell}
+
+\item 
+将更改提交到 new-workflow 分支并推送到远程。这次，工作流程应该会失败，拉取请求的检查会显示一个错误，如图 2.17 所示：
+
+\myGraphic{0.6}{content/chapter2/images/17.png}{图2.17 --- 如果工作流中存在潜在的脚本攻击，代码检查可能会使拉取请求失败}
+
+\item 
+在拉取请求中，导航到\textbf{Files changes}(文件更改)。请注意，代码检查操作已在正确的行号上对拉取请求进行了注释，该行包含潜在的脚本注入攻击（见图 2.18）：
+
+\myGraphic{0.6}{content/chapter2/images/18.png}{图2.18 --- 工作流文件中的拉取请求注释}
 \end{enumerate}
 
 \mySubsubsection{2.4.3}{How it works…}
 
-就像匹配器的工作方式一样,您可以创建警告和错误消息并将其打印到日志中。消息将创注释,该注释可以将消息与存储库中的特定文件相关联。可选,您的消息可以指定文件的位置:
+devops-actions/actionlint (\url{https://github.com/marketplace/actions/rhysd-actionlint}) 操作是一个封装器，用于 @rhysd (这是 GitHub 用户) 的 actionlint 容器 (见 \url{https://github.com/rhysd/actionlint}),可以在本地或网络上运行 actionlint。其对工作流进行大量的检查 (见 \url{https://github.com/rhysd/actionlint/blob/main/docs/checks.md} 获取完整列表)，该操作是一个封装器，会在库中找到的所有工作流程上运行 actionlint。因此，必须先检出库。然后，该操作使用问题匹配器 (见 \url{https://github.com/actions/toolkit/blob/main/docs/problem-matchers.md}) 来在工作流程文件中注释拉取请求。问题匹配器可以使用正则表达式模式，从结果文件中读取发现的问题，并用它们注释拉取请求。通过工作流命令 add-matcher 和 remove-matcher 激活和停用，工作流命令可以在工作流程步骤和操作中使用，用于与工作流程和运行器机器通信。也可以用于向工作流程日志写入消息，将值传递给其他步骤或操作，设置环境变量，或写入调试消息。
+
+工作流程命令使用具有特定格式的 echo 命令：
 
 \begin{shell}
-::notice file={name},line={line},endLine={el},title={title}::{message}
-::warning
-file={name},line={line},endLine={el},title={title}::{message}
-::error file={name},line={line},endLine={el},title={title}::{message}
+  echo "::workflow-command param1={data},param2={data}::{command value}"
 \end{shell}
 
-参数如下：
+如果使用 JavaScript，工具包 (\url{https://github.com/actions/toolkit}) 提供了许多封装器，可以用来替代 echo 写入标准输出。在后续部分中，我将介绍一些有用的写入工作流程日志和注释文件的工作流程命令示例。
 
-\begin{itemize}
-\item 
-Title：消息的自定义标题
+问题匹配器通过以下工作流程命令添加：
 
-\item 
-File：提出错误或警告的文件名
+\begin{shell}
+  echo "::add-matcher::$GITHUB_ACTION_PATH/actionlint-matcher.json"
+\end{shell}
 
-\item 
-Col：列/角色编号，从1开始
+该命令采用结果文件的路径，可以使用 remove-matcher 并传入所有者来禁用匹配：
 
-\item 
-EndColumn：末端列号
+\begin{shell}
+  echo "::remove-matcher owner= actionlint::"
+\end{shell}
 
-\item 
-Line：文件中的行号以1开始
+为了访问拉取请求，工作流使用 GITHUB\_TOKEN，这是一个由 GitHub 自动创建的特殊令牌，可通过 github 上下文 (github.token) 或 secrets 上下文 (secrets.GITHUB\_TOKEN) 访问。即使工作流没有将其作为输入或环境变量提供，GitHub Action 也可以访问该令牌。该令牌可用于在访问 GitHub 资源时对工作流进行身份验证，默认权限可以设置为宽松 (读写) 或受限 (只读)，但可以在工作流程中调整权限。可以在工作流程日志的\textbf{Set up job | GITHUB\_
+TOKEN Permissions}(设置作业 | GITHUB\_TOKEN 权限)下查看工作流权限。请记住，最佳实践是始终是显式设置工作流所需的权限。
 
-\item 
-EndLine：终点号码
-\end{itemize}
+所有其他权限将自动设置为无。权限可以针对单个作业或整个工作流程设置。
 
-唯一无法注释文件的消息是调试消息。此工作流命令仅接受该消息作为参数。
+我们示例的情况为，给出了工作流作业读取内容和写入拉取请求的权限：
+
+\begin{shell}
+permissions:
+  contents: read
+  pull-requests: write
+\end{shell}
+
+\mySubsubsection{2.4.4}{There's more…}
+
+本示例，我们通过简单地添加 pull\_request 触发器到工作流程，将工作流程代码检查作为拉取请求的检查。然而，即使检查失败，仍然能够将更改合并回主分支。为了防止具有代码检查错误的工作流程被合并，可以启用分支保护 (\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches}) 或创建规则集 (\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets})。与 codeowners (\url{https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners}) 结合使用，可以确保只有没有代码检查错误，并且需要在团队或个人对工作流审查后，才能合并回主分支。
+
+
+
+
+
+
+
+
+
+
+
+

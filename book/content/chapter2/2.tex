@@ -1,114 +1,110 @@
 
-从Greenfield存储库开始,最好在主分支上创建工作流。但是,如果您必须在开发人员正在工作的活动存储库中创建工作流程,并且您不想妨碍他们的工作流,那么可以在分支中编写工作流并将其合并回主分支。
+Visual Studio Code (VS Code) 是世界上最受欢迎和广泛使用的代码编辑器之一。由于其灵活性、广泛的扩展生态系统和强大的社区支持，它在开发者社区中获得了显著的人气。
 
-但是,某些触发因素可能无法正常工作。如果您想使用WorkFlow\_DISPATCH触发器手动运行工作流,则必须将第一个动作与触发器合并回MAIN或使用API触发工作流程。之后,您可以在分支中创建工作流程,并在通过UI触发工作流程时选择分支。
+VS Code 与 GitHub 高度集成，提供了诸如 Git 集成、使用 GitHub 账户同步设置、直接访问仓库，以及使用 GitHub 提供的扩展在编辑器内创建、编辑和管理 GitHub Action 工作流程等功能。这种紧密的集成，简化了工作流程的创建过程，还简化了在 GitHub Action 工作流程上的协作。
 
-如果您的工作流程需要Webhook触发器,例如push,pull\_request或plul\_request\_target,则可能有必要在存储库的叉子中创建工作流,这取决于您打算使用触发器进行的工作。这样, 您可以测试和调试工作流程而不会干扰开发人员工作,并且完成后,您可以将其合并回原始存储库。
+这个示例中，我们将安装 GitHub Actions 的 VS Code 扩展，并展示可以用它做什么。
 
 \mySubsubsection{2.2.1}{Getting ready}
 
-如果您在上一个食谱中使用工作流程后仍然进行了本地更改,请务必撤消所有更改以具有清洁版本的存储库。您可以执行以下命令来做到这一点:
+开始之前，请检查电子邮件地址和名称是否正确设置在git中：
 
 \begin{shell}
-$ git reset --hard HEAD
+$ git config --global user.email
+$ git config --global user.name
 \end{shell}
 
-您也可以在VS代码的GIT窗口中执行此操作(请参见图2.9)：
+请记住，我们在公共库中工作。如果想要保持电子邮件地址为隐私，请使用来自 \url{https://github.com/settings/emails} 的邮件地址（见图 2.1）：
 
-\myGraphic{0.4}{content/chapter2/images/9.png}{图2.9 --- 丢弃您的本地更改}
+\myGraphic{0.6}{content/chapter2/images/1.png}{图2.1 --- 公共库中保持电子邮件地址为隐私}
+
+这个电子邮件地址由你的 GitHub 用户 ID 和名称组成，位于 users.noreply.github.com 域中：
+
+\begin{shell}
+$ git config --global user.email 5276337+wulfland@users.noreply.github.com
+\end{shell}
+
+GitHub 将自动将提交与账户关联，而不会暴露电子邮件地址。
+
+然后，从第 1 章中本地克隆库，以在仓库的\textbf{Code}(代码)部分的\textbf{Code | Local}(代码 | 本地)下找到相应的 URL（见图 2.2）：
+
+\myGraphic{0.6}{content/chapter2/images/2.png}{图2.2 --- 本地克隆库}
+
+这里使用 SSH 进行身份验证，这样就可以在 1Password 中管理 SSH 密钥——但也可以使用 HTTPS 和一个 PAT 令牌。可以在这里找到关于本地克隆库的更多信息：\url{https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository}。
 
 \mySubsubsection{2.2.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-在VS代码中,单击左下角的MAIN,选择+在命令调色板中创建新分支,输入新workfl ow作为新分支的名称,然后点击[Enter](见图2.10):
+打开 VS Code，通过组合键 [Shift]+[Command]+[X] 或 [Ctrl]+[Shift]+[X] 或只需单击左侧栏中的扩展图标来打开扩展窗口（见图 2.3）。搜索 github actions 并安装带有验证徽章的 GitHub 的操作(\url{https://marketplace.visualstudio.com/items?itemName=GitHub.vscodegithub-actions})。如有必要，重启 VS Code，并使用 GitHub 账户登录：
 
-\myGraphic{0.4}{content/chapter2/images/10.png}{图2.10 --- 在VS代码中创建一个新分支}
+\myGraphic{0.6}{content/chapter2/images/3.png}{图2.3 --- 为 VS Code 安装 GitHub Actions 扩展}
 
-另外，您也可以使用以下命令：
+该扩展提供了以下功能：
 
-\begin{shell}
-$ git switch -c new-workflow
-\end{shell}
+\begin{itemize}
+\item 
+管理工作流和监控工作流运行
 
 \item 
-在Explorer窗口中的VS代码中创建一个新的WorkFlow文件。找到并标记.github/WorkFl ow文件夹,然后单击新文件⋯图标。输入Developinbranch。 YML作为文件名,然后单击Enter(请参见图2.11):
-
-\myGraphic{0.4}{content/chapter2/images/11.png}{图2.11 --- 在VS代码中创建一个新的工作流文件}
-
-请注意,VS代码会自动检测到这是一个工作流文件。使用pull\_request和workflow\_dis patch触发器创建一个简单的工作流,该触发器将某些上下文值输出到控制台,如列表2.1:
-
-\filename{清单2.1 - 在分支中创建的工作流程}
-
-\begin{shell}
-# workflow to show how to develop workflows in branches
-name: Develop in a branch
-
-on: [pull_request, workflow_dispatch]
-jobs:
-  job1:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "Workflow triggered in branch '${{ github.ref }}'."
-          Echo "Workflow triggered by event '${{ github.event_name }}'."
-          Echo "Workflow triggered by actor '${{ github.actor}}''."
-\end{shell}
+手动触发工作流
 
 \item 
-添加新文件(阶段更改)，输入提交消息并提交更改(请参见图2.12)：
-
-\myGraphic{0.4}{content/chapter2/images/12.png}{图2.12 --- 在VS Code中提交新文件}
-
-如果愿意，也可以使用命令行：
-
-\begin{shell}
-$ git add .
-$ git commit -m "Added a workflow file in local branch"
-\end{shell}
+工作流和表达式的语法高亮
 
 \item 
-在VS代码中,您可以通过单击发布分支直接推动更改。从命令行,您可以使用以下内容:
-
-\begin{shell}
-$ git push -u origin new-workflow
-\end{shell}
+集成文档
 
 \item 
-接下来,我们将为我们的新分支机构创建拉动请求。当我们使用pull\_request触发器时,这将自动运行我们的新工作流程。转到您的浏览器中的存储库,然后导航以拉出请求。git将检测到您已经推出了一个新分支,并将为您提供创建拉动请求的选项(比较和拉请请求,请参见图2.13):
-
-\myGraphic{0.4}{content/chapter2/images/13.png}{图2.13 --- 在浏览器中创建一个新的pull请求}
-
-只需要保留默认的标题(你之前添加的提交信息)，然后点击Create pull request(见图2.14)：
-
-\myGraphic{0.4}{content/chapter2/images/14.png}{图2.14 --- 创建带有标题和描述的拉取请求}
-
-您还可以使用GitHub CLI创建拉动请求：
-
-\begin{shell}
-$ gh pr create --fill
-\end{shell}
-
-\begin{myTip}{GitHub CLI}
-在整本书中,我们将使用github cli(\url{https://cli.github.com/})。它适用于所有平台和许多包装管理器(Homebrew,Winget,RPM等)。有关更多安装说明,请参见\url{https://github.com/cli/cli/cli#installation}。安装后,您必须使用gh auth login登录(请参阅\url{https://cli.github.com/manual/gh_auth_login})进行身份验证。
-\end{myTip}
+验证和代码补全
 
 \item 
-打开您的拉请请求，并注意它已自动执行工作流程(请参见图2.15)：
+智能验证
+\end{itemize}
 
-\myGraphic{0.4}{content/chapter2/images/15.png}{图2.15 --- 由于pull\_request触发器，工作流将自动运行}
+智能验证尤其有帮助，支持对引用的操作和可重用工作流程进行代码补全，将解析引用操作的参数、输入和输出，并提供验证、代码补全和内联文档功能。
 
-您还可以在“操作”选项卡中查看工作流,但是您无法手动运行工作流程。 即使使用WorkFlow\_DisPatch触发器,运行工作流的按钮也只有在将工作流与该触发器合并为MAIN时可用。之后,您还可以在分支上手动运行它。
+\item 
+打开本地克隆库。可以在本地克隆的仓库文件夹的命令行中输入 code .（. 代表当前文件夹）。这将打开一个新的 VS Code 实例并打开当前文件夹。或者在 VS Code 中使用\textbf{File | Open Folder}(文件 | 打开文件夹)，并选择克隆库的所在文件夹。
 
-但是,您可以在VS代码中运行工作流程。在必要时使用右上角的刷新图标,打开GitHub操作扩展,并刷新工作流窗口。 现在,您应该看到新的工作流程,并且可以使用箭头按钮手动触发它(请参见图2.16):
+\item 
+单击左侧的 GitHub Actions 图标（见图 2.4）,并检查\textbf{Current Branch}(当前分支)窗口。可以看到当前分支中的所有工作流运行，每次运行都有由工作流名称和哈希值组成 ID。还可以展开工作流运行状态，以查看作业和步骤。可以直接在 VS Code 中打开作业日志，或者可以在浏览器中打开步骤日志：
 
-\myGraphic{0.4}{content/chapter2/images/16.png}{图2.16 --- 在VS Code中手动运行工作流}
+\myGraphic{0.6}{content/chapter2/images/4.png}{图2.4 --- 检查当前分支中的工作流运行}
+
+\item 
+WORKFLOWS 窗口显示了主分支中仓库的所有工作流程，可以将工作流程固定在列表顶部，打开工作流程文件进行编辑，或者如果工作流具有 workflow\_dispatch 触发器，则可以运行工作流的触发器（见图 2.5）：
+
+\myGraphic{0.6}{content/chapter2/images/5.png}{图2.5 --- 工作流窗口允许触发和打开工作流}
+
+打开工作流文件。
+
+\item 
+接下来，在工作流程文件中尝试使用自动补全功能。删除第 15 行中 vars 后面的值。请注意，扩展程序知晓所有的变量和秘钥（见图 2.6）
+
+\myGraphic{0.6}{content/chapter2/images/6.png}{图2.6 --- 自动补全所有已知的秘钥和变量}
+
+还具有完整的 workflow 语法，可以在工作流文件中按组合键 [Control]+[Space] 来获取有效元素的列表。
+
+VS Code 会检测到你工作流文件中的问题，并为其提供快速修复（见图 2.7）：
+
+\myGraphic{0.6}{content/chapter2/images/7.png}{图2.7 --- VS Code 为问题提供快速修复}
+
+\item 
+在SETTINGS窗口中，可以找到库中所有的环境、密钥和变量。但不能创建新的环境，可以为环境或库级别添加密钥和变量，以及编辑或删除它们（见图 2.8）：
+
+\myGraphic{0.6}{content/chapter2/images/8.png}{图2.8 --- 在 VS Code 中管理环境、密钥和变量}
+
 \end{enumerate}
 
 \mySubsubsection{2.2.3}{How it works…}
 
-在某些触发因素方面存在一些限制,但是通常,在单独的分支中开发工作流并使用拉力请求进行更改的协作非常有效。
+对于 GitHub Actions 扩展，VS Code 是编写和执行工作流的完美编辑器，可以在一个地方完成所有操作，也可以离线工作，并且具有高级语法高亮和针对工作流和表达式的自动补全功能。这就是为什么我们将在本书的其余部分中，使用VS Code来编写工作流。
 
 \mySubsubsection{2.2.4}{There’s more…}
 
-为了更进一步,我们将在工作流程中添加一个衬里,以便在存储库中的所有工作流程中发现错误,安全问题以及缺少最佳实践。
+VS Code 不仅仅可以本地安装——也可以直接在浏览器中使用。在 GitHub 库中，只需按下点号 [.] 键，即可直接在浏览器中用 VS Code 打开当前库，或按下 [Shift]+[>] 在新标签页中打开。要直接在 VS Code 中打开仓库，也可以导航到https://github.dev/<owner>/<repository>。
+
+在 GitHub.dev 中，可以像在本地一样处理文件和 Git：首先，提交更改，然后推送到 GitHub。可以安装扩展，并且可以使用 GitHub 账户同步 VS Code 设置。
+
+然而，如果需要终端或安装一些框架，必须在本机进行操作或使用 GitHub Codespaces (\url{https://github.com/features/codespaces})。Codespaces 提供了在 Microsoft Azure 上运行的全功能远程开发环境。每月有 120 小时和 15 GB 的免费存储空间（GitHub Pro 计划则有 180 分钟和 20 GB）；之后，将按分钟和 GB 付费。每 GB 每月成本为 0.07 美元，机器的计算费用每小时在 0.18 美元(双核机器)到 2.88 美元(32 核机器)之间。对于本书来说，我选择了本地版本，以避免用完免费时长的限制，但如果各位读者从未尝试过 Codespaces，我鼓励各位进行尝试，这是为每个项目配备专业开发环境的绝佳方式。
