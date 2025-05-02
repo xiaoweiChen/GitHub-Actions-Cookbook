@@ -1,10 +1,10 @@
-Kubernetes 功能强大，但也相当复杂。请注意，在这个指南中，我只会专注于让你开始如何在 Kubernetes 中扩展自托管运行器。如果你想要运行和维护一个安全的环境，你需要更深入的 Kubernetes 知识，并且必须根据你的需求承担更多的工作。
+Kubernetes 非常强大，但也相当复杂。本示例中，我将只专注于让你开始使用 Kubernetes 扩展自托管运行器。
 
-ARC 是一个 Kubernetes 运算符，它可以编排和扩展你的自托管运行器的工作负载。它是一个开源项目，但现在已得到 GitHub 的全面支持。
+ARC 是一个 Kubernetes 运营商，能编排和扩展自托管运行器的工作负载。这是一个开源项目，但现在已得到 GitHub 的完全支持。
 
 \mySubsubsection{4.4.1}{Getting ready}
 
-如果你已经有一个 Kubernetes 集群，你可以直接使用它。如果没有，你可以在 Azure 中通过运行以下命令创建一个新的集群：
+如果已经有一个 Kubernetes 集群，可以使用它。如果没有，可以通过运行以下命令在 Azure 中创建一个新集群：
 
 \begin{shell}
 $ az group create --name AKSCluster -l westeurope
@@ -16,29 +16,30 @@ $ az aks create --resource-group AKSCluster \
 $ az aks get-credentials --resource-group AKSCluster --name AKSCluster
 \end{shell}
 
-确保你在集群中安装了 cert-manager(\url{https://cert-manager.io/docs/installation/})。你可以通过运行以下命令来完成安装。请确保将版本号替换为最新的版本:
+确保集群中安装了 cert-manager(\url{https://cert-manager.io/docs/installation/})，可以通过运行以下命令来完成此操作，确保为最新版本：
 
 \begin{shell}
 $ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.2/cert-manager.yaml
 \end{shell}
 
-你可以检查 ARC 的快速入门教程中先决条件是否有变化:\url{https://github.com/actions/actions-runner-controller/blob/master/docs/quickstart.md}。
+可以检查 ARC 的快速入门教程中先决条件是否有变化:\url{https://github.com/actions/actions-runner-controller/blob/master/docs/quickstart.md}。
 
 \mySubsubsection{4.4.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-将 ARC 部署到你的集群中。确保你将其版本更改为最新版本：
+将 ARC 部署到集群中，确保版本为最新版本：
 
 \begin{shell}
-$ kubectl apply -f https://github.com/actions/actions-runnercontroller/releases/download/v0.23.7/actions-runner-controller.yaml
+$ kubectl apply -f https://github.com/actions/actions-runnercontroller/releases/download/v0.23.7/
+actions-runner-controller.yaml
 \end{shell}
 
 \item 
-在 GitHub 上创建一个具有仓库权限的 PAT(个人访问令牌)。访问 \url{https://github.com/settings/tokens/new},选择“repo”,设置过期日期,然后点击“Generate token”(生成令牌)。接着,复制该令牌。
+在 GitHub 中创建一个具有 repo 范围的 PAT。转到 \url{https://github.com/settings/tokens/new}，选择 repo，设置过期日期，然后点击生成令牌，再复制该令牌。
 
 \item 
-现在，将令牌保存为 Kubernetes 中的秘钥：
+现在，将令牌保存为 Kubernetes 中的一个秘钥：
 
 \begin{shell}
 $ kubectl create secret generic controller-manager \
@@ -47,7 +48,7 @@ $ kubectl create secret generic controller-manager \
 \end{shell}
 
 \item 
-在您的仓库中创建一个名为 runnerdeployment.yml 的文件，并包含以下内容。将仓库所有者和名称替换为您的仓库的实际值：
+在库中创建一个名为 runnerdeployment.yml 的文件，并包含以下内容。将库所有者和名称替换为库的值：
 
 \begin{shell}
 apiVersion: actions.summerwind.dev/v1alpha1
@@ -62,68 +63,66 @@ spec:
 \end{shell}
 
 \item 
-将 RunnerDeployment 应用到您的集群中：
+将 RunnerDeployment 应用到集群：
 
 \begin{shell}
 $ kubectl apply -f runnerdeployment.yml
 \end{shell}
 
-现在，您应该有一个运行器和两个pods在运行：
+现在，应该有一个运行器和两个正在运行的 pod：
 
 \begin{shell}
 $ kubectl get runners
 $ kubectl get pods
 \end{shell}
 
-验证您是否可以在 GitHub 中看到该运行器(设置/操作/运行器)。请注意,每次工作流程运行后名称都会更改(见图 4.13):
+验证否可以在 GitHub 中看到运行器（settings/actions/runners）。请注意，每次工作流程运行后，名称都会更改（见图 4.13）：
 
-\myGraphic{0.4}{content/chapter4/images/13.png}{图4.13 --- GitHub 上的 ARC 运行器}
+\myGraphic{0.4}{content/chapter4/images/13.png}{图4.13 --- GitHub 中的 ARC 运行器}
 
-运行你之前配方中的 .github/workflows/self-hosted.yml 工作流程，并检查输出。注意，它是在你的 AKS 集群中执行的(见图 4.14)：
+从之前的配方中运行 .github/workflows/self-hosted.yml 工作流程并检查输出，在 AKS 集群中执行（见图 4.14）：
 
-\myGraphic{0.4}{content/chapter4/images/14.png}{图4.14 --- GitHub 上的 ARC 运行器}
-
-自托管的 GitHub Actions 工作流程由部署在 Kubernetes 集群中的 ARC(Actions Runner Controller)执行。
+\myGraphic{0.4}{content/chapter4/images/14.png}{图4.14 --- 自托管工作流程在 Kubernetes 集群中由 ARC 执行}
 \end{enumerate}
 
 \mySubsubsection{4.4.3}{How it works…}
 
-ARC 运行器默认设置为临时性。它们使用 Kubernetes 副本集,并在执行后自动启动一个新的容器。ARC 提供三种扩展选项:
+ARC 运行器默认设置为临时运行，使用 Kubernetes 副本集，并在执行后自动启动一个新的容器。ARC 提供三种扩展选项：
 
 \begin{itemize}
 \item 
-定时扩展:根据时间表进行扩展和缩减
+定时：根据计划进行扩展和缩减
 
 \item 
-基于负载的扩展:根据正在执行作业的运行器的百分比进行扩展
+基于规模：执行作业的繁忙运行器的百分比
 
 \item 
-按需扩展:当新的工作流程作业排队时启动实例
+按需：当新的工作流程作业排队时启动实例
 \end{itemize}
 
-ARC 支持在企业、组织和仓库级别创建运行器。您可以使用 GitHub 应用程序或 PAT 在组织和仓库级别进行身份验证。但是,在企业级别,您必须使用 PAT,因为应用程序不能限定在企业范围内。
+ARC 支持在企业、组织和库级别创建运行器。可以使用 GitHub 应用程序或 PAT 在组织和库级别进行身份验证。使用企业库时，必须使用 PAT，因为应用程序不能限定在企业范围内。
 
-您可以为不同的团队配置具有不同镜像和命名空间的扩展集。这也允许您限制它们之间的网络访问。
+可以为不同的团队配置具有不同镜像和命名空间的扩展集，也允许限制它们之间的网络访问。
 
 \mySubsubsection{4.4.4}{There’s more…}
 
-攻击软件供应链和构建流程是一个很大的威胁。你应该非常小心，特别是对于自托管的运行器。永远不要在允许分叉的公共代码仓库中使用它们，并采取措施控制你在运行器上拉取的所有依赖项，以便没有人能够执行以下操作：
+对软件供应链和构建过程的攻击构成了一个巨大的威胁。应该非常小心，特别是对于自托管运行器。永远不要在允许派生的公共库中使用，并采取措施控制在运行器上拉取的所有依赖项，以便没有人可以执行以下操作：
 
 \begin{itemize}
 \item 
-在你的构建过程中篡改文件
+篡改构建过程中的文件
 
 \item 
-逃逸你的容器/沙盒或访问工作流程范围之外的文件
+逃离容器/沙盒或访问工作流程范围之外的文件
 
 \item 
-通过操纵依赖缓存(缓存投毒)来危害你的依赖项 
+通过操纵依赖项缓存（缓存中毒）来损害依赖项
 
 \item 
-窃取数据或机密并将其发送到控制服务器。
+窃取数据或机密，并将数据发送到控制服务器
 \end{itemize}
 
-你可以在工作流中使用 StepSecurity 提供的 Harden-Runner 动作(\url{https://github.com/stepsecurity/harden-runner})。它将根据诸如出站网络流量等策略监控你的工作流，例如：
+可以在工作流程中使用 StepSecurity 的 Harden-Runner 操作(\url{https://github.com/stepsecurity/harden-runner})，将根据策略（如出站网络出口）监控工作流：
 
 \begin{shell}
 steps:
@@ -132,7 +131,7 @@ steps:
       egress-policy: audit
 \end{shell}
 
-你还可以用它来阻止流量，并仅允许特定的端点和端口：
+也可以使用它来阻止流量，只允许特定的端点和端口：
 
 \begin{shell}
 egress-policy: block
@@ -141,11 +140,11 @@ allowed-endpoints: >
   github.com:443
 \end{shell}
 
-对于 ARC，你无需在每个工作流任务中添加 Harden-Runner 动作，而是可以在 Kubernetes 集群上安装 ARC Harden-Runner DaemonSet。该 DaemonSet 将持续监控每个工作流运行，而无需在每个工作流中添加动作。
+对于 ARC，不必将 Harden-Runner 操作添加到每个工作流程作业中，可以在 Kubernetes 集群上安装 ARC Harden-Runner DaemonSet。该 DaemonSet 将不断监控每个工作流程的运行，而无需将操作添加到每个工作流程中。
 
-你可以在仪表板的“运行时安全”选项卡下访问安全洞察和运行时检测信息。
+可以在仪表板的运行时安全选项卡下访问安全见解和运行时检测。
 
-请注意，这不是免费软件。对于 \url{https://github.com} 上的公共存储库，提供免费的社区许可证；但对于私有存储库或 GitHub Enterprise Server (GHES)，你需要购买许可证(详情请参见 \url{https://www.stepsecurity.io/pricing})。
+请注意，这不是免费软件。对于 \url{https://github.com} 上的公共存储库，提供免费的社区许可证；但对于私有存储库或 GitHub Enterprise Server (GHES)，需要购买许可证(\url{https://www.stepsecurity.io/pricing})。
 
 
 
