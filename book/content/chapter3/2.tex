@@ -1,19 +1,19 @@
 
-在此食谱中,您将从Dockerfile创建一个简单的Docker容器操作,并将其用于连续集成(CI 工作流程,该工作流将每次更改某些东西时都会从工作流中运行动作。
+本示例中，将使用Dockerfile创建Docker容器，并在持续集成（CI）工作流程中使用它。每次更改内容时，工作流程都会运行该操作。
 
 \mySubsubsection{3.2.1}{Getting ready}
 
-创建一个名为DockeractionRecipe的新存储库。使其公开,以免您使用任何动作分钟并使用数文件进行初始化(请参见图3.1):
+创建一个名为DockerActionRecipe的新存储库。将其设为公开，并用README文件初始化（见图3.1）：
 
-\myGraphic{0.6}{content/chapter3/images/1.png}{图3.1 --- 为Docker容器操作创建一个新的存储库}
+\myGraphic{0.6}{content/chapter3/images/1.png}{图3.1 --- 为Docker容器操作创建一个新库}
 
-在本地克隆仓库并使用 VS Code 或 GitHub Codespaces 打开它。
+在本地克隆该库，并在VS Code或GitHub Codespaces中打开它。
 
 \mySubsubsection{3.2.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-在存储库的根部创建一个名为Dockerfile的新文件。将以下内容添加到文件：
+在库的根目录下创建一个名为Dockerfile的新文件，并向文件中添加以下内容：
 
 \begin{shell}
 # Container image that runs your code
@@ -21,19 +21,19 @@ FROM alpine:latest
 CMD echo "Hello World"
 \end{shell}
 
-这将基于最新的 Alpine 镜像创建一个镜像，并添加一层，用于将“Hello World”输出到控制台。
+这将基于最新的Alpine镜像创建一个镜像，并添加一个将“Hello World”输出到控制台的层。
 
 \item 
-使用以下命令在本地运行 Docker 容器：
+使用以下命令在本地运行Docker容器：
 
 \begin{shell}
 $ docker run $(docker build -q .)
 \end{shell}
 
-它将创建一个镜像(docker build)并运行它(docker run)。你应该能够在控制台上看到“Hello World”。
+它将创建一个镜像（docker build）并运行它（docker run），应该能够在控制台上看到Hello World。
 
 \item 
-要更加灵活,让我们将脚本代码移至自己的文件中。创建一个称为入门点的新文件.sh并添加以下内容:
+为了更灵活，创建一个名为entrypoint.sh的新文件，并添加以下内容：
 
 \begin{shell}
 #!/bin/sh -l
@@ -41,7 +41,7 @@ echo "Hello World"
 \end{shell}
 
 \item 
-现在,调整Dockerfile,以便执行脚本,而不是直接写入控制台。 将脚本文件复制到器的根部,然后将其用作入口点:
+现在，调整Dockerfile，使其执行脚本而不是直接写入控制台。将脚本文件复制到容器的根目录，然后将其作为入口点：
 
 \begin{shell}
 FROM alpine:3.10
@@ -51,28 +51,28 @@ ENTRYPOINT ["/entrypoint.sh"]
 \end{shell}
 
 \item 
-请注意，我添加了 \verb|chmod +x entrypoint.sh| 命令以使脚本可执行。否则，如果您尝试在本地运行容器，它将失败，并显示错误信息：\verb|exec: /entrypoint.sh": permission denied|(权限被拒绝)。在所有基于 Unix 的系统上，您可以直接运行 \verb|chmod +x entrypoint.sh|，该属性会在提交到 git 时附加到文件中。而在 Windows 上，您可以使用 git 来设置文件权限：
+请注意，这里添加了 \verb|chmod +x entrypoint.sh| 命令来使脚本可执行。否则，本地运行容器时会失败，并显示一条消息：\verb|exec: /entrypoint.sh": permission denied|(权限被拒绝)。在所有类Unix的系统中，可以在本地运行 \verb|chmod +x entrypoint.sh|，并在提交到git时附加该属性。在Windows上，可以使用git来设置文件权限：
 
 \begin{shell}
 $ git add entrypoint.sh
 $ git update-index --chmod=+x entrypoint.sh
 \end{shell}
   
-再次运行 Docker 容器。您应该会再次看到“Hello World” --- 这次是从脚本文件中输出的：
+再次运行Docker容器，应该会再次看到Hello World——这次是从脚本文件输出：
 
 \begin{shell}
 $ docker run $(docker build -q .)
 \end{shell}
 
 \item 
-在动作中，我们希望使用一个输入参数。因此，我们将对脚本进行参数化。将单词 "World" 替换为传递给 Docker 的所有参数(使用 \$@ 表示所有参数)：
+在这个操作中，我们想要使用一个输入参数，这就是要对脚本参数化的原因。将单词World替换为传递给Docker的参数（\$@代表所有参数）：
 
 \begin{shell}
 #!/bin/sh -l
 echo "Hello $@"
 \end{shell}
 
-尝试再次在本地运行容器，并传入一些单词。容器将打印结果，如下所示：
+尝试再次在本地运行容器，并传入一些单词。容器将进行输出，如下所示：
 
 \begin{shell}
 $ docker run $(docker build -q .) foo bar
@@ -80,7 +80,7 @@ $ docker run $(docker build -q .) foo bar
 \end{shell}
 
 \item 
-接下来，在您的仓库中添加一个名为 action.yml 的新文件，并加入以下输入内容：
+接下来，向库中添加一个名为action.yml的新文件，并添加以下输入：
 
 \begin{shell}
 name: 'Docker Action Recipe'
@@ -98,7 +98,7 @@ inputs:
 \end{shell}
 
 \item 
-至此，该操作已准备就绪。为了测试它，我们将添加一个名为 .github/workflows/ci.yml 的本地工作流文件，该文件会在每次推送时运行。它将下载仓库并使用自定义输入参数执行我们的操作：
+此时，操作已经准备好了。为了测试，需要添加一个名为.github/workflows/ci.yml的本地工作流文件，将在每次推送时运行。它会下载库，并使用自定义输入参数执行相应的操作：
 
 \begin{shell}
 name: Action CI
@@ -116,39 +116,39 @@ jobs:
           who-to-greet: '@wulfland'
 \end{shell}
 
-\begin{myTip}{引用本地行动}
-请注意，我们通过本地路径 ./ 引用了该操作，这就是为什么我们必须首先使用 checkout 操作的原因。工作流将使用与其运行时相同的版本。您也可以通过指定 <owner>/DockerActionRecipe@main 来正常引用该操作，就像从另一个仓库引用它一样。
+\begin{myTip}{引用本地操作}
+请注意，我们是通过本地路径 ./ 引用操作的——这就是为什么必须首先使用检出操作。工作流程将使用与工作流程运行时相同的版本，也可以通过指定 <owner>/DockerActionRecipe@main 来正常引用操作——就像从另一个库引用它一样。
 \end{myTip}
 
 \item 
-提交并推送所有更改。推送触发器将自动运行您的工作流，您可以检查操作的输出结果。它应该如图 3.2 所示那样显示。
+提交并推送所有更改。推送触发器将自动运行工作流，可以检查操作的输出。它应该看起来像图3.2所示：
 
-\myGraphic{0.6}{content/chapter3/images/2.png}{图3.2 --- 工作流程中的动作输出}
+\myGraphic{0.6}{content/chapter3/images/2.png}{图3.2 --- 工作流操作的输出}
 
-通过Docker守护程序和传递给动作的参数检查动作的输出。
+通过Docker守护程序和传递给操作的参数，来检查操作的输出。
 \end{enumerate}
 
 \mySubsubsection{3.2.3}{How it works…}
 
-有三种不同类型的动作：
+有三种不同类型的操作：
 
 \begin{itemize}
 \item 
-Docker容器操作
+Docker容器操作
 
 \item 
-JavaScript动作
+JavaScript操作
 
 \item 
-复合动作
+复合操作
 \end{itemize}
 
-Docker 容器操作仅在 Linux 上运行，而 JavaScript 操作和复合操作可以在任何平台上使用。所有操作都由名为 action.yml(或 action.yaml)的文件定义，该文件包含了定义操作的元数据。此文件不能被命名为其他名称，意味着一个操作必须位于其自己的仓库或文件夹中。action.yml 文件中的 run 部分定义了操作的类型。
+Docker容器操作仅运行在Linux上，而JavaScript操作和复合操作可以在没有平台限制。所有操作都由一个名为action.yml（或action.yaml）的文件定义，该文件包含定义操作的元数据。这个文件名不能变，所以一个操作必须位于自己的库或文件夹中。action.yml文件中的runs部分定义了操作的类型。
 
-Docker 容器操作将其所有依赖项包含在容器内，因此非常一致。它们允许您使用任何编程语言开发操作 --- 唯一的限制是它必须在 Linux 上运行。由于检索或构建镜像以及启动容器所需的时间，Docker 容器操作比 JavaScript 操作要慢。
+Docker容器操作包含它们所有的依赖项在容器中，因此一致。允许使用其他语言开发操作——唯一的限制是必须运行在Linux上。由于检索或构建镜像和启动容器所需的时间，Docker容器操作比JavaScript操作慢。
 
-Docker 容器操作可以引用容器注册表(如 Docker Hub 或 GitHub Packages)中的镜像，也可以在运行时构建您与其他操作文件一起提供的 Dockerfile。在这种情况下，您必须在 action.yml 文件中将镜像名称指定为 Dockerfile。
+Docker容器操作可以引用容器注册表中的镜像，例如：Docker Hub或GitHub Packages，或者可以在运行时构建相应的Dockerfile。这时，必须在action.yml文件中将Dockerfile指定为镜像名称。
 
 \mySubsubsection{3.2.4}{There’s more…}
 
-容器操作非常强大，因为您可以使用任何语言编写它们。您可以将输出参数返回给工作流，向工作流日志写入消息，在拉取请求中标注文件，以及编写丰富的工作总结。在接下来的简短教程中，我们将添加输出参数并写入作业总结。
+容器操作非常强大，可以使用任何语言进行编写。可以向工作流返回输出参数，向工作流日志写入消息，在拉取请求中注释文件，并编写作业摘要。在下一个简短的示例中，我们将添加输出参数并写入作业摘要。

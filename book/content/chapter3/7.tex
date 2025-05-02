@@ -1,28 +1,28 @@
-GitHub Actions 的强大之处在于其社区 --- 分享即是关爱。因此，GitHub Marketplace 在赋能基于社区的工作流方面扮演着至关重要的角色。在本教程中，您将为其中一个操作添加品牌信息和其他元数据，并将其分享到市场上。
+GitHub Actions 的强大之处在于社区——分享即是关爱。这就是为什么 GitHub 市场在赋能基于社区的流程中发挥着重要作用。在这个示例中，将为我们自定义的操作添加品牌和其他元数据，并在市场中分享。
 
 \mySubsubsection{3.7.1}{Getting ready}
 
-我将使用我们之前创建的 Docker 容器操作来完成本教程 --- 但您也可以使用 TypeScript 操作或复合操作。这无关紧要。只要该操作位于其自己的公共仓库中，就可以正常工作。
+我将使用之前创建的 Docker 容器操作，来完成这个指南——也可以使用 TypeScript 操作或复合操作，这无关紧要。只要操作位于自己的公共库中，它就可以工作。
 
 \mySubsubsection{3.7.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-在浏览器中导航到您仓库的根目录。GitHub 会检测到您的仓库包含一个 action.yml 文件，并会在蓝色横幅中建议您发布一个版本(见图 3.12)：
+在浏览器中导航到库的根目录。GitHub 将检测到库包含一个 action.yml 文件，并且会在蓝色横幅中提议发布一个版本（见图 3.12）：
 
-\myGraphic{0.4}{content/chapter3/images/12.png}{图3.12 --- 起草一个发布版本以将操作发布到市场}
+\myGraphic{0.6}{content/chapter3/images/12.png}{图3.12 --- 起草一个版本以将操作发布到市场}
 
-这与进入 Releases 并点击 Draft a new release(/releases/new)是相同的。
-
-\item 
-在对话框中，GitHub 会显示一些警告，以帮助您改进市场列表(见图 3.13)：
-
-\myGraphic{0.4}{content/chapter3/images/13.png}{图3.13 --- 发布操作到市场的指南}
-
-点击可用图标和颜色的链接，各选一个。我将选择铃铛(bell)和紫色(purple)。
+这与你转到\textbf{Releases}(发布)并点击\textbf{Draft a new release}(起草新版本)（/releases/new）相同。
 
 \item 
-打开您的操作。在VS代码中添加品牌和作者信息：
+在对话框中，GitHub 将显示一些警告，以帮助改进市场列表（见图 3.13）：
+
+\myGraphic{0.6}{content/chapter3/images/13.png}{图3.13 --- 发布操作到市场的指导}
+
+点击可用图标和颜色的链接，各选一个。我选择铃铛(bell)和紫色(purple)。
+
+\item 
+在 VS Code 中打开你的 action.yml 文件，并添加品牌和作者信息：
 
 \begin{shell}
 name: 'Docker Action Recipe'
@@ -34,86 +34,84 @@ author: 'Michael Kaufmann'
 \end{shell}
 
 \item 
-一个好的 README.md 文件对市场列表非常重要。添加输入、输出以及使用示例的部分。可以参考 \url{https://github.com/wulfland/DockerActionRecipe} 获取建议。
+对于市场列表来说，一个好的 README.md 文件很重要。添加一个用于输入、输出和使用示例的部分。可以参考 \url{https://github.com/wulfland/DockerActionRecipe} 获取建议。
 
 \item 
-提交并推动您的更改。
+提交并推送更改。
 
 \item 
-返回浏览器并刷新新版本发布窗口。检查应该现在没有任何警告，并且看起来像图 3.14 所示的内容：
+返回你的浏览器并刷新新版本窗口。现在检查应该显示没有警告，并且看起来像图 3.14 所示的样子：
 
-\myGraphic{0.4}{content/chapter3/images/14.png}{图3.14 --- 检查成功，因为该操作具有唯一的名称、品牌标识、描述以及一个 README 文件。}
-
-\item 
-单击选择标签，输入v1.0，然后单击创建新标签(请参见图3.15)：
-
-\myGraphic{0.4}{content/chapter3/images/15.png}{图3.15 --- 创建或选择一个标签以创建发布版本}
+\myGraphic{0.6}{content/chapter3/images/14.png}{图3.14 --- 检查成功，有唯一的名称、品牌、描述和一个 README 文件}
 
 \item 
-将 v1.0 添加为发布的标题。请注意，您可以自动生成该版本的发布说明。然而，只有在使用拉取请求(pull requests)时，生成的结果才会非常好。您也可以手动添加描述。
+点击\textbf{Choose a tag}(选择标签)，输入 v1.0，然后点击\textbf{Create new tag}(创建新标签)（见图 3.15）：
+
+\myGraphic{0.6}{content/chapter3/images/15.png}{图3.15 --- 创建或选择一个标签来创建一个版本}
 
 \item 
-点击 Publish release(发布版本)。在发布的版本中，您将看到 Marketplace 和 Latest 标签(见图 3.16)：
-
-\myGraphic{0.4}{content/chapter3/images/16.png}{图3.16 --- 存储库中发行版的内容}
+将 v1.0 添加为版本标题。请注意，可以为版本自动生成发布说明，只有在处理拉取请求时，结果才会非常好，也可以手动添加描述。
 
 \item 
-单击市场标签。这将带您进入您的市场上市。
+点击\textbf{Publish release}(发布版本)，将看到市场（Marketplace）和最新（Latest）标签（见图 3.16）：
+
+\myGraphic{0.6}{content/chapter3/images/16.png}{图3.16 --- 库中版本信息}
 
 \item 
-请注意，在您的 action.yml 文件中 branding 部分指定的颜色和图标会显示在操作名称旁边。您仓库的 README.md 文件将构成市场列表的主要内容。在右侧，您会看到一个 Delist 按钮(用于将操作从市场中移除)、一个版本选择器以及一些重要链接。第一个链接会带您返回到您的仓库(有关列表区域的详细信息，请参见图 3.17)：
-
-\myGraphic{0.4}{content/chapter3/images/17.png}{图3.17 --- 市场上架}
+点击市场标签，这将转到市场列表。
 
 \item 
-返回您的仓库，重复相同的步骤，创建一个名为 v1.1 的新版本。请注意，这次对话框中会有一个标志，显示这是最新的发布版本(见图 3.18)。如果您忘记了这一点，GitHub 将不会将该版本标记为最新版本 --- 这与您选择的版本号标签无关：
+注意在操作名称旁边，有一个图标，颜色是在 action.yml 文件中的品牌部分指定的。库的 README.md 文件将涵盖列表的最大部分。在右侧，有一个按钮可以取消列出该操作（从市场中移除），一个版本选择器，以及重要链接。第一个链接将转回到你的库（见图 3.17 列表区域）：
 
-\myGraphic{0.4}{content/chapter3/images/18.png}{图3.18 --- 在创建或编辑版本时，您必须手动将某个版本设置为最新版本。}
-
-\item 
-最后，创建一个新的工作流文件或在浏览器中编辑现有的工作流。在右侧的市场窗口中，输入您操作的名称。您的操作应该会立即被找到。请注意，GitHub 会根据您的发布版本自动生成安装说明(见图 3.19)：
-
-\myGraphic{0.4}{content/chapter3/images/19.png}{图3.17 --- 工作流编辑器中的列表}
+\myGraphic{0.6}{content/chapter3/images/17.png}{图3.17 --- 市场列表}
 
 \item 
-如果您不想将其保存在市场上，则将其贴上您的动作，如图3.17所示。
+返回到库并通过重复相同的步骤创建一个名为 v1.1 的新版本。这次对话框有一个标记作为最新版本（见图 3.18）。如果忘记这一点，GitHub 将不会标记该版本为最新——无论选择的标签版本号是什么：
+
+\myGraphic{0.6}{content/chapter3/images/18.png}{图3.18 --- 在创建或编辑版本时，必须手动设置一个版本为最新}
+
+\item 
+最后，在浏览器中创建一个新的工作流文件或编辑现有的工作流。在右侧，在市场窗口中输入操作的名称。操作应该立即被找到。请注意 GitHub 从版本自动创建的安装说明（见图 3.19）：
+
+\myGraphic{0.6}{content/chapter3/images/19.png}{图3.17 --- 工作流编辑器中的列表}
+
+\item 
+如果不想在市场中保留，请取消列出操作，如图 3.17 所示。
 \end{enumerate}
 
 \mySubsubsection{3.7.3}{How it works…}
 
-GitHub Marketplace 是基于 GitHub 的发布版本构建的(详见 \url{https://docs.github.com/en/repositories/releasing-projects-on-github})，而发布版本又是基于 Git 标签构建的。
+GitHub 市场是建立在 GitHub 版本之上(\url{https://docs.github.com/en/repositories/releasing-projects-on-github})，而 GitHub 版本又是建立在 git 标签之上的。标签可以是任何文本——但鼓励使用语义化版本控制来为版本赋予意义。
 
-标签可以是任意文本 --- 但建议使用语义化版本控制(Semantic Versioning)来为版本赋予意义。
-
-语义化版本控制是一种用于指定软件版本号的正式约定。它由具有不同含义的多个部分组成。语义化版本号的示例包括 1.0.0 或 2.5.99-beta。其格式如下：
+语义化版本控制是为软件指定版本号的正式约定，由具有不同含义的不同部分组成。语义化版本号的示例是 1.0.0 或 1.5.99-beta。格式如下：
 
 \begin{shell}
 <major>.<minor>.<patch>-<pre>
 \end{shell}
 
-让我们仔细看看：
+来仔细看看：
 
 \begin{itemize}
 \item 
-主版本号：一个数字标识符，如果版本不向后兼容且包含重大更改时增加。更新到新的主版本必须谨慎处理！主版本号为零表示初始开发阶段。
+主版本号：一个数字标识符，如果版本不向后兼容并且有破坏性更改，则该标识符会增加。必须谨慎处理对新主版本的更新！主版本号为零表示初始开发。
 
 \item 
-次版本号：一个数字标识符，如果有新功能添加但保持向后兼容时增加。可以更新到新的次版本而不破坏现有功能，如果需要新功能的话。
+次版本号：一个数字标识符，如果添加了新功能但版本与先前版本向后兼容，并且如果你需要新功能，可以更新而不会破坏任何东西，则该标识符会增加。
 
 \item 
-修订版本号：一个数字标识符，当发布向后兼容的错误修复时增加。新的修订版本应该总是安装。
+修订版本号：一个数字标识符，如果你发布了向后兼容的 bug 修复，则该标识符会增加。应该始终安装新的补丁。
 
 \item 
-预发布版本：一个文本标识符，通过连字符附加。该标识符只能使用 ASCII 字母数字字符和连字符([0-9A-Za-z-])。文本越长，预发布版本越小(意味着 -alpha < -beta < -rc)。预发布版本总是小于正常版本(1.0.0-alpha < 1.0.0)。
+预发布版本：使用连字符附加的文本标识符。标识符必须仅使用 ASCII 字母数字字符和连字符（[0-9A-Za-z-]）。文本越长，预发布版本越小（意味着 -alpha < -beta < -rc）。预发布版本始终小于正常版本（1.0.0-alpha < 1.0.0）。
 \end{itemize}
 
 
-在 GitHub 发布版本中，最佳实践是使用 v 作为语义化版本的前缀(例如，v1.0、v1.0.1 等)。
+在 GitHub 发布中，最佳实践是在语义化版本前缀加上 v（例如，v1.0、v1.0.1 等）。
 
 有关语义化版本的完整规范，请参见 \url{https://semver.org/}。
 
 \mySubsubsection{3.7.4}{There’s more…}
 
-通过标签进行版本控制存在某种风险，因为任何对仓库有写权限的人都可以修改标签。因此，作为 GitHub 操作的维护者，建议您除了分支保护规则外，还使用标签保护规则(详见 \url{https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/configuring-tag-protection-rules})。例如，为 v* 设置标签保护规则后，将防止任何没有管理员权限的人修改以 v 开头的标签。
+使用标签进行版本控制会带来一些风险，对库具有写权限的人都可以修改标签，作为 GitHub 操作的维护者，鼓励在分支保护规则之外使用标签保护规则( \url{https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/configuring-tag-protection-rules})。例如，对 v* 的标签保护规则，将防止没有库管理员权限的人修改以 v 开头的标签。
 
-如果您希望自动化生成语义化版本和自动生成高质量的发布说明，可以使用约定式提交(Conventional Commits)(详见 \url{https://www.conventionalcommits.org})。约定式提交为每次提交添加一个前缀，表明它是一个功能(feature)、修复(fix)，或者是否包含破坏性更改(breaking change)。您可以将其与 GitVersion(详见 \url{https://gitversion.net/docs/})结合使用，以自动为您的发布生成语义化版本。您将在第 7 章《使用 GitHub Actions 发布您的软件》中了解更多相关内容。
+如果想要自动化发布创建语义化版本和自动创建良好的发布说明的过程，可以使用约定式提交(Conventional Commits)(\url{https://www.conventionalcommits.org})。约定式提交在每个提交前添加一个前缀，指示它是功能还是修复，以及它是否破坏性的。可以将此与 GitVersion(详见 \url{https://gitversion.net/docs/})结合使用，为发布自动创建语义化版本。

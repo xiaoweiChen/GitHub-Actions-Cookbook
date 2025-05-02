@@ -1,15 +1,15 @@
 
-除了 Docker 容器操作和 JavaScript/TypeScript 操作之外，还有第三种操作类型 --- 复合操作(Composite Actions)。复合操作可以封装其他操作。在这个指南中，你将创建一个简单的复合操作，并在工作流中使用它 --- 既可以与 Bash 脚本配合使用，也可以与 GitHub 脚本一起使用。
+除了 Docker 容器操作和 JavaScript/TypeScript 操作之外，第三种类型的操作是复合操作。复合操作是其他操作的包装器。这个示例中，将创建一个简单的复合操作，并在工作流程中进行使用——一次使用 bash 脚本，一次使用 GitHub 脚本。
 
 \mySubsubsection{3.5.1}{Getting ready}
 
-创建一个新的仓库，命名为 CompositeActionRecipe。将其设置为公开，以避免消耗任何操作分钟数，并使用一个 README 文件进行初始化。将仓库克隆到本地，并在 VS Code 中打开它，或者直接在 GitHub Codespaces 中打开。
+创建一个名为 CompositeActionRecipe 的新库，将其设为公开，并用 README 文件初始化。在本地克隆该库，并在 VS Code 中打开，或在 GitHub Codespaces 中打开。
 
 \mySubsubsection{3.5.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-在仓库的根目录下添加一个名为 action.yml 的新文件。然后为其添加名称和描述：
+在库的根目录下添加一个名为 action.yml 的新文件。添加一个名称和描述：
 
 \begin{shell}
 name: 'Composite Action Recipe'
@@ -17,7 +17,7 @@ description: 'Greets the user and returns 42.'
 \end{shell}
 
 \item 
-在 action.yml 文件中添加一个名为 who-to-greet 的输入和一个名为 answer 的输出。请注意，要访问输出，您需要步骤 ID(step ID)，我们将在下一步中添加它:
+添加一个名为 who-to-greet 的输入和一个名为 answer 的输出。注意，需要步骤 ID 来访问输出。我们将在下一步中添加：
 
 \begin{shell}
 inputs:
@@ -32,7 +32,7 @@ outputs:
 \end{shell}
 
 \item 
-接下来，添加 runs 部分，将 using 设置为 composite，并添加一个执行 Bash 脚本的步骤。需要注意的是，在复合操作中，您必须明确指定 shell，而不能依赖默认的 shell:
+接下来，添加 runs 部分，将 using 设置为 composite，并添加一个执行 bash 脚本的步骤。在复合操作中，必须指定 shell，且不能依赖于默认的 shell：
 
 \begin{shell}
 runs:
@@ -47,17 +47,17 @@ runs:
         echo "So long, and thanks for all the fish."
 \end{shell}
 
-我们利用输入参数向工作流日志中写入一条问候消息，并通过与之前在容器操作中相同的方法将输出参数设置为 42。唯一的不同之处在于，这里的脚本是直接在工作流运行器上执行的，而不是在容器中运行。
+使用输入向工作流日志写入问候消息，并且以与在容器操作中相同的方式将输出参数设置为 42。唯一的区别是，直接在工作流程运行器上执行脚本，而非在容器中。
 
 \item 
-在 .github/workflows/ 目录下添加一个新的工作流文件，命名为 ci.yml，并配置它以便在 push 和 pull\_request 事件触发时运行。以下是示例配置：
+添加一个新的工作流程文件名为 .github/workflows/ci.yml，并配置它在 push 和 pull\_request 上运行：
 
 \begin{shell}
 name: CI Workflow
 on: [push, pull_request]
 \end{shell}
 
-在工作流文件中添加一个作业(job)，该作业会检出仓库并运行复合操作，同时传递一个输入参数。为步骤指定一个 ID，以便访问输出。以下是完整的配置示例：
+添加一个作业，它检出存储库并带有输入参数运行复合操作。给步骤一个 ID 以便访问输出，像这样：
 
 \begin{shell}
 jobs:
@@ -72,25 +72,25 @@ jobs:
           who-to-greet: '@wulfland'
 \end{shell}
 
-然后，添加一个额外的步骤，将输出写入控制台:
+然后，将输出写入控制台：
 
 \begin{shell}
       - name: Output the answer
         run: echo "The answer is ${{ steps.my-action.outputs.answer }}"
 \end{shell}
 
-这些概念应该在了解其他操作类型时已经熟悉了。
+这些概念应该已经非常熟悉了。
 
 \item 
-提交并推送您的更改。这将触发工作流；您可以通过检查工作流日志来查看您的操作的实际运行情况。
+提交并推送你的更改。这将触发工作流；可以检查工作流日志，看看操作如何执行的。
 \end{enumerate}
 
 \mySubsubsection{3.5.3}{How it works…}
 
-复合操作是步骤和其他操作的封装器。您可以使用它们来捆绑多个运行命令或操作 --- 无论这些操作是由您自己创建的还是来自市场上的 --- 并且您可以为组织中的用户提供其他操作的默认值。
+复合操作是步骤和其他操作的包装器，可以使用它们来捆绑多个运行命令或操作——无论自定义的，还是来自市场——并且可以为组织中的用户提供其他操作的默认值。
 
-在 action.yml 文件的 runs 部分中，复合操作包含了步骤 --- 就像您在普通工作流中设置的一样。您可以使用 inputs 上下文访问输入参数。输出参数可以通过步骤的 outputs 上下文，在 steps 上下文中访问。
+复合操作在 action.yml 文件的 runs 部分中有步骤——就像正常工作流中会有的那样。可以使用 inputs 上下文来访问输入参数。输出参数可以使用步骤上下文中的 outputs 上下文来访问。
 
 \mySubsubsection{3.5.4}{There’s more…}
 
-复合操作直接在工作流运行器上执行。由于所有运行器都内置了 Node.js，因此您可以在复合操作中运行 JavaScript 和 TypeScript。为了充分发挥工具包的功能，我们将在复合操作中使用一个名为 github-script 的操作。当然，您也可以直接在工作流中使用这一操作。
+复合操作直接在工作流运行器上执行，每个运行器都安装了 Node.js，所以也可以在复合操作中运行 JavaScript 和 TypeScript。我们将使用一个名为 github-script 的操作来利用工具包在复合操作中的力量，也可以直接在工作流中使用该操作。

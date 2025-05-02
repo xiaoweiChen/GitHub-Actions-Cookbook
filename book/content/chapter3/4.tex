@@ -1,34 +1,34 @@
 
-在本教程中，您将从模板创建一个基本的 TypeScript 动作，构建并发布它，然后在工作流中使用它。
+这个示例中，将从模板创建一个基本的 TypeScript 操作，构建和发布，并在工作流中使用。
 
 \mySubsubsection{3.4.1}{Getting ready}
 
-确保您已安装了较新版本的 Node.js(\url{https://nodejs.org/en/download})。请按照以下步骤操作：
+确保安装了相对较新版本的 Node.js(\url{https://nodejs.org/en/download})。请按照以下步骤操作：
 
 \begin{enumerate}
 \item 
-前往 \url{https://github.com/actions/typescript-action}，然后点击右上角的 \textbf{Use this template | Create a new repository}(如图 3.6 所示)：
+前往 \url{https://github.com/actions/typescript-action}，然后点击右上角的 \textbf{Use this template | Create a new repository}(使用此模板|创建新存储库)(如图 3.6 所示)：
 
-\myGraphic{0.4}{content/chapter3/images/6.png}{图3.6 --- 从 typescript-action 模板创建一个新的仓库}
-
-\item 
-选择您的 GitHub 账户作为拥有者，将其命名为 TypeScriptActionRecipe，保持其可见性为 Public(公开)，然后点击 Create repository(创建仓库)。
+\myGraphic{0.6}{content/chapter3/images/6.png}{图3.6 --- 使用 typescript-action 模板创建新库}
 
 \item 
-将仓库克隆到本地，并在 VS Code 中打开该文件夹。
+选择您的 GitHub 帐户作为所有者，将其命名为 TypeScriptActionRecipe，将其可见性保留为Public(公开)，然后单击\textbf{Create repository}(创建存储库)。
+
+\item 
+本地克隆该库，并在 VS Code 中打开该文件夹。
 \end{enumerate}
 
 \mySubsubsection{3.4.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-打开终端，进入仓库的根目录。安装所有必要的依赖项：
+打开终端，并转到库的根目录。安装所有必要的依赖项：
 
 \begin{shell}
 $ npm install
 \end{shell}
 
-该仓库包含一些单元测试。运行这些测试以检查一切是否正常：
+该库包含一些单元测试，运行它们以检查一切是否正常：
 
 \begin{shell}
 $ npm test
@@ -43,7 +43,7 @@ description: 'Waites for some milliseconds, writes an awesome job summary to the
 author: 'Michael Kaufmann'
 \end{shell}
 
-暂时忽略品牌信息(branding) --- 但请注意，该操作定义了一个输入参数(milliseconds)和一个输出参数(time)：
+暂时忽略品牌信息(branding) --- 但请注意，该操作具有定义的输入参数（milliseconds）和输出参数（time）：
 
 \begin{shell}
 # Define your inputs here.
@@ -66,32 +66,32 @@ outputs:
 export async function run(): Promise<void> {
 \end{shell}
 
-请注意，它使用了工具包(@actions/core；参见 \url{https://github.com/actions/toolkit})来读取输入参数：
+这里使用了工具包(@actions/core；参见 \url{https://github.com/actions/toolkit})来读取输入参数：
 
 \begin{shell}
 const ms: string = core.getInput('milliseconds')
 \end{shell}
 
-它还使用工具包来写入调试消息。这类似于我们在第 2 章中使用的 \verb|echo "::debug::{debug message}"| 工作流命令：
+还使用工具包来写入调试消息。这类似于我们在第 2 章中使用的 \verb|echo "::debug::{debug message}"| 工作流命令：
 
 \begin{shell}
 core.debug(`Waiting ${ms} milliseconds ...`)
 \end{shell}
 
-设置输出参数也是如此。这与写入 GITHUB\_OUTPUT 环境文件是等效的：
+对于设置输出参数也是如此。这相当于写入 GITHUB\_OUTPUT 环境文件：
 
 \begin{shell}
 echo "answer=42" >> $GITHUB_OUTPUT
 \end{shell}
 
-使用工具包时，代码如下所示：
+使用工具包的代码为：
 
 \begin{shell}
 core.setOutput('time', new Date().toTimeString())
 \end{shell}
 
 \item 
-下一步是在 run 函数中的 core.setOutput 下方编写我们的作业总结。从 core.summary 开始，并注意您可以使用自动补全功能来帮助您完成所有可用的函数和语法。添加一个 <h2> 标题：
+下一步是在 run 函数中的 core.setOutput 下面编写作业摘要。从 core.summary 开始，并注意可以使用自动完成功能，来了解所有可用的功能和语法。添加一个 <h2> 标题：
 
 \begin{shell}
 // Write an advanced job summary
@@ -99,7 +99,7 @@ core.summary
   .addHeading('Advanced Job Summary', 'h2')
 \end{shell}
 
-core.summary 对象具有流式接口(fluent interface)。这意味着您可以直接将新方法链接到前一个方法的输出中。接下来，添加一张图片并将其大小设置为 64x64：
+core.summary 对象具有流式接口(fluent interface)，所以可以直接将新方法链接到前一个方法的输出中。接下来，添加一张图片并将其大小设置为 64x64：
 
 \begin{shell}
 .addImage(
@@ -112,17 +112,29 @@ core.summary 对象具有流式接口(fluent interface)。这意味着您可以�
   )
 \end{shell}
 
-添加一个包含一些数据的表：
+添加一个带有一些数据的表格：
 
-\myGraphic{0.4}{content/chapter3/images/6.1.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+.addTable([ \\
+\hspace*{1em}[ \\
+\hspace*{2em}\{ data: 'File', header: true \}, \\
+\hspace*{2em}\{ data: 'Result', header: true \} \\
+\hspace*{1em}], \\
+\hspace*{1em}['foo.js', 'Pass \emoji{✅}'], \\
+\hspace*{1em}['bar.js', 'Fail \emoji{❌}'], \\
+\hspace*{1em}['test.js', 'Pass \emoji{✅}'] \\
+])
+}
+\end{tcolorbox}
 
-和一个简单的链接：
+以及一个简单的链接：
 
 \begin{shell}
 .addLink('My custom link', 'https://writeabout.net'
 \end{shell}
 
-您需要使用 write 函数来完成总结，将缓冲区内容写入环境文件中：
+需要使用 write 函数来完成摘要，以将缓冲区写入环境文件：
 
 \begin{shell}
 .write()
@@ -131,14 +143,14 @@ core.summary 对象具有流式接口(fluent interface)。这意味着您可以�
 可以在此处查看代码：https://github.com/wulfland/TypeScriptActionRecipe。
 
 \item 
-将 TypeScript 打包以供分发。这是非常重要的一步，每次修改 .ts 文件时都必须执行此操作！
+打包 TypeScript 以便分发。这是一个重要步骤，每次修改 .ts 文件时都必须执行！
 
 \begin{shell}
 $ npm run bundle
 \end{shell}
 
 \item 
-提交您的更改。这将自动触发一些工作流 --- 在它们运行的同时，您可以利用这个时间来看看它们正在做什么。.github/workflows/linter.yml 会在所有推送到 main 分支或针对 main 分支的拉取请求时运行，并会对您的代码库进行代码检查(linting)：
+提交更改。这将自动触发一些工作流程——行时，可以使用这些时间来查看它们在做什么。.github/workflows/linter.yml 在对 main 的所有推送和拉取请求上运行，其会对您的代码库进行检查：
 
 \begin{shell}
 - name: Lint Code Base
@@ -151,16 +163,16 @@ $ npm run bundle
     VALIDATE_JSCPD: false
 \end{shell}
 
-如果这一步失败了，那很可能是因为您在提交更改之前忘记了运行 npm run bundle。您也可以在本地运行 prettier，以确保您的代码符合代码检查(linting)的标准：
+如果这失败了，可能忘记在提交更改之前运行 npm run bundle，还可以在本地运行 prettier 以确保已遵守了 检查 标准：
 
 \begin{shell}
 $ npx prettier . --check
 $ npx prettier . --write
 \end{shell}
 
-.github/workflows/codeql-analysis.yml 工作流会在每次推送到 main 分支或针对 main 分支的拉取请求时运行 --- 此外，它还会每周运行一次。该工作流会对您的代码进行扫描，以发现潜在的安全漏洞。
+.github/workflows/codeql-analysis.yml 工作流也将在每次推送和对 main 的拉取请求上运行——但也会每周运行一次，将扫描代码以查找安全漏洞。
 
-Check dist (.github/workflows/check-dist.yml) 是一个简单的工作流，它会运行 npm run bundle 并将输出与您的 dist 文件夹进行比较。如果您忘记使用 npm run bundle 打包 TypeScript 代码，这个工作流将会失败。它通过一个小而简单的脚本来确保您不会遗漏打包步骤。
+Check dist（.github/workflows/check-dist.yml）是一个简单的工作流，将运行 npm run bundle 并将输出与您的 dist 文件夹进行比较。如果忘记使用小型简单脚本来打包您的 TypeScript，它将失败：
 
 \begin{shell}
   - name: Compare Expected and Actual Directories
@@ -173,7 +185,7 @@ Check dist (.github/workflows/check-dist.yml) 是一个简单的工作流，它�
       fi
 \end{shell}
 
-最后一个工作流是 CI 构建(.github/workflows/ci.yml)。它包含两个作业：第一个作业：安装所有依赖项并运行单元测试。第二个作业：执行您的动作，并使用其输出，正如我们在第 2 章中所做的那样。
+后一个是在 CI 构建（.github/workflows/ci.yml）。它有两个作业：一个安装所有依赖项并运行单元测试，而另一个执行您的操作并使用输出，就像第 2 章中所做的那样：
 
 \begin{shell}
 - name: Test Local Action
@@ -187,20 +199,20 @@ Check dist (.github/workflows/check-dist.yml) 是一个简单的工作流，它�
   run: echo "${{ steps.test-action.outputs.time }}"
 \end{shell}
 
-test-typescript 作业将会失败，因为我们没有调整单元测试，但第二个作业应该会成功。此时，您可以检查您的作业总结；它应该看起来像图 3.7 中所示的内容：
+test-typescript 作业将失败，因为没有调整单元测试，但第二个作业应该成功。此时，可以检查工作摘要，其应该看起来像图 3.6 中所示的那样：
 
-\myGraphic{0.4}{content/chapter3/images/7.png}{图3.7 --- 使用工具包创建的作业总结}
+\myGraphic{0.6}{content/chapter3/images/7.png}{图3.7 --- 使用工具包创建的工作摘要}
 
-另外，检查工作流日志中输出参数的值(请参见图3.8)：
+同时，在工作流程日志中检查输出参数的值（见图 3.8）：
 
-\myGraphic{0.4}{content/chapter3/images/8.png}{图3.8 --- 工作流日志中TypeScript动作的输出}
+\myGraphic{0.6}{content/chapter3/images/8.png}{图3.8 --- 工作流程日志中 TypeScript 操作的输出}
 
 \begin{myTip}{修复单元测试}
-我并未在本书中包含调整单元测试的教程，因为本书的重点是 GitHub Actions 而不是 TypeScript。但如果您想修复测试，可以先查看以下示例：\url{https://github.com/wulfland/TypeScriptActionRecipe/blob/main/__tests__/main.test.ts}。
+我没有在这本书中包含调整单元测试的示例，这本书是关于 GitHub Actions 而非 TypeScript。但想要修复测试，可以查看：\url{https://github.com/wulfland/TypeScriptActionRecipe/blob/main/__tests__/main.test.ts}。
 \end{myTip}
 
 \item 
-如果回到 main.ts 文件的末尾，您会看到，如果该操作遇到错误，它将会失败。它是通过使用 core.setFailed,而不是返回非零值来实现的：
+回到 main.ts 的末尾，如果遇到错误，操作将会失败。其通过使用 core.setFailed ，而非返回非零值来实现：
 
 \begin{shell}
 } catch (error) {
@@ -210,13 +222,13 @@ test-typescript 作业将会失败，因为我们没有调整单元测试，但�
 \end{shell}
 
 \item 
-创建一个名为Fail-CI-Build的新分支，然后切换：
+创建一个名为 fail-ci-build 的新分支并切换：
 
 \begin{shell}
 $ git switch -c fail-ci-build
 \end{shell}
 
-在包含Core.setFailed的行之前，将以下代码块添加到捕获块：
+在包含 core.setFailed 的行之前，向 catch 块中添加以下代码块：
 
 \begin{shell}
 core.error('Something bad happened', {
@@ -228,7 +240,7 @@ core.error('Something bad happened', {
   })
 \end{shell}
 
-在 .github/workflows/ci.yml 中，将 milliseconds 参数修改为一个无法转换为整数的值：
+在 .github/workflows/ci.yml 中，修改 milliseconds 参数为无法转换为整数的值：
 
 \begin{shell}
 - name: Test Local Action
@@ -238,7 +250,7 @@ core.error('Something bad happened', {
     milliseconds: xxx
 \end{shell}
 
-打包 TypeScript，提交您的更改，并创建一个拉取请求：
+打包 TypeScript，提交更改，并创建一个拉取请求：
 
 \begin{shell}
 $ npm run bundle
@@ -249,21 +261,21 @@ $ gh pr create --fill
 \end{shell}
   
 \item 
-检查您创建的拉取请求，并注意日志中来自 core.setFailed 和 core.error 的输出(参见图 3.9)：
+检查创建的拉取请求，并注意日志中来自 core.setFailed 和 core.error 的输出（见图 3.9）：
 
-\myGraphic{0.4}{content/chapter3/images/9.png}{图3.9 --- 工作流日志中失败动作的输出}
+\myGraphic{0.6}{content/chapter3/images/9.png}{图3.9 --- 工作流程日志中失败操作的输出}
 
-另外，请注意，注释在工作流文件中显示(请参见图3.10)：
+同时，请注意注释在工作流程文件中显示（见图 3.10）：
 
-\myGraphic{0.4}{content/chapter3/images/10.png}{图3.10 --- 工具包的注释}
+\myGraphic{0.6}{content/chapter3/images/10.png}{图3.10 --- 来自工具包的注释}
 
 围绕 TypeScript 和工具包的工具使得开发 GitHub Actions 变得更加便捷，并且在编写高质量的动作时提供了巨大的帮助
 \end{enumerate}
 
 \mySubsubsection{3.4.3}{How it works…}
 
-TypeScript 动作与容器动作并没有太大区别 --- 它们只是运行在 Node.js 环境中，而不是 Docker 容器中。TypeScript 只是 JavaScript 之上的一层抽象，当您运行 npm run bundle 时，它会被转译为 JavaScript(输出到 /dist 文件夹)。如果您是 TypeScript 的新手，这些工具可能会让人感到有些不知所措 --- 但同时，这些工具也让入门变得相当容易。VS Code 中的自动补全和智能提示(IntelliSense)、自动化的代码检查和格式化、支持模拟的单元测试等功能，都能帮助您编写高质量的代码。正是这些工具的存在，使得开发者能够更高效地创建和维护 GitHub Actions。
+TypeScript 操作与容器操作没有太大区别 --- 它们只是在 Node.js 环境中运行，而非 Docker 容器中。TypeScript 只是在 JavaScript 之上的一层，如果运行 npm run bundle，会转译成 JavaScript（进入 /dist 文件夹）。如果你是 TypeScript 新手，所有这些工具可能看起来令人不知所措——但这些工具也使得入门变得相当容易。VS Code 中的自动完成和 IntelliSense、自动检查 和格式化、带有模拟的单元测试——有很多工具有助于编写良好的代码。
 
 \mySubsubsection{3.4.4}{There’s more…}
 
-我们只是初步探索了该工具包(\url{https://github.com/actions/toolkit})的功能。它还可以帮助您使用 GitHub REST 或 GraphQL API、OIDC 令牌等更多功能。如果您计划在 GitHub Actions 上做更多工作，至少学习一点 TypeScript 是值得的，这样可以充分利用该工具包的强大功能。
+我们只是接触了工具包(\url{https://github.com/actions/toolkit})，并了解了其一些功能。它还可以在使用 GitHub REST 或 GraphQL API、OICD 令牌等功能时给予我们帮助。如果想要在 GitHub Actions 中做更多事情，了解一点 TypeScript 很有必要，从而能更好借助工具包的力量。
