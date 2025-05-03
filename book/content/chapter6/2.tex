@@ -1,4 +1,4 @@
-在这个指南中，我们将创建一个简单的持续集成 (CI) 流水线，用于构建和验证代码，并将其集成到拉取请求验证中。我们将在后续的指南中使用这段代码 --- 这就是为什么我们使用一个非常简单的 JavaScript 包。
+在示例方中，将创建一个简单的持续集成 (CI) 流水，该流水构建和验证代码，并集成到拉取请求验证中。我们将在后续配方中使用此代码——这也是使用一个非常简单的 JavaScript 包的原因。
 
 \mySubsubsection{6.2.1}{Getting ready}
 
@@ -313,7 +313,7 @@ super-linter/super-linter/slim@[VERSION]
 
 在第二章《编写和调试工作流程》中,我还向您介绍了分支保护。您可以使用规则保护存储库中的一个或多个分支,并强制执行提交必须通过拉取请求合并,并且某些检查必须成功。除了手动审查之外,您还可以要求状态检查成功(见图 6.1):
 
-\myGraphic{0.4}{content/chapter6/images/1.png}{图6.1 ---  将 GitHub Action 工作流程作业添加为受保护分支的状态检查}
+\myGraphic{0.6}{content/chapter6/images/1.png}{图6.1 ---  将 GitHub Action 工作流程作业添加为受保护分支的状态检查}
 
 状态检查可以是工作流程中的一个作业 - 或任何使用状态 API 报告状态集成的。您可以为下一个指南中的存储库中的 main 分支启用策略，并将状态检查策略设置为工作流程的作业。有关受保护分支的更多信息，请参阅 \url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches}。
 
@@ -321,7 +321,7 @@ super-linter/super-linter/slim@[VERSION]
 
 规则集是分支保护的更强大的继任者。它们与受保护分支具有相同的权力。您还可以像在受保护分支中一样定义状态检查(见图 6.2)：
 
-\myGraphic{0.4}{content/chapter6/images/2.png}{图6.2 ---  在规则集中将 GitHub Action 工作流程作业添加为状态检查}
+\myGraphic{0.6}{content/chapter6/images/2.png}{图6.2 ---  在规则集中将 GitHub Action 工作流程作业添加为状态检查}
 
 大多数可以在规则集中使用的规则与分支保护规则相似，并且可以在不改变现有规则的情况下组合使用。
 

@@ -55,7 +55,7 @@ $ gh pr create --fill
 \item 
 在您的拉取请求中打开 CI 工作流程运行并检查我们添加的步骤的输出。重新运行这两个作业，并注意操作如何从缓存中恢复软件包，以及 cache-hit 如何防止下一步执行(参见图 6.21)：
 
-\myGraphic{0.4}{content/chapter6/images/21.png}{图6.21 --- 缓存成功恢复并且 cache-hit 为 true}
+\myGraphic{0.6}{content/chapter6/images/21.png}{图6.21 --- 缓存成功恢复并且 cache-hit 为 true}
 
 \item 
 合并您的拉取请求：
@@ -115,6 +115,6 @@ $ gh pr merge -s --auto
 
 你可以在 Actions | Caches下管理缓存(见图6.22):
 
-\myGraphic{0.4}{content/chapter6/images/22.png}{图6.22 --- 管理缓存}
+\myGraphic{0.6}{content/chapter6/images/22.png}{图6.22 --- 管理缓存}
 
 缓存操作(\url{https://github.com/actions/cache})对大多数编程语言都有很好的文档和示例。当你想实现缓存时,也可以参考文档(\url{https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows})。

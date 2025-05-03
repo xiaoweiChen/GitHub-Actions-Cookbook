@@ -177,13 +177,8 @@ RUN apt-get -y update && \
   useradd -m docker && \
   apt-get install -y --no-install-recommends curl ca-certificates && \
   mkdir -p /opt/hostedtoolcache /home/docker/actions-runner && \
-  curl -L \
-  https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/
-  actions-runner-${GH_RUNNER_PLATFORM}-${GH_RUNNER_VERSION}.tar.gz \
-  -o /home/docker/actions-runner/actionsrunner.tar.gz && \
-  tar xzf /home/docker/actions-runner/actions-runner.tar.gz -C /home/docker/actions-runner && \
-  chown -R docker /home/docker && \
-  /home/docker/actions-runner/bin/installdependencies.sh
+  curl -L https://github.com/actions/runner/releases/download/v${GH_RUNNER_VERSION}/
+  actions-runner-${GH_RUNNER_PLATFORM}-${GH_RUNNER_VERSION}.tar.gz  -o /home/docker/actions-runner/actionsrunner.tar.gz && tar xzf /home/docker/actions-runner/actions-runner.tar.gz -C /home/docker/actions-runner && chown -R docker /home/docker && /home/docker/actions-runner/bin/installdependencies.sh
 \end{shell}
 
 以 docker 用户身份运行容器，并将工作目录设置为该用户主目录下的 actions-runner：

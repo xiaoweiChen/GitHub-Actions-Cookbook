@@ -5,7 +5,7 @@
 
 在仓库中，导航到“设置”|“代码安全性和分析”，确保已启用“依赖关系图”(见图7.4)：
 
-\myGraphic{0.4}{content/chapter7/images/5.png}{图7.5 --- 启用依赖关系图和可选的Dependabot警报}
+\myGraphic{0.6}{content/chapter7/images/5.png}{图7.5 --- 启用依赖关系图和可选的Dependabot警报}
 
 这将分析您的仓库并检测您可以在“洞察”|“依赖关系图”下检查的所有依赖项。您还可以启用Dependabot警报。在这种情况下，当您的某个依赖项存在已知漏洞时，Dependabot会通知您。Dependabot安全更新更进一步，Dependabot会为您生成一个包含更新到非漏洞版本的拉取请求。为了减少拉取请求的数量，您可以组合更新(此功能仍处于测试阶段)。
 
@@ -80,19 +80,19 @@ updates:
 \item 
 提交并推送文件。然后,转到Insights | Dependency graph | Dependabot。为每个配置的生态系统都有一个条目,您可以通过点击右侧的链接来检查日志文件(参见图7.6):
 
-\myGraphic{0.4}{content/chapter7/images/6.png}{图7.6 --- 检查Dependabot版本更新的日志}
+\myGraphic{0.6}{content/chapter7/images/6.png}{图7.6 --- 检查Dependabot版本更新的日志}
 
 检查日志中是否有错误。
 
 \item 
 现在，转到包-配方仓库，并使用新的补丁版本创建一个新版本。一旦新包版本发布，转到Insights | Dependency graph| Dependabot，并点击package.json行中的链接。点击检查更新以强制Dependabot现在检查更新(参见图7.7)：
 
-\myGraphic{0.4}{content/chapter7/images/7.png}{图7.7 --- 让Dependabot现在检查更新}
+\myGraphic{0.6}{content/chapter7/images/7.png}{图7.7 --- 让Dependabot现在检查更新}
 
 \item 
 Dependabot将创建一个新的拉取请求，以更新到新版本(参见图7.8)：
 
-\myGraphic{0.4}{content/chapter7/images/8.png}{图7.8 --- Dependabot版本更新创建的拉取请求}
+\myGraphic{0.6}{content/chapter7/images/8.png}{图7.8 --- Dependabot版本更新创建的拉取请求}
 
 合并拉取请求，或者通过在拉取请求上评论 @dependabot squash and merge 让 Dependabot 来完成合并。
 

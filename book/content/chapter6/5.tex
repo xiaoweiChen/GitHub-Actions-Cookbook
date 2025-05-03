@@ -94,7 +94,7 @@ Swift(在撰写本文时处于测试阶段)
 \item 
 默认:CodeQL 的默认设置将自动检测您存储库中的语言并选择受支持的进行分析。它将应用默认的查询套件和扫描触发器。在存储库中,转到Settings | Code security and analysis,,如果您的存储库中的语言受该功能支持,则可以选择Default(见图 6.11):
 
-\myGraphic{0.4}{content/chapter6/images/11.png}{图6.11 --- 使用默认或高级模式配置代码扫描}
+\myGraphic{0.6}{content/chapter6/images/11.png}{图6.11 --- 使用默认或高级模式配置代码扫描}
 
 \item 
 高级：使用自定义工作流程并添加 CodeQL 分析，就像我们在本指南中所做的那样。如果您在设置中点击高级(图 6.11)，这将为您生成一个可定制的工作流程模板。它将使用带有 fail-fast: false 的矩阵策略来分析您存储库中检测到的所有语言。
@@ -105,7 +105,7 @@ Swift(在撰写本文时处于测试阶段)
 
 所有工具的分析结果都可以在“安全”|“代码扫描”下访问(见图 6.12)：
 
-\myGraphic{0.4}{content/chapter6/images/12.png}{图6.12 --- 在存储库中查看代码分析结果}
+\myGraphic{0.6}{content/chapter6/images/12.png}{图6.12 --- 在存储库中查看代码分析结果}
 
 您可以访问报告结果的所有工具的状态。请注意,在我们的存储库中,分析还分析了我们的测试包生成的代码。
 要了解更多关于 CodeQL 的信息,请访问:\url{https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql}。
@@ -116,7 +116,7 @@ GitHub 支持各种其他工具 - 其中包括 Checkmarx、Snyk、Microsoft Defe
 
 如果您在“设置”|“代码安全性和分析”下点击“探索工作流程”(见图 6.13)，然后您将被重定向到一个新的工作流程页面，该页面通过安全类别和代码扫描查询进行过滤(\url{https://github.com/OWNER/REPO/actions/new?category=security&query=code+scanning})：
 
-\myGraphic{0.4}{content/chapter6/images/13.png}{图6.13 --- 向您的存储库添加第三方扫描工具}
+\myGraphic{0.6}{content/chapter6/images/13.png}{图6.13 --- 向您的存储库添加第三方扫描工具}
 
 您可以探索所有已发布到市场的模板工作流程的合作伙伴。
 

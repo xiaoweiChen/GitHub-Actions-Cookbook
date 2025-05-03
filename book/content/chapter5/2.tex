@@ -1,27 +1,36 @@
-在这个配方中，你将创建一个简单的问题模板，之后可以扩展这个模板以收集用户输入用于你的 IssueOps 工作流。
+本示例中，将创建一个简单的模板，以后可以扩展它以收集 IssueOps 工作流中的用户输入。
 
 \mySubsubsection{5.2.1}{Getting ready}
 
-我们将把问题模板添加到你在前几章中使用的仓库中。你可以将仓库克隆到本地并在 Visual Studio Code 中操作，或者你也可以直接在浏览器中完成这部分操作 --- 这无关紧要。你可以参考我的仓库中的示例(\url{https://github.com/wulfland/GitHubActionsCookbook})。
+我们将把issue模板添加到前几章中使用过的库中，可以本地库并在 Visual Studio Code 中打开，也可以在浏览器中完成此部分。可以按照我库中的示例(\url{https://github.com/wulfland/GitHubActionsCookbook})进行操作。
 
 \mySubsubsection{5.2.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-创建新文件：在你的仓库中创建一个名为 .github/ISSUE\_TEMPLATE/repo\_request.yml 的新文件。只要该文件位于 .github/ISSUE\_TEMPLATE 文件夹内，并且是 YAML 或 Markdown 格式，GitHub 就会自动将其视为一个问题模板。
+在库中创建一个名为 .github/ISSUE\_TEMPLATE/repo\_request.yml 的文件。只要文件是 YAML 或 Markdown 文件，GitHub 就会自动将 .github/ISSUE\_TEMPLATE 文件夹中的文件视为issue模板。
 
 \item 
-添加名称和描述：为模板添加名称和描述。
+为模板添加名称和描述：
 
-\myGraphic{0.4}{content/chapter5/images/0.1.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+name: '\emoji{🗒️} Repository Request'\\
+description: 'Request a new repository.'
+}
+\end{tcolorbox}
 
 \item 
-预填充新问题的标题：使用默认值预填充新问题的标题。
+使用默认值预填新问题的标题：
 
-\myGraphic{0.4}{content/chapter5/images/0.2.png}{}
+\begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
+\scriptsize{
+title: '\emoji{🗒️} Repository Request: '
+}
+\end{tcolorbox}
 
 \item 
-应用一个或多个标签给新问题：
+将一个或多个标签应用于新问题：
 
 \begin{shell}
 labels:
@@ -29,14 +38,14 @@ labels:
   - 'issue-ops'
 \end{shell}
 
-注意，这些标签必须存在于仓库中。如果它们不存在，请创建它们(可以使用 gh label list 来检查)：
+注意，这些标签必须存在于仓库中。如果不可用，请创建它们（使用 gh label list 进行检查）：
 
 \begin{shell}
 $ gh label create repo-request
 $ gh label create issue-ops
 \end{shell}
 
-如果需要，你还可以提供描述或显式的颜色字符串：
+还可以提供描述或明确的颜色字符串：
 
 \begin{shell}
 $ gh label create repo-request \
@@ -45,7 +54,7 @@ $ gh label create repo-request \
 \end{shell}
 
 \item 
-将问题分配给一个或多个用户或团队：在这个例子中，只需使用你的 GitHub 用户名即可。
+将问题分配给一个或多个用户或团队，只需使用 GitHub 用户名即可：
 
 \begin{shell}
 assignees:
@@ -53,25 +62,26 @@ assignees:
 \end{shell}
 
 \item 
-自动将新问题分配给 GitHub 项目：语法为 \{owner\}/\{project id\}。
+可以自动将新问题分配给一个 GitHub 项目，语法为 \{owner\}/\{project id\}。
 
 \begin{shell}
 projects: 'wulfland/19
 \end{shell}
 
-请注意,创建问题的人需要对该项目具有写入权限。
-如果你没有项目,那么只需创建一个新项目。点击右上角的 + 图标,然后选择新建项目(见图 5.1)。
+请注意，创建问题的人需要对该项目具有写入权限。
 
-\myGraphic{0.4}{content/chapter5/images/1.png}{图 5.1 --- 创建一个新项目}
+如果没有项目，请创建一个新项目。点击右上角的 + 图标，然后选择 \textbf{New project}（新建项目）（见图 5.1）。
 
-为项目选择一个模板或从头开始。对于一个用于管理存储库请求的简单项目,你可以从一个简单的看板(Board)开始(见图 5.2)。
+\myGraphic{0.6}{content/chapter5/images/1.png}{图 5.1 --- 创建新项目}
 
-\myGraphic{0.4}{content/chapter5/images/2.png}{图 5.2 --- 选择一个模板或从头开始}
+选择一个项目模板或从头开始。对于一个简单的管理仓库请求的项目，您可以直接从一个简单的 Board（看板）开始（见图 5.2）。
 
-例如“存储库请求”，然后点击创建项目(Create project)。从项目的 URL 中获取项目 ID：https://github.com/users/\{owner\}/projects/\{id\}。
+\myGraphic{0.6}{content/chapter5/images/2.png}{图 5.2 --- 选择模板或从头开始}
+
+为项目命名——例如，Repository Requests，然后点击 \textbf{Create project}（创建项目）。从项目的 URL 中获取项目 ID：https://github.com/users/\{owner\}/projects/\{id\}。
 
 \item 
-在表单的主体中,你可以定义不同的字段。首先为请求的仓库名称创建一个简单的文本输入框。你可以设置字段为必填项,并添加额外的标签、默认值或占位符:
+在表单正文中，可以定义不同的字段。首先，为请求的仓库名称添加一个简单的文本输入框，可以使字段成为必填项，并添加附加标签、默认值或占位符：
 
 \begin{shell}
 body:
@@ -87,7 +97,7 @@ kebab casing.'
 \end{shell}
 
 \item 
-通常，你会有一个部门、区域或团队用于权限设置或命名约定。添加一个简单的下拉菜单，从中选择两个示例部门之一：
+通常，会有一个部门、区域或团队，用于权限或命名约定。添加一个简单的下拉菜单，从中选择两个示例部门：
 
 \begin{shell}
 - type: dropdown
@@ -105,30 +115,33 @@ kebab casing.'
 \end{shell}
 
 \item 
-将文件提交到你的仓库。
+将文件提交到库。
 
 \item 
-现在，在“问题| 新建问题”(Issues | New issue)下，你可以挑选你的模板并点击开始(Get started)(见图 5.3)。
+在 \textbf{Issues | New issue} 下，可以选择模板并点击 \textbf{Get started}（见图 5.3）。
 
-\myGraphic{0.4}{content/chapter5/images/3.png}{图 5.3 --- 使用模板创建问题}
+\myGraphic{0.6}{content/chapter5/images/3.png}{图 5.3 --- 使用模板创建issue}
 
-请注意,标签、项目和被指派人会自动设置,控件也会渲染为必填字段,并设置为正确的默认值。
+标签、项目和分配对象已自动设置，控件为必填字段，并设置了正确的默认值（见图 5.4）。
 
-\myGraphic{0.4}{content/chapter5/images/4.png}{图 5.4 --- 使用问题模板创建新问题,填写表单并保存新问题}
+\myGraphic{0.6}{content/chapter5/images/4.png}{图 5.4 --- 使用问题模板创建新issue}
 
-填写表单并保存新问题。
+填写表单并保存新issue。
 
 \end{enumerate}
 
 \mySubsubsection{5.2.3}{How it works…}
 
-问题和拉取请求模板是引导用户创建问题或拉取请求时的强大工具。你可以通过用户界面生成这些模板，使它们更容易被发现(参见GitHub文档：\url{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issuesand-pull-requests/syntax-for-issue-forms})。模板可以是纯Markdown格式的，但使用本指南中提到的新自定义模板，你可以创建包含多种表单元素(如markdown、文本区域、输入框、下拉菜单和复选框)的丰富表单。你还可以添加验证并提供默认值。对于GitHub表单模式的完整语法，请参考此链接 \url{https://docs.github.com/en/communities/using-templates-toencourage-useful-issues-and-pull-requests/syntax-for-githubs-formschema}。请注意，在填写完表单后，数据将以Markdown形式添加到问题或拉取请求的正文中。模板仅在用户创建问题或拉取请求时支持他们，之后编辑时就只是Markdown了。
+问题（Issue）和拉取请求（Pull Request）模板，是引导用户创建问题或拉取请求的有力工具。
+可以通过界面生成模板，使其更易于查找（\url{https://docs.github.com/en/communities/using-templates-to-encourage-useful-issuesand-pull-requests/syntax-for-issue-forms}）。模板可以是纯 Markdown，但通过此示例中使用的新自定义模板，也可以创建包含多种表单元素（如 Markdown、文本区域、输入框、下拉菜单和复选框），还可以添加验证并设置默认值。有关 GitHub 表单模式的完整语法，请参阅 \url{https://docs.github.com/en/communities/using-templates-toencourage-useful-issues-and-pull-requests/syntax-for-githubs-formschema}。填写完表单后，数据会以 Markdown 格式添加到问题或拉取请求的正文中。模板仅在用户创建问题或拉取请求时提供支持。之后，编辑时就只是 Markdown 了。
 
 \mySubsubsection{5.2.4}{There’s more…}
 
-在创建新问题时,GitHub会显示来自.github/ISSUE\_TEMPLATE文件夹中的所有有效的Markdown或YAML表单模板。但是,你可以配置额外的链接至外部系统,并且你可以设置是否允许空白问题或者强制用户选择一个模板(见图 5.5)。这使得你可以更灵活地管理如何创建问题以及收集必要的信息来加快解决流程。
+GitHub 会在创建新问题时显示 .github/ISSUE\_TEMPLATE 文件夹中的所有有效 Markdown 或 YAML 表单模板。但您可以配置额外的链接到外部系统，并可以配置是否允许空白问题或强制用户选择模板（请参阅图 5.5）。
 
-要配置模板选择器,请在 .github/ISSUE\_TEMPLATE 文件夹中添加一个 config.yml 文件。将 blank\_issues\_enabled 设置为 true 或 false,并在 contact\_links 数组中添加额外的链接。例如:
+\myGraphic{0.6}{content/chapter5/images/5.png}{图 5.5 --- 配置模板选择器表单}
+
+要配置模板选择器，请将 config.yml 文件添加到 .github/ISSUE\_TEMPLATE 文件夹中。将 blank\_issues\_enabled 设置为 true 或 false，并将额外的链接添加到 contact\_links 数组中：
 
 \begin{tcolorbox}[ breakable,colback = bashcodebg, colframe= black!50!white]
 \scriptsize{
