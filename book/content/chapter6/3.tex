@@ -1,9 +1,9 @@
 
-在这个指南中，我们将为不同的版本构建和测试我们的软件，具体来说，是为 NodeJS 环境。
+在本示例中，将为不同的版本构建和测试软件。在我们的示例中，使用的是 NodeJS 环境。
 
 \mySubsubsection{6.3.1}{Getting ready}
 
-确保您已经从上一个指南中克隆了存储库。创建一个新分支来修改工作流程：
+确保已从上一个示例中克隆了库，并创建一个新分支来修改工作流：
 
 \begin{shell}
 $ git switch -c build-matrix
@@ -15,7 +15,7 @@ $ git switch -c build-matrix
 
 \begin{enumerate}
 \item 
-将以下代码添加到工作流程文件中：
+将以下代码添加到工作流文件中：
 
 \begin{shell}
 strategy:
@@ -23,10 +23,10 @@ strategy:
     node-version: ["21.x", "20.x"]
 \end{shell}
 
-如有需要，请调整版本。
+根据需要调整版本。
 
 \item 
-在 actions/setup-node 操作中，将 Node 版本设置为矩阵上下文中的相应值：
+在 actions/setup-node 操作中，将 node 版本设置为矩阵上下文中的对应值：
 
 \begin{shell}
 - uses: actions/setup-node@v4
@@ -36,7 +36,7 @@ strategy:
 \end{shell}
 
 \item 
-提交并推送您的更改，并创建一个拉取请求：
+提交并推送更改，并创建一个拉取请求：
 
 \begin{shell}
 $ git add .
@@ -46,12 +46,12 @@ $ gh pr create --fill
 \end{shell}
 
 \item 
-检查工作流程的输出。它将为矩阵数组中的每个条目运行一个单独的工作(见图 6.3)：
+检查工作流的输出，其将为矩阵数组中的每个条目运行一个单独的作业（见图 6.3）：
 
-\myGraphic{0.6}{content/chapter6/images/3.png}{图6.3 --- 矩阵为每个条目运行不同的作业}
+\myGraphic{0.6}{content/chapter6/images/3.png}{图6.3 --- 矩阵为每个条目运行一个不同的作业}
 
 \item 
-等待工作流程完成。合并您的拉取请求并清理您的存储库：
+等待工作流完成，合并拉取请求并清理库：
 
 \begin{shell}
 $ gh pr merge -m
@@ -60,7 +60,7 @@ $ gh pr merge -m
 
 \mySubsubsection{6.3.3}{How it works…}
 
-矩阵是一种方便的方法，可以使用不同的组合来运行相同的工作流程作业。它可以包含一个或多个包含多个值的数组。矩阵将运行所有数组中所有值的组合。您可以将矩阵视为嵌套的 for 循环。一个很好的例子是在不同的平台上运行和测试不同的版本：
+矩阵是一种方便的方法，可以使用不同的组合来使用相同的工作流作业。可以包含一个或多个数组，这些数组可以包含许多值。矩阵将运行所有数组中所有值的所有组合，可以将矩阵视为嵌套的 for 循环。一个很好的例子是在不同平台上运行和测试不同版本：
 
 \begin{shell}
 jobs:
@@ -76,11 +76,11 @@ jobs:
         node-version: ${{ matrix.version }}
 \end{shell}
 
-通过这种方式，您可以重复使用相同的工作流程逻辑来同时测试许多不同的值组合。
+这样，可以重用相同的工作流逻辑，同时测试许多不同的值组合。
 
 \mySubsubsection{6.3.4}{There’s more…}
 
-矩阵还有一些附加功能。您可以设置 fail-fast 来指示如果在矩阵中的一个作业失败时是否取消工作流程,或者是否应该继续。您可以使用 max-parallel 定义并行作业的数量,并且可以包含和排除某些元素的值。这里是一个更复杂的例子:
+矩阵有一些功能。可以设置 fail-fast 来指示如果矩阵中的一个作业失败，是否会取消工作流，或者应该继续。可以使用 max-parallel 定义并行作业的数量，并且可以为某些元素包含和排除值。这是一个更加复杂的示例：
 
 \begin{shell}
 jobs:

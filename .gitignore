@@ -1,0 +1,15 @@
+*.pdf
+*.aux
+*.log
+*.out
+*.gz
+*.py
+*toc
+*.listing
+*.synctex(busy)
+*.epub
+*.pygtex
+*.pygstyle
+/_minted-book/
+*.fls
+/book/ccs.fdb_latexmk

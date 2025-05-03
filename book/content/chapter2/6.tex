@@ -1,11 +1,11 @@
 
-之前的示例中，可以使用启用了调试日志的选项重新运行失败的任务或所有任务，也可以在存储库级别启用或禁用调试日志。
+之前的示例中，可以使用启用了调试日志的选项重新运行失败的任务或所有任务，也可以在库级别启用或禁用调试日志。
 
 \mySubsubsection{2.6.1}{How to do it…}
 
 我们可以向库添加一个名为 ACTIONS\_STEP\_DEBUG 的变量,并将其值设置为 true 或 false 来启用或禁用调试日志。这将向工作流日志添加非常详细的输出,以及所有调试消息，并且这些内容将从所有操作中显示出来。
 
-可以使用网页、GitHub CLI 或 VS Code 配置该变量。要使用网页设置变量，请转到 \textbf{Settings | Secrets and variables | Actions}(设置 | 秘钥和变量 | 操作) 并选择 \textbf{Variables}(变量) 选项卡 (/settings/variables/actions)。单击 \textbf{New repository variable}(新存储库变量) (这将重定向到 /settings/variables/actions/new)，输入 ACTIONS\_STEP\_DEBUG 作为名称，true 作为值，然后单击 \textbf{Add variable}(添加变量)。
+可以使用网页、GitHub CLI 或 VS Code 配置该变量。要使用网页设置变量，请转到 \textbf{Settings | Secrets and variables | Actions}(设置 | 秘钥和变量 | 操作) 并选择 \textbf{Variables}(变量) 选项卡 (/settings/variables/actions)。单击 \textbf{New repository variable}(新库变量) (这将重定向到 /settings/variables/actions/new)，输入 ACTIONS\_STEP\_DEBUG 作为名称，true 作为值，然后单击 \textbf{Add variable}(添加变量)。
 
 要使用 CLI 设置，只需执行以下命令：
 

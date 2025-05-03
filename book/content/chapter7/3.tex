@@ -44,7 +44,7 @@ $ az ad sp create --id <appId>
 \end{shell}
 
 \item 
-接着,打开Azure门户,在Microsoft Entra中,找到“App registrations”下的release-recipe。在“Certificates \& secrets”|“Federated credentials”|“Add credentials”下添加OIDC信任。填写表单。将组织设置为您的GitHub用户名,输入存储库名称,并将实体类型选择为“Environment”(参见图7.1):
+接着,打开Azure门户,在Microsoft Entra中,找到“App registrations”下的release-recipe。在“Certificates \& secrets”|“Federated credentials”|“Add credentials”下添加OIDC信任。填写表单。将组织设置为您的GitHub用户名,输入库名称,并将实体类型选择为“Environment”(参见图7.1):
 
 \myGraphic{0.6}{content/chapter7/images/1.png}{图7.1 --- 在Microsoft Entra中连接您的GitHub账户}
 
@@ -69,7 +69,7 @@ $ az ad sp create --id <appId>
 
 \begin{itemize}
 \item 
-在您的云提供商和GitHub之间创建OIDC信任。将信任限制在组织和存储库,并进一步限制对环境、分支或拉取请求的访问。
+在您的云提供商和GitHub之间创建OIDC信任。将信任限制在组织和库,并进一步限制对环境、分支或拉取请求的访问。
 
 \item 
 在工作流程运行期间,GitHub OIDC提供者自动生成一个JSON网络令牌。该令牌包含多个声明,为特定工作流程作业建立安全和可验证的身份。

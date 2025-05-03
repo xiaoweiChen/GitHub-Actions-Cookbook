@@ -1,8 +1,8 @@
-这是一个简短的指南,我们将使用它来向现有的 CI 构建中添加 CodeQL 分析。CodeQL 是 GitHub 的代码分析引擎,对于公共存储库它是免费的。
+这是一个简短的示例，我们将使用它来将 CodeQL 分析添加到现有的 CI 构建中。CodeQL 是 GitHub 的代码分析引擎，并且对公共库免费。
 
 \mySubsubsection{6.5.1}{Getting ready}
 
-在 package-recipe 存储库中创建一个新分支：
+在 package-recipe 库中创建一个新分支：
 
 \begin{shell}
 $ git switch -c add-codeql
@@ -12,7 +12,7 @@ $ git switch -c add-codeql
 
 \begin{enumerate}
 \item 
-打开 .github/workflows/ci.yml 文件，并授予构建作业写入安全事件的权限：
+打开 .github/workflows/ci.yml 文件，并授予 build 作业写入安全事件的权限：
 
 \begin{shell}
 build:
@@ -22,7 +22,7 @@ build:
 \end{shell}
 
 \item 
-向作业中添加一个初始化操作(github/codeql-action/init)。对于需要编译的语言，这必须放在构建过程之前。由于 JavaScript 是一种静态语言，您可以将其添加到作业的末尾。将语言设置为 javascript-typescript 并选择 security-and-quality 查询套件：
+将一个 init 操作 (github/codeql-action/init) 添加到作业中。对于必须编译的语言，这必须放在构建过程之前。由于 JavaScript 是静态语言，可以将其添加到作业的末尾。将语言设置为 javascript-typescript，并选择 security-and-quality 查询套件：
 
 \begin{shell}
     - name: Initialize CodeQL
@@ -33,7 +33,7 @@ build:
 \end{shell}
 
 \item 
-实际的分析在编译后执行。只需将以下代码添加到作业的末尾：
+执行实际分析是在编译之后进行的。只需将以下代码添加到作业的末尾：
 
 \begin{shell}
     - name: Perform CodeQL Analysis
@@ -43,7 +43,7 @@ build:
 \end{shell}
 
 \item 
-提交您的代码，创建一个拉取请求，并在所有检查都通过后合并更改：
+提交代码，创建一个拉取请求，并在所有检查通过后合并更改：
 
 \begin{shell}
 $ git add .
@@ -55,9 +55,9 @@ $ gh pr merge -m --auto
 
 \mySubsubsection{6.5.3}{How it works…}
 
-CodeQL 是 GitHub 的代码分析引擎，用于自动化安全性和质量检查。它在公共存储库中是免费的，并且适用于购买了 GitHub 高级安全许可证的企业。
+CodeQL 是 GitHub 的代码分析引擎，用于自动化安全和质量检查，在公共库中免费，并且对购买了 GitHub Advanced Security 许可证的企业可用。
 
-您可以分析以下语言：
+可以分析以下语言：
 
 \begin{itemize}
 \item 
@@ -88,41 +88,40 @@ Ruby
 Swift(在撰写本文时处于测试阶段)
 \end{itemize}
 
-有三种方法可以分析您的代码：
+有三种方式可以分析代码：
 
 \begin{itemize}
 \item 
-默认:CodeQL 的默认设置将自动检测您存储库中的语言并选择受支持的进行分析。它将应用默认的查询套件和扫描触发器。在存储库中,转到Settings | Code security and analysis,,如果您的存储库中的语言受该功能支持,则可以选择Default(见图 6.11):
+默认：CodeQL 的默认设置将自动检测存中的语言，并选择支持的语言进行分析。它将应用默认的查询套件和扫描触发器。在\textbf{Settings | Code security and analysis}(设置 | 代码安全和分析)下，如果库中的语言受该功能支持，可以选择\textbf{Default}(默认)（见图 6.11）：
 
 \myGraphic{0.6}{content/chapter6/images/11.png}{图6.11 --- 使用默认或高级模式配置代码扫描}
 
 \item 
-高级：使用自定义工作流程并添加 CodeQL 分析，就像我们在本指南中所做的那样。如果您在设置中点击高级(图 6.11)，这将为您生成一个可定制的工作流程模板。它将使用带有 fail-fast: false 的矩阵策略来分析您存储库中检测到的所有语言。
+高级：使用自定义工作流，并像本示例中所做的那样添加 CodeQL 分析。如果在设置（图 6.11）中点击高级，这将生成一个可自定义的工作流模板。将使用矩阵策略，并将 fail-fast 设置为 false，以分析库中检测到的所有语言。
 
 \item 
-命令行界面：直接在外部 CI 系统中运行 CodeQL 命令行界面，并将结果上传到 GitHub。
+CLI：在外部 CI 系统中直接运行 CodeQL CLI，并将结果上传到 GitHub。
 \end{itemize}
 
-所有工具的分析结果都可以在“安全”|“代码扫描”下访问(见图 6.12)：
+所有工具的分析结果可以在\textbf{Security | Code scanning}(安全|代码扫描)下访问（见图 6.12）：
 
-\myGraphic{0.6}{content/chapter6/images/12.png}{图6.12 --- 在存储库中查看代码分析结果}
+\myGraphic{0.6}{content/chapter6/images/12.png}{图6.12 --- 在库中查看代码分析结果}
 
-您可以访问报告结果的所有工具的状态。请注意,在我们的存储库中,分析还分析了我们的测试包生成的代码。
-要了解更多关于 CodeQL 的信息,请访问:\url{https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql}。
+可以访问报告结果的工具的所有状态。请注意，在我们的库中，还分析了测试包生成的代码。要了解有关 CodeQL 的更多信息，请访问\url{https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql}。
 
 \mySubsubsection{6.5.4}{There’s more…}
 
-GitHub 支持各种其他工具 - 其中包括 Checkmarx、Snyk、Microsoft Defender for DevOps 和 ESLint。它支持许多商业工具，但也支持许多免费或开源的工具。
+GitHub 支持各种其他工具—— 其中包括 Checkmarx、Snyk、Microsoft Defender for DevOps 和 ESLint。支持许多商业工具，也支持许多免费或开源的工具。
 
-如果您在“设置”|“代码安全性和分析”下点击“探索工作流程”(见图 6.13)，然后您将被重定向到一个新的工作流程页面，该页面通过安全类别和代码扫描查询进行过滤(\url{https://github.com/OWNER/REPO/actions/new?category=security&query=code+scanning})：
+如果在\textbf{Settings | Code security and analysis}(设置|代码安全和分析)下点击\textbf{Explore workflows}(探索工作流)（见图 6.13），将重定向到一个新的工作流页面，该页面按安全类别和代码扫描查询进行筛选(\url{https://github.com/OWNER/REPO/actions/new?category=security&query=code+scanning})：
 
-\myGraphic{0.6}{content/chapter6/images/13.png}{图6.13 --- 向您的存储库添加第三方扫描工具}
+\myGraphic{0.6}{content/chapter6/images/13.png}{图6.13 --- 将第三方扫描工具添加到库中}
 
-您可以探索所有已发布到市场的模板工作流程的合作伙伴。
+可以探索所有已在 市场 上发布模板工作流的合作伙伴。
 
-如果您有其他工具，只要它们支持静态分析结果交换格式(SARIF；请参阅 \url{https://sarifweb.azurewebsites.net/}) - 结构化信息标准推进组织(OASIS)批准的静态代码分析标准 - 作为输出格式，您仍然可以集成它们。
+如果您有其他工具，只要它们支持静态分析结果交换格式(SARIF；请参阅 \url{https://sarifweb.azurewebsites.net/})作为输出格式，可以对其进行集成。SARIF 是结构化信息标准促进组织（OASIS）批准的静态代码分析标准。
 
-为了给您一个例子，您可以使用 Checkov，这是一个用于基础设施即代码(IaC)的静态代码分析工具，支持 Terraform、Terraform plan、CloudFormation、AWS 无服务器应用程序模型(SAM)、Kubernetes、Helm 图表、Kustomize、Dockerfiles、Serverless、Bicep、OpenAPI 或 ARM 模板。使用 bridgecrewio/checkov-action 操作来运行您的分析，然后将结果上传到 GitHub：
+举个例子，可以使用 Checkov，这是一个支持 Terraform、Terraform plan、CloudFormation、AWS Serverless Application Model (SAM)、Kubernetes、Helm charts、Kustomize、Dockerfiles、Serverless、Bicep、OpenAPI 或 ARM 模板的 IaC（基础设施即代码）静态代码分析工具。使用 bridgecrewio/checkov-action 操作来运行分析，然后将结果上传到 GitHub：
 
 \begin{shell}
 - name: Checkov GitHub Action
@@ -137,7 +136,7 @@ GitHub 支持各种其他工具 - 其中包括 Checkmarx、Snyk、Microsoft Defe
   if: always()
 \end{shell}
 
-这样，只要它们支持 SARIF，您就可以轻松地集成市场上所有可用的代码扫描工具。
+这样一来，只要它们支持 SARIF，就可以轻松集成市场上可用的代码扫描工具了。
 
 
 

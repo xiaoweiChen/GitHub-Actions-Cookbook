@@ -2,14 +2,14 @@
 
 \mySubsubsection{6.2.1}{Getting ready}
 
-我认为最好是从头开始构建一个新的存储库和 npm 包。即使您不熟悉 JavaScript,这也不应该是一个挑战。您可以与以下存储库中的代码进行比较或从中复制:\url{https://github.com/wulfland/package-recipe}。如果您在这方面遇到困难,只需克隆此存储库并使用它即可。
+我认为最好从头开始构建一个新库和 npm 包，即使不熟悉 JavaScript，也没什么问题，也可以直接使用该库：\url{https://github.com/wulfland/package-recipe}。
 
 \begin{enumerate}
 \item 
-创建一个名为 package-recipe 的新公共存储库。使用 .gitignore 文件和 README 文件进行初始化,并为 .gitignore 文件选择 Node 作为模板。
+创建一个名为 package-recipe 的新库。使用 .gitignore 文件和 README 文件初始化，并选择 Node 作为 .gitignore 文件的模板。
 
 \item 
-在本地克隆您的存储库或在 Codespaces 中打开它。
+将库克隆到本地，或使用 Codespaces 打开它。
 
 \item 
 运行以下命令：
@@ -18,18 +18,18 @@
 $ npm init
 \end{shell}
 
-跟随向导。包的名称是 @<github-user-name>/packagerecipe。作为测试命令，添加以下代码：
+按照向导的提示操作。包的名称为 @<github-user-name>/packagerecipe。将测试命令添加为以下代码：
 
 \begin{shell}
 jest && make-coverage-badge
 \end{shell}
 
-Jest 是我们将用来测试应用程序的测试框架，而通过 make-coverage-badge，我们稍后将创建一个徽章，并将其添加到 README 文件中。
+Jest 是我们将用来测试应用程序的测试框架，而 make-coverage-badge 将用于稍后创建一个徽章，并将其添加到 README 文件中。
 
-您可以保留其余属性的默认值。
+可以将其余属性保留为默认值。
 
 \item 
-向导完成后，运行以下命令：
+完成后，运行以下命令：
 
 \begin{shell}
 $ npm install
@@ -52,10 +52,10 @@ module.exports = function greet () {
 }
 \end{shell}
 
-我们正在创建一个简单的包，它只会返回 Hello world!。
+我们正在创建一个简单的包，只会返回 Hello world!。
 
 \item 
-添加一个新的 tests/index.test.js 文件(带有两个下划线)。添加以下测试：
+添加一个新的 \_\_tests\_\_/index.test.js 文件（注意双下划线）。添加以下测试：
 
 \begin{shell}
 describe('index.js', () => {
@@ -66,10 +66,10 @@ describe('index.js', () => {
 })
 \end{shell}
 
-这只是一个简单的测试，检查 index.js 是否像预期的那样将文本写入控制台。
+这只是一个简单的测试，用于检查 index.js 是否按预期将文本写入控制台。
 
 \item 
-打开 package.json 并为 Jest 添加以下配置：
+打开 package.json 文件，并添加以下 Jest 的配置：
 
 \begin{shell}
 "jest": {
@@ -92,7 +92,7 @@ describe('index.js', () => {
 },
 \end{shell}
 
-这将为代码覆盖添加多个报告输出。
+这将添加多个代码覆盖率报告输出。
 
 \item 
 执行测试： 
@@ -101,24 +101,24 @@ describe('index.js', () => {
 $ npm run test
 \end{shell}
 
-如果一切设置正确,这将执行一个测试并在 coverage 文件夹中写入报告。它还将在 coverage/badge.svg 生成一个徽章。
+如果一切设置正确，这将执行一个测试并在 coverage 文件夹中写入报告，还会在 coverage/badge.svg 处生成一个徽章。
 
 \item 
-提交您的文件并将它们推送到 GitHub。
+提交文件，并将它们推送到 GitHub。
 
 \item 
-在存储库中，转到 Settings 并向下滚动到Pull Requests。勾选Allow auto-merge和Automatically delete head branches。
+在库中，转到 \textbf{Settings}（设置）并向下滚动到 \textbf{Pull Requests}（拉取请求）。检查 \textbf{Allow auto-merge}（允许自动合并）和 \textbf{Automatically delete head branches}（自动删除头分支）。
 \end{enumerate}
 
 \mySubsubsection{6.2.2}{How to do it…}
 
-现在我们有了我们将在下一个指南中使用的包存储库，让我们开始添加 CI 工作流程：
+现在,已经准备好了一个包库，我们将用于下一个示例，开始添加 CI 工作流：
 
 \begin{enumerate}
 \item 
 创建一个新的\_github/workflows/ci.yml 文件。
 
-将工作流程命名为 CI,并在每个拉取请求上触发以验证更改。此外,在每个推送到 main 分支上触发它以构建一个可以发布的新版本:
+将工作流命名为 CI，并在每次拉取请求时触发以验证更改。同时,在每次推送到 main 分支时触发,以构建一个可以发布的新版本:
 
 \begin{shell}
 name: CI
@@ -131,7 +131,7 @@ on:
 \end{shell}
 
 \item 
-添加一个在 ubuntu-latest 上运行并检出存储库的构建作业：
+添加一个构建作业，该作业在 ubuntu-latest 上运行并检出到库：
 
 \begin{shell}
 jobs:
@@ -143,7 +143,7 @@ jobs:
 \end{shell}
 
 \item 
-配置工作流程运行器以 targeting 特定的 NodeJS 版本。我们可以使用通配符来表示次要版本,并让操作使用最新版本:
+配置工作流运行器以针对特定的 NodeJS 版本。我们可以为次要版本使用通配符，并让操作使用最新可用版本：
 
 \begin{shell}
 - uses: actions/setup-node@v4
@@ -153,7 +153,7 @@ jobs:
 \end{shell}
 
 \item 
-构建和测试代码：
+构建并测试代码：
 
 \begin{shell}
 - name: Install dependencies
@@ -164,7 +164,7 @@ jobs:
 \end{shell}
 
 \item 
-提交并将工作流程推送到 main 分支。这应该已经触发了工作流程，因为推送触发了构建和测试，并且应该会成功。
+提交并推送工作流到 main 分支。由于推送触发器，这应该已经触发了工作流，并且构建和测试应该成功。
 
 \item 
 为了测试验证，创建一个新分支：
@@ -174,7 +174,7 @@ $ git switch -c fail-pr
 \end{shell}
 
 \item 
-修改 index.js 为某些会导致测试失败的内容(例如,console.log(‘Hello Mars!’);)。添加并提交更改,然后创建一个拉取请求:
+修改 index.js 以执行会使测试失败的更改（例如，\verb|console.log('Hello Mars!);|）。添加并提交更改，然后创建一个拉取请求：
 
 \begin{shell}
 $ git add index.js
@@ -183,17 +183,17 @@ $ git push -u origin fail-pr
 $ gh pr create --fill
 \end{shell}
 
-拉取请求将触发工作流程，并且会失败，因为 npm run test 命令将返回一个非零值。
+拉取请求将触发工作流，并且由于 npm run test 命令将返回一个非零值，工作流将失败。
 
 \end{enumerate}
 
 \mySubsubsection{6.2.3}{How it works…}
 
-让我们了解验证是如何工作的。
+再来了解如何进行验证工作的。
 
-\mySamllsectionNoContent{检出}
+\mySamllsectionNoContent{检出库}
 
-对于 CI 来说，首先需要使用检出操作 (\url{https://github.com/actions/checkout}) 来检出您的存储库。该操作有许多参数。例如，您可以设置要拉取到运行器的 git 历史记录的深度。默认值为 1，这只会下载 HEAD 分支。在从 git 生成版本号的指南中，我们将将其设置为 0 以下载所有分支和标签：
+CI 的第一步是使用 checkout 操作 (\url{https://github.com/actions/checkout}) 检出到库。该操作有许多参数。例如，可以设置要拉取到运行器的 Git 记录深度。默认值为 1，这只会下载 HEAD 分支。在从 Git 生成版本号的示例中，我们将设置为 0 以下载所有分支和标签：
 
 \begin{shell}
 steps:
@@ -202,7 +202,7 @@ steps:
       fetch-depth:0 # Default: 1
 \end{shell}
 
-其他选项包括 lfs，用于确定是否应下载 Git 大文件存储 (LFS) 文件(默认值为 false)，或者 submodules：
+其他选项包括 lfs，用于确定是否应下载 Git 大文件存储 (LFS) 文件（默认为 false），或 submodules：
 
 \begin{shell}
 steps:
@@ -212,7 +212,7 @@ steps:
       submodules: true # Default: false
 \end{shell}
   
-对于大型单体存储库，您还可以执行稀疏检出，并且仅获取存储库特定区域的数据。此示例仅检出 .github、src 和 tests 文件夹：
+对于大型单库，还可以执行稀疏检出，并仅获取库特定区域的数据。此示例仅检出 .github、src 和 \_\_tests\_\_ 文件夹：
 
 \begin{shell}
 steps:
@@ -224,11 +224,11 @@ steps:
         __tests__
 \end{shell}
 
-这可以极大地减少工作流程所需的时间和存储空间。
+这可以极大地减少工作流所需的时间和存储空间。
 
 \mySamllsectionNoContent{设置环境}
 
-以下编程语言有不同的设置操作：
+可为不同语言进行设置操作，包括：
 
 \begin{itemize}
 \item 
@@ -256,7 +256,7 @@ Elixir
 Haskell
 \end{itemize}
 
-在我们的情况下,我们使用 setup-node (\url{https://github.com/actions/setup-node})。设置操作确保在构建过程中设置正确的二进制文件和环境变量。所有操作都以某种形式的版本参数形式出现:
+这里，我们使用 setup-node (\url{https://github.com/actions/setup-node})。确保设置操作在构建过程中，设置了正确的二进制文件和环境变量。所有这些操作都接受某种形式的版本参数：
 
 \begin{shell}
 - uses: actions/setup-node@v4
@@ -264,19 +264,19 @@ Haskell
     node-version: 21
 \end{shell}
 
-支持通配符以及别名。例如 21.x、21.5.0、>=21.5.0、lts/Hydrogen、21-nightly、latest。如果您使用通配符，则可以设置 check-latest: true 以检查最新可用版本。
+通配符和别名也受支持。示例包括 21.x、21.5.0、>=21.5.0、lts/Hydrogen、21-nightly、latest。如果您使用通配符，则可以设置 check-latest: true 以检查可用的最新版本。
 
-大多数检出操作还支持使用不同的注册表来下载依赖项。对于 Node，参数是 registry-url，它将使用提供的 URL 和来自 env.NODE\_AUTH\_TOKEN 的令牌连接到特定注册表。
+大多数 checkout 操作还支持不同的注册表以下载依赖项。对于 node，参数是 registry-url，将使用提供的 URL 和来自 env.NODE\_AUTH\_TOKEN 的令牌连接到特定注册表。
 
-检出操作通常还会缓存依赖项。在许多情况下，使用相应的设置操作比您自己实现缓存更有效(我们将在本章后面提供一个指南)。
+Checkout 操作通常还会缓存依赖项。在许多情况下，使用相应的设置操作比自己实现更有效。
 
 \mySubsubsection{6.2.4}{There’s more…}
 
-最好将验证工作流程与分支保护规则集结合使用 --- 您可以添加一个代码检查工具以提高质量。
+验证工作流最好与分支保护和规则集结合使用——还可以添加一个检查工具来进一步提高质量。
 
 \mySamllsectionNoContent{超级代码检查工具}
 
-在第2章《编写和调试工作流程》中，我们使用了一个代码检查工具来验证和注释我们在拉取请求中的工作流程。代码也可以这样做。有一个叫做 superlinter 的 GitHub 操作(见 \url{https://github.com/super-linter/super-linter})，它基本上将所有可用的代码检查工具结合在一个操作中。您可以像这样使用它来检查您的代码：
+在第2章中，我们使用了一个检查工具来验证和注释拉取请求中的工作流。同样，也可以用于代码。有一个名为 superlinter(\url{https://github.com/super-linter/super-linter})的 GitHub 操作，它基本上将所有可用的 检查工具 合并到一个操作中。可以这样使用它来 检查代码：
 
 \begin{shell}
 permissions:
@@ -301,47 +301,47 @@ steps:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 \end{shell}
 
-Super-linter 的镜像相当大，可能会影响您工作流程的性能。如果您不需要所有语言，那么您也可以使用精简版本：
+super-linter 的镜像相当大，可能会影响工作流的性能。如果不需要所有语言，还可以使用精简版本：
 
 \begin{shell}
 super-linter/super-linter/slim@[VERSION]
 \end{shell}
 
-它排除了 rust、dotenv、armttk、pwsh 和 C\# 的代码检查工具,镜像大小要小得多。在 v5 中,这将把大小从 7.35 GB 减少到 slim-v5 的 4.88 GB,并将仅拉取镜像的时间从大约 2 分钟减少到大约 1 分钟。
+排除了 rust、dotenv、armttk、pwsh 和 C\# 的 linter，并且镜像大小要小得多。在 v5 中，这将使大小从 7.35 GB 减少到 slim-v5 的 4.88 GB，并且将下载镜像的时间从大约 2 分钟减少到大约 1 分钟。
 
 \mySamllsectionNoContent{分支保护}
 
-在第二章《编写和调试工作流程》中,我还向您介绍了分支保护。您可以使用规则保护存储库中的一个或多个分支,并强制执行提交必须通过拉取请求合并,并且某些检查必须成功。除了手动审查之外,您还可以要求状态检查成功(见图 6.1):
+在第2章中，我也介绍了分支保护。可以使用规则保护库中的一个或多个分支，并强制要求提交必须通过拉取请求合并，并且某些检查必须成功。除了手动审核外，还可以要求状态检查成功（见图 6.1）：
 
-\myGraphic{0.6}{content/chapter6/images/1.png}{图6.1 ---  将 GitHub Action 工作流程作业添加为受保护分支的状态检查}
+\myGraphic{0.6}{content/chapter6/images/1.png}{图6.1 --- 将 GitHub Action 工作流作业添加为受保护分支的状态检查}
 
-状态检查可以是工作流程中的一个作业 - 或任何使用状态 API 报告状态集成的。您可以为下一个指南中的存储库中的 main 分支启用策略，并将状态检查策略设置为工作流程的作业。有关受保护分支的更多信息，请参阅 \url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches}。
+状态检查可以是一个工作流中的单个作业——或者是使用状态 API 报告状态的集成。可以为下一个示例在库中为 main 启用策略，并将状态检查策略设置为工作流的作业。有关受保护分支的更多信息，请参阅 \url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches}。
 
 \mySamllsectionNoContent{规则集}
 
-规则集是分支保护的更强大的继任者。它们与受保护分支具有相同的权力。您还可以像在受保护分支中一样定义状态检查(见图 6.2)：
+规则集是分支保护的更强大的继任者，具有与受保护分支相同的功能。还可以像在受保护分支中一样定义状态检查（见图 6.2）
 
-\myGraphic{0.6}{content/chapter6/images/2.png}{图6.2 ---  在规则集中将 GitHub Action 工作流程作业添加为状态检查}
+\myGraphic{0.6}{content/chapter6/images/2.png}{图6.2 --- 在规则集中添加 GitHub Action 工作流作业作为状态检查}
 
-大多数可以在规则集中使用的规则与分支保护规则相似，并且可以在不改变现有规则的情况下组合使用。
+规则集可以使用的大多数规则与分支保护规则相似，并且可以组合使用而无需更改现有规则。
 
-规则集更先进，并且具有以下优势：
+规则集比保护规则更高级，具有以下优势：
 
 \begin{itemize}
 \item 
-规则集可以在组织级别定义，并且可以针对多个存储库。
+规则集可以在组织级别定义，并且可以针对多个库。
 
 \item
 可以通过同时应用多个规则集来分层规则。
 
 \item
-规则集具有状态，允许您在存储库中激活和停用规则集，而无需删除它们。
+规则集具有状态，允许在不删除的情况下在库中激活或停用规则集。
 
 \item
-您只需要对存储库具有读取权限即可查看所有活动的规则集。这使得贡献者更容易了解哪些规则适用。
+只需要库的读取权限即可查看所有活动的规则集，可使得贡献者可以更清楚地了解适用的规则。
 
 \item
-有一些附加规则在保护规则中不可用，例如用于控制提交消息或作者电子邮件地址的规则。
+有一些规则在保护规则中不可用，例如：控制提交消息或作者电子邮件地址的规则。
 \end{itemize}
 
-您可以在此处了解更多关于规则集的信息：\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets}。
+可以在这里了解更多关于规则集的信息：\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets}。

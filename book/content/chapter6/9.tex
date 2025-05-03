@@ -1,4 +1,4 @@
-在这个配方中，我们将使用缓存来优化工作流程的速度。
+在本示例中，我们将使用缓存来优化操作的速度。
 
 \mySubsubsection{6.9.1}{Getting ready}
 
@@ -12,7 +12,7 @@ $ git switch -c cache-npm-packages
 
 \begin{enumerate}
 \item 
-编辑 .github/workflows/ci.yml 文件。在 setup-node 操作之后，添加以下脚本以获取正确 npm 版本的 npm 缓存目录，并将其存储为输出变量：
+编辑 .github/workflows/ci.yml 文件。在 setup-node 操作之后，添加以下脚本以获取正确的 npm 版本的 npm 缓存目录，并将其存储为输出变量：
 
 \begin{shell}
 - name: Get npm cache directory
@@ -21,7 +21,7 @@ $ git switch -c cache-npm-packages
 \end{shell}
 
 \item 
-在那之后添加实际的缓存步骤。还要给它一个名称，并从 package-lock.json 文件的哈希值中创建一个键：
+紧接着添加实际的缓存步骤。同时，给它一个名称，并从 package-lock.json 文件的哈希值创建一个密钥：
 
 \begin{shell}
 - uses: actions/cache@v3
@@ -34,7 +34,7 @@ $ git switch -c cache-npm-packages
 \end{shell}
 
 \item 
-下一步将仅在将它们添加到缓存时列出依赖项：
+下一步将仅列出依赖项，将其添加到缓存中：
 
 \begin{shell}
 - name: List the state of node modules
@@ -44,7 +44,7 @@ $ git switch -c cache-npm-packages
 \end{shell}
 
 \item 
-提交您的更改并创建一个拉取请求：
+提交更改并创建一个拉取请求：
 
 \begin{shell}
 $ git add.
@@ -53,12 +53,12 @@ $ gh pr create --fill
 \end{shell}
 
 \item 
-在您的拉取请求中打开 CI 工作流程运行并检查我们添加的步骤的输出。重新运行这两个作业，并注意操作如何从缓存中恢复软件包，以及 cache-hit 如何防止下一步执行(参见图 6.21)：
+在拉取请求中打开 CI 工作流运行，并检查添加的步骤的输出。重新运行两个作业，并注意操作如何从缓存中恢复包，以及 cache-hit 如何阻止下一步执行（见图 6.21）：
 
-\myGraphic{0.6}{content/chapter6/images/21.png}{图6.21 --- 缓存成功恢复并且 cache-hit 为 true}
+\myGraphic{0.6}{content/chapter6/images/21.png}{图6.21 --- 缓存成功恢复且 cache-hit 为 true}
 
 \item 
-合并您的拉取请求：
+合并拉取请求：
 
 \begin{shell}
 $ gh pr merge -s --auto
@@ -68,11 +68,11 @@ $ gh pr merge -s --auto
 
 \mySubsubsection{6.9.3}{How it works…}
 
-重要的是只在有性能问题时使用缓存。如果你使用设置操作,你可能看不到很大的改进。但是了解缓存如何工作是很重要的,以便在需要时可以使用这个工具。
+只有在遇到性能问题时才应使用缓存。如果使用的是 setup 动作，可能不会看到显著的改进。但了解缓存的工作原理很重要，这样在需要时就可以使用该工具。
 
-缓存操作(\url{https://github.com/actions/cache})在GitHub拥有的云存储上存储信息,并在后续运行中从那里检索它。
+缓存操作(\url{https://github.com/actions/cache})将信息存储在 GitHub 拥有的云存储中，并在后续运行中从该存储中检索。
 
-假设你有一个长时间运行的操作 --- 比如计算质数 --- 你在后续步骤中使用输出。(我这里只是使用sleep来模拟一个长时间运行的任务):
+假设您有一个长时间运行的操作(例如：计算质数)，并且后续步骤中使用该输出。（这里我使用 sleep 来模拟长时间运行的任务）：
 
 \begin{shell}
 - name: Generate Prime Numbers
@@ -84,7 +84,7 @@ $ gh pr merge -s --auto
   run: cat primes
 \end{shell}
 
-你现在可以在那个步骤之前添加一个缓存步骤，并缓存primes文件夹:
+现在，可以在该步骤之前添加一个缓存步骤，并缓存 primes 文件夹：
 
 \begin{shell}
 - name: Cache Primes
@@ -95,9 +95,9 @@ $ gh pr merge -s --auto
     key: ${{ runner.os }}-primes
 \end{shell}
 
-这里的关键是必须唯一,以确定缓存是否已更改。在我们的示例中,我们使用了package-lock.json文件的哈希值。对于质数,我们可能对操作系统有不同的格式。
+这里的键是确定缓存是否已更改所必需的唯一标识。我们的示例中，使用了 package-lock.json 文件的哈希值。对于质数，可能针对操作系统使用不同的格式。
 
-在长时间运行的操作中,你现在可以检查缓存是否有效,并且只在当前键没有命中时执行它:
+在长时间运行的操作中，可以检查缓存是否有效，并且仅在当前键未命中时才执行：
 
 \begin{shell}
 - name: Generate Prime Numbers
@@ -107,14 +107,14 @@ $ gh pr merge -s --auto
     echo "1 2 3..." > primes
 \end{shell}
 
-这个工作流程将在第一次长时间运行的操作中运行,并在缓存中填充文件。如果你第二次运行它,它将从缓存中加载文件,并省略长时间运行的步骤。
+这个工作流在第一次运行长时间操作时会执行，并将文件填充到缓存中。如果第二次运行，将从缓存中加载文件，并跳过长时间运行的步骤。
 
 \mySubsubsection{6.9.4}{There’s more…}
 
-一个存储库可以在缓存中存储最多10 GB的数据。一旦达到这个限制,旧的文件将根据最后一次访问的时间被删除。一周内未使用的缓存也将被清理。
+一个库最多可以存储 10 GB 的缓存数据。当达到该限制，较早的文件将根据它们上次访问的时间被移除，超过一周未被使用的缓存也会进行清理。
 
-你可以在 Actions | Caches下管理缓存(见图6.22):
+可以在 \textbf{Actions | Caches}下管理缓存(见图6.22):
 
 \myGraphic{0.6}{content/chapter6/images/22.png}{图6.22 --- 管理缓存}
 
-缓存操作(\url{https://github.com/actions/cache})对大多数编程语言都有很好的文档和示例。当你想实现缓存时,也可以参考文档(\url{https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows})。
+缓存操作(\url{https://github.com/actions/cache})有良好的文档和针对大多数编程语言的示例。想要实现缓存操作时，也可以参考文档(\url{https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows})。
