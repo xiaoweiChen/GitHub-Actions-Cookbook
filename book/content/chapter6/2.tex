@@ -55,7 +55,7 @@ module.exports = function greet () {
 我们正在创建一个简单的包，只会返回 Hello world!。
 
 \item 
-添加一个新的 \_\_tests\_\_/index.test.js 文件（注意双下划线）。添加以下测试：
+添加一个新的 \_\_tests\_\_/index.test.js 文件(注意双下划线)。添加以下测试：
 
 \begin{shell}
 describe('index.js', () => {
@@ -107,7 +107,7 @@ $ npm run test
 提交文件，并将它们推送到 GitHub。
 
 \item 
-在库中，转到 \textbf{Settings}（设置）并向下滚动到 \textbf{Pull Requests}（拉取请求）。检查 \textbf{Allow auto-merge}（允许自动合并）和 \textbf{Automatically delete head branches}（自动删除头分支）。
+在库中，转到 \textbf{Settings}(设置)并向下滚动到 \textbf{Pull Requests}(拉取请求)。检查 \textbf{Allow auto-merge}(允许自动合并)和 \textbf{Automatically delete head branches}(自动删除头分支)。
 \end{enumerate}
 
 \mySubsubsection{6.2.2}{How to do it…}
@@ -174,7 +174,7 @@ $ git switch -c fail-pr
 \end{shell}
 
 \item 
-修改 index.js 以执行会使测试失败的更改（例如，\verb|console.log('Hello Mars!);|）。添加并提交更改，然后创建一个拉取请求：
+修改 index.js 以执行会使测试失败的更改(例如，\verb|console.log('Hello Mars!);|)。添加并提交更改，然后创建一个拉取请求：
 
 \begin{shell}
 $ git add index.js
@@ -202,7 +202,7 @@ steps:
       fetch-depth:0 # Default: 1
 \end{shell}
 
-其他选项包括 lfs，用于确定是否应下载 Git 大文件存储 (LFS) 文件（默认为 false），或 submodules：
+其他选项包括 lfs，用于确定是否应下载 Git 大文件存储 (LFS) 文件(默认为 false)，或 submodules：
 
 \begin{shell}
 steps:
@@ -311,7 +311,7 @@ super-linter/super-linter/slim@[VERSION]
 
 \mySamllsectionNoContent{分支保护}
 
-在第2章中，我也介绍了分支保护。可以使用规则保护库中的一个或多个分支，并强制要求提交必须通过拉取请求合并，并且某些检查必须成功。除了手动审核外，还可以要求状态检查成功（见图 6.1）：
+在第2章中，我也介绍了分支保护。可以使用规则保护库中的一个或多个分支，并强制要求提交必须通过拉取请求合并，并且某些检查必须成功。除了手动审核外，还可以要求状态检查成功(见图 6.1)：
 
 \myGraphic{0.6}{content/chapter6/images/1.png}{图6.1 --- 将 GitHub Action 工作流作业添加为受保护分支的状态检查}
 
@@ -319,7 +319,7 @@ super-linter/super-linter/slim@[VERSION]
 
 \mySamllsectionNoContent{规则集}
 
-规则集是分支保护的更强大的继任者，具有与受保护分支相同的功能。还可以像在受保护分支中一样定义状态检查（见图 6.2）
+规则集是分支保护的更强大的继任者，具有与受保护分支相同的功能。还可以像在受保护分支中一样定义状态检查(见图 6.2)
 
 \myGraphic{0.6}{content/chapter6/images/2.png}{图6.2 --- 在规则集中添加 GitHub Action 工作流作业作为状态检查}
 

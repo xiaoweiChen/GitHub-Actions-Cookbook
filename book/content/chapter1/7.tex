@@ -3,7 +3,7 @@
 
 \mySubsubsection{1.7.1}{Getting ready}
 
-在这个示例中，将使用 Web UI 来设置变量和密钥,也可以使用 GitHub CLI（\url{https://cli.github.com}）来完成这项工作(需要安装)。但对于这个示例来说，GitHub CLI并不是必需的。
+在这个示例中，将使用 Web UI 来设置变量和密钥,也可以使用 GitHub CLI(\url{https://cli.github.com})来完成这项工作(需要安装)。但对于这个示例来说，GitHub CLI并不是必需的。
 
 \mySubsubsection{1.7.2}{How to do it…}
 
@@ -11,26 +11,26 @@
 \item 
 导航到\textbf{Settings | Secrets and Variables | Actions}(设置|密钥和变量|操作)，可查看库中现有的密钥，并且可以在\textbf{Secrets}(密钥)(settings/secrets/actions)和\textbf{Variables}(变量)(settings/variables/actions)选项卡之间切换，参考图 1.20:
 
-\myGraphic{0.7}{content/chapter1/images/20.png}{图1.20 --- 为代码仓库配置密钥和变量}
+\myGraphic{0.7}{content/chapter1/images/20.png}{图1.20 --- 为代码库配置密钥和变量}
 
 \item 
-点击\textbf{New repository secret}(新建代码仓库密钥)将打开\textbf{New secret}(新建密钥)对话框（settings/secrets/actions/new；请参阅图 1.21）：
+点击\textbf{New repository secret}(新建代码库密钥)将打开\textbf{New secret}(新建密钥)对话框(settings/secrets/actions/new；请参阅图 1.21)：
 
 \myGraphic{0.7}{content/chapter1/images/21.png}{图1.21 --- 添加新密钥}
 
-将 MY\_SECRET 作为密钥名称，将随机单词（例如 Abracadabra）作为密钥，然后点击\textbf{Add secret}(添加密钥)，日志中将屏蔽密钥！因此，不要使用可能在其他作业或步骤的输出中出现的常见单词。
+将 MY\_SECRET 作为密钥名称，将随机单词(例如 Abracadabra)作为密钥，然后点击\textbf{Add secret}(添加密钥)，日志中将屏蔽密钥！因此，不要使用可能在其他作业或步骤的输出中出现的常见单词。
 
 \begin{myTip}{密钥和变量的命名约定}
-密钥名称不区分大小写，并且只能包含普通字符（[a-z] 和 [A-Z]）、数字（[0-9]）和下划线（）。它们不能以 GITHUB 或数字开头。
+密钥名称不区分大小写，并且只能包含普通字符([a-z] 和 [A-Z])、数字([0-9])和下划线()。它们不能以 GITHUB 或数字开头。
 
 最好是使用大写单词，并通过下划线字符分隔来命名密钥。
 \end{myTip}
 
 \item 
-重复该过程以\textbf{New repository variable}(创建新的代码仓库变量)（settings/variables/actions/new），并创建一个名为 WHO\_TO\_GREET 且值为 World 的变量。
+重复该过程以\textbf{New repository variable}(创建新的代码库变量)(settings/variables/actions/new)，并创建一个名为 WHO\_TO\_GREET 且值为 World 的变量。
 
 \item 
-打开来自上一个示例的 .github/workflows/MyFirstWorkflow.yml 文件，并点击编辑图标（请参阅图 1.22）：
+打开来自上一个示例的 .github/workflows/MyFirstWorkflow.yml 文件，并点击编辑图标(请参阅图 1.22)：
 
 \myGraphic{0.6}{content/chapter1/images/22.png}{图1.22 --- 编辑 MyFirstWorkflow.yml}
 
@@ -70,7 +70,7 @@
 
 \myGraphic{0.6}{content/chapter1/images/24.png}{图1.24 --- 配置变量和密钥的层次结构}
 
-组织的密钥和变量与代码仓库的密钥和变量工作方式相同。您可以在\textbf{Settings | Secrets and variables | Actions}(设置|密钥和变量|操作)下创建一个密钥或变量。新的组织密钥或变量可以为以下内容设置访问策略：
+组织的密钥和变量与代码库的密钥和变量工作方式相同。您可以在\textbf{Settings | Secrets and variables | Actions}(设置|密钥和变量|操作)下创建一个密钥或变量。新的组织密钥或变量可以为以下内容设置访问策略：
 
 \begin{itemize}
 \item 

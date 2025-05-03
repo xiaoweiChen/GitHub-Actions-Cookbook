@@ -8,14 +8,14 @@ GitHub Actions 的强大之处在于社区——分享即是关爱。这就是�
 
 \begin{enumerate}
 \item 
-在浏览器中导航到库的根目录。GitHub 将检测到库包含一个 action.yml 文件，并且会在蓝色横幅中提议发布一个版本（见图 3.12）：
+在浏览器中导航到库的根目录。GitHub 将检测到库包含一个 action.yml 文件，并且会在蓝色横幅中提议发布一个版本(见图 3.12)：
 
 \myGraphic{0.6}{content/chapter3/images/12.png}{图3.12 --- 起草一个版本以将操作发布到市场}
 
-这与你转到\textbf{Releases}(发布)并点击\textbf{Draft a new release}(起草新版本)（/releases/new）相同。
+这与你转到\textbf{Releases}(发布)并点击\textbf{Draft a new release}(起草新版本)(/releases/new)相同。
 
 \item 
-在对话框中，GitHub 将显示一些警告，以帮助改进市场列表（见图 3.13）：
+在对话框中，GitHub 将显示一些警告，以帮助改进市场列表(见图 3.13)：
 
 \myGraphic{0.6}{content/chapter3/images/13.png}{图3.13 --- 发布操作到市场的指导}
 
@@ -45,7 +45,7 @@ author: 'Michael Kaufmann'
 \myGraphic{0.6}{content/chapter3/images/14.png}{图3.14 --- 检查成功，有唯一的名称、品牌、描述和一个 README 文件}
 
 \item 
-点击\textbf{Choose a tag}(选择标签)，输入 v1.0，然后点击\textbf{Create new tag}(创建新标签)（见图 3.15）：
+点击\textbf{Choose a tag}(选择标签)，输入 v1.0，然后点击\textbf{Create new tag}(创建新标签)(见图 3.15)：
 
 \myGraphic{0.6}{content/chapter3/images/15.png}{图3.15 --- 创建或选择一个标签来创建一个版本}
 
@@ -53,7 +53,7 @@ author: 'Michael Kaufmann'
 将 v1.0 添加为版本标题。请注意，可以为版本自动生成发布说明，只有在处理拉取请求时，结果才会非常好，也可以手动添加描述。
 
 \item 
-点击\textbf{Publish release}(发布版本)，将看到市场（Marketplace）和最新（Latest）标签（见图 3.16）：
+点击\textbf{Publish release}(发布版本)，将看到市场(Marketplace)和最新(Latest)标签(见图 3.16)：
 
 \myGraphic{0.6}{content/chapter3/images/16.png}{图3.16 --- 库中版本信息}
 
@@ -61,17 +61,17 @@ author: 'Michael Kaufmann'
 点击市场标签，这将转到市场列表。
 
 \item 
-注意在操作名称旁边，有一个图标，颜色是在 action.yml 文件中的品牌部分指定的。库的 README.md 文件将涵盖列表的最大部分。在右侧，有一个按钮可以取消列出该操作（从市场中移除），一个版本选择器，以及重要链接。第一个链接将转回到你的库（见图 3.17 列表区域）：
+注意在操作名称旁边，有一个图标，颜色是在 action.yml 文件中的品牌部分指定的。库的 README.md 文件将涵盖列表的最大部分。在右侧，有一个按钮可以取消列出该操作(从市场中移除)，一个版本选择器，以及重要链接。第一个链接将转回到你的库(见图 3.17 列表区域)：
 
 \myGraphic{0.6}{content/chapter3/images/17.png}{图3.17 --- 市场列表}
 
 \item 
-返回到库并通过重复相同的步骤创建一个名为 v1.1 的新版本。这次对话框有一个标记作为最新版本（见图 3.18）。如果忘记这一点，GitHub 将不会标记该版本为最新——无论选择的标签版本号是什么：
+返回到库并通过重复相同的步骤创建一个名为 v1.1 的新版本。这次对话框有一个标记作为最新版本(见图 3.18)。如果忘记这一点，GitHub 将不会标记该版本为最新——无论选择的标签版本号是什么：
 
 \myGraphic{0.6}{content/chapter3/images/18.png}{图3.18 --- 在创建或编辑版本时，必须手动设置一个版本为最新}
 
 \item 
-最后，在浏览器中创建一个新的工作流文件或编辑现有的工作流。在右侧，在市场窗口中输入操作的名称。操作应该立即被找到。请注意 GitHub 从版本自动创建的安装说明（见图 3.19）：
+最后，在浏览器中创建一个新的工作流文件或编辑现有的工作流。在右侧，在市场窗口中输入操作的名称。操作应该立即被找到。请注意 GitHub 从版本自动创建的安装说明(见图 3.19)：
 
 \myGraphic{0.6}{content/chapter3/images/19.png}{图3.17 --- 工作流编辑器中的列表}
 
@@ -102,11 +102,11 @@ GitHub 市场是建立在 GitHub 版本之上(\url{https://docs.github.com/en/re
 修订版本号：一个数字标识符，如果你发布了向后兼容的 bug 修复，则该标识符会增加。应该始终安装新的补丁。
 
 \item 
-预发布版本：使用连字符附加的文本标识符。标识符必须仅使用 ASCII 字母数字字符和连字符（[0-9A-Za-z-]）。文本越长，预发布版本越小（意味着 -alpha < -beta < -rc）。预发布版本始终小于正常版本（1.0.0-alpha < 1.0.0）。
+预发布版本：使用连字符附加的文本标识符。标识符必须仅使用 ASCII 字母数字字符和连字符([0-9A-Za-z-])。文本越长，预发布版本越小(意味着 -alpha < -beta < -rc)。预发布版本始终小于正常版本(1.0.0-alpha < 1.0.0)。
 \end{itemize}
 
 
-在 GitHub 发布中，最佳实践是在语义化版本前缀加上 v（例如，v1.0、v1.0.1 等）。
+在 GitHub 发布中，最佳实践是在语义化版本前缀加上 v(例如，v1.0、v1.0.1 等)。
 
 有关语义化版本的完整规范，请参见 \url{https://semver.org/}。
 

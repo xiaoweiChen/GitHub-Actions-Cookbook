@@ -17,7 +17,7 @@ $ git switch -c add-badges
 https://github.com/OWNER/REPO/actions/workflows/FILE.yml/badge.svg
 \end{shell}
 
-还可以通过添加查询参数（例如，?branch=main 或 ?event=push）按分支或事件进行过滤。我们想要一个适用于 main 分支的徽章，请将以下图像添加到您的 README 的 Markdown 中：
+还可以通过添加查询参数(例如，?branch=main 或 ?event=push)按分支或事件进行过滤。我们想要一个适用于 main 分支的徽章，请将以下图像添加到您的 README 的 Markdown 中：
 
 \begin{shell}
 ![main](https://github.com/OWNER/package-recipe/actions/workflows/ i.yml/badge.svg?branch=main)
@@ -89,12 +89,12 @@ $ gh pr create –fill
 
 \myGraphic{0.6}{content/chapter6/images/5.png}{图6.5 --- 工作流摘要中显示代码覆盖率}
 
-摘要也添加为拉取请求的注释（见图 6.6）：
+摘要也添加为拉取请求的注释(见图 6.6)：
 
 \myGraphic{0.6}{content/chapter6/images/6.png}{图6.6 --- 将代码覆盖率结果添加为拉取请求注释}
 
 \item 
-代码覆盖率徽章是在测试期间由 npm 包自动创建的。但为了添加徽章（即添加到 README），需要一个托管它的地方，为此使用 \textbf{GitHub Pages}。
+代码覆盖率徽章是在测试期间由 npm 包自动创建的。但为了添加徽章(即添加到 README)，需要一个托管它的地方，为此使用 \textbf{GitHub Pages}。
 
 将以下代码添加到构建作业的末尾，以将工件上传到工作流。请注意，这不是普通的 actions/upload-artifact 操作——是一个用于 GitHub Pages 的特殊操作：
 
@@ -169,7 +169,7 @@ $ gh merge -m
 \end{shell}
 
 \item 
-拉取请求合并后，一个新的工作流运行将由推送到 main 触发。完成后，可以看到包含报告的网站 URL（见图 6.7）：
+拉取请求合并后，一个新的工作流运行将由推送到 main 触发。完成后，可以看到包含报告的网站 URL(见图 6.7)：
 
 \myGraphic{0.6}{content/chapter6/images/7.png}{图6.7 --- 检查 Pages 网站}
 
@@ -180,7 +180,7 @@ GitHub 创建的网站在目录根目录中包含徽章。URL 看起来像这样
 [![Coverage](https://wulfland.github.io/package-recipe/badge.svg)]
 \end{shell}
 
-我们希望点击徽章时可定向到网站中的 lcov-report 文件夹，需要为图像添加一个链接。将以下 Markdown 添加到 README（将 wulfland 替换为相应的 GitHub 用户名）：
+我们希望点击徽章时可定向到网站中的 lcov-report 文件夹，需要为图像添加一个链接。将以下 Markdown 添加到 README(将 wulfland 替换为相应的 GitHub 用户名)：
 
 \begin{shell}
 [![Coverage](https://wulfland.github.io/package-recipe/badge.svg)] (https://wulfland.github.io/package-recipe/lcov-report)
@@ -204,7 +204,7 @@ GitHub 创建的网站在目录根目录中包含徽章。URL 看起来像这样
 https://github.com/OWNER/REPOSITORY/actions/workflows/WORKFLOW-FILE/badge.svg
 \end{shell}
 
-通常，可显示特定分支或事件的状态，可以通过提供相应的参数（例如 ?branch=main 或 ?event=push）来实现。这样，就可以为软件的不同版本显示多个徽章。有关更多信息，请参阅 \url{ https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-aworkflow-status-badge}。
+通常，可显示特定分支或事件的状态，可以通过提供相应的参数(例如 ?branch=main 或 ?event=push)来实现。这样，就可以为软件的不同版本显示多个徽章。有关更多信息，请参阅 \url{ https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-aworkflow-status-badge}。
 
 \mySamllsectionNoContent{GitHub Pages}
 
@@ -248,11 +248,11 @@ cancel-in-progress 参数可用于在可用新版本时取消作业并运行该�
 
 \mySubsubsection{6.4.4}{There’s more…}
 
-自动验证代码并将详细信息带到对开发人员有价值的地方非常重要。除了测试结果、代码覆盖率和检查 之外，还可以集成 SonarQube 或 SonarCloud 等解决方案。它们提供了 GitHub 集成，并且对开源项目免费。只需使用 GitHub 凭据登录，就可以配置一个新项目。该项目可以创建徽章，可以将其添加到 README 中（见图 6.9）：
+自动验证代码并将详细信息带到对开发人员有价值的地方非常重要。除了测试结果、代码覆盖率和检查 之外，还可以集成 SonarQube 或 SonarCloud 等解决方案。它们提供了 GitHub 集成，并且对开源项目免费。只需使用 GitHub 凭据登录，就可以配置一个新项目。该项目可以创建徽章，可以将其添加到 README 中(见图 6.9)：
 
 \myGraphic{0.6}{content/chapter6/images/9.png}{图6.9 --- 在GitHub README 中使用 SonarCloud 徽章}
 
-Sonar 徽章提供了与拉取请求的集成，并且可以用作规则集和分支保护规则中的状态检查。质量门在拉取请求中报告（见图 6.10）：
+Sonar 徽章提供了与拉取请求的集成，并且可以用作规则集和分支保护规则中的状态检查。质量门在拉取请求中报告(见图 6.10)：
 
 \myGraphic{0.6}{content/chapter6/images/10.png}{图6.10 --- SonarCloud 质量门在拉取请求中的集成}
 

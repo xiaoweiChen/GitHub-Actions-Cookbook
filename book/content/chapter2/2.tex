@@ -1,7 +1,7 @@
 
 Visual Studio Code (VS Code) 是世界上最受欢迎和广泛使用的代码编辑器之一。由于其灵活性、广泛的扩展生态系统和强大的社区支持，它在开发者社区中获得了显著的人气。
 
-VS Code 与 GitHub 高度集成，提供了诸如 Git 集成、使用 GitHub 账户同步设置、直接访问仓库，以及使用 GitHub 提供的扩展在编辑器内创建、编辑和管理 GitHub Action 工作流程等功能。这种紧密的集成，简化了工作流程的创建过程，还简化了在 GitHub Action 工作流程上的协作。
+VS Code 与 GitHub 高度集成，提供了诸如 Git 集成、使用 GitHub 账户同步设置、直接访问库，以及使用 GitHub 提供的扩展在编辑器内创建、编辑和管理 GitHub Action 工作流程等功能。这种紧密的集成，简化了工作流程的创建过程，还简化了在 GitHub Action 工作流程上的协作。
 
 这个示例中，我们将安装 GitHub Actions 的 VS Code 扩展，并展示可以用它做什么。
 
@@ -14,7 +14,7 @@ $ git config --global user.email
 $ git config --global user.name
 \end{shell}
 
-请记住，我们在公共库中工作。如果想要保持电子邮件地址为隐私，请使用来自 \url{https://github.com/settings/emails} 的邮件地址（见图 2.1）：
+请记住，我们在公共库中工作。如果想要保持电子邮件地址为隐私，请使用来自 \url{https://github.com/settings/emails} 的邮件地址(见图 2.1)：
 
 \myGraphic{0.6}{content/chapter2/images/1.png}{图2.1 --- 公共库中保持电子邮件地址为隐私}
 
@@ -26,7 +26,7 @@ $ git config --global user.email 5276337+wulfland@users.noreply.github.com
 
 GitHub 将自动将提交与账户关联，而不会暴露电子邮件地址。
 
-然后，从第 1 章中本地克隆库，以在仓库的\textbf{Code}(代码)部分的\textbf{Code | Local}(代码 | 本地)下找到相应的 URL（见图 2.2）：
+然后，从第 1 章中本地克隆库，以在库的\textbf{Code}(代码)部分的\textbf{Code | Local}(代码 | 本地)下找到相应的 URL(见图 2.2)：
 
 \myGraphic{0.6}{content/chapter2/images/2.png}{图2.2 --- 本地克隆库}
 
@@ -36,7 +36,7 @@ GitHub 将自动将提交与账户关联，而不会暴露电子邮件地址。
 
 \begin{enumerate}
 \item 
-打开 VS Code，通过组合键 [Shift]+[Command]+[X] 或 [Ctrl]+[Shift]+[X] 或只需单击左侧栏中的扩展图标来打开扩展窗口（见图 2.3）。搜索 github actions 并安装带有验证徽章的 GitHub 的操作(\url{https://marketplace.visualstudio.com/items?itemName=GitHub.vscodegithub-actions})。如有必要，重启 VS Code，并使用 GitHub 账户登录：
+打开 VS Code，通过组合键 [Shift]+[Command]+[X] 或 [Ctrl]+[Shift]+[X] 或只需单击左侧栏中的扩展图标来打开扩展窗口(见图 2.3)。搜索 github actions 并安装带有验证徽章的 GitHub 的操作(\url{https://marketplace.visualstudio.com/items?itemName=GitHub.vscodegithub-actions})。如有必要，重启 VS Code，并使用 GitHub 账户登录：
 
 \myGraphic{0.6}{content/chapter2/images/3.png}{图2.3 --- 为 VS Code 安装 GitHub Actions 扩展}
 
@@ -65,33 +65,33 @@ GitHub 将自动将提交与账户关联，而不会暴露电子邮件地址。
 智能验证尤其有帮助，支持对引用的操作和可重用工作流程进行代码补全，将解析引用操作的参数、输入和输出，并提供验证、代码补全和内联文档功能。
 
 \item 
-打开本地克隆库。可以在本地克隆的仓库文件夹的命令行中输入 code .（. 代表当前文件夹）。这将打开一个新的 VS Code 实例并打开当前文件夹。或者在 VS Code 中使用\textbf{File | Open Folder}(文件 | 打开文件夹)，并选择克隆库的所在文件夹。
+打开本地克隆库。可以在本地克隆的库文件夹的命令行中输入 code .(. 代表当前文件夹)。这将打开一个新的 VS Code 实例并打开当前文件夹。或者在 VS Code 中使用\textbf{File | Open Folder}(文件 | 打开文件夹)，并选择克隆库的所在文件夹。
 
 \item 
-单击左侧的 GitHub Actions 图标（见图 2.4）,并检查\textbf{Current Branch}(当前分支)窗口。可以看到当前分支中的所有工作流运行，每次运行都有由工作流名称和哈希值组成 ID。还可以展开工作流运行状态，以查看作业和步骤。可以直接在 VS Code 中打开作业日志，或者可以在浏览器中打开步骤日志：
+单击左侧的 GitHub Actions 图标(见图 2.4),并检查\textbf{Current Branch}(当前分支)窗口。可以看到当前分支中的所有工作流运行，每次运行都有由工作流名称和哈希值组成 ID。还可以展开工作流运行状态，以查看作业和步骤。可以直接在 VS Code 中打开作业日志，或者可以在浏览器中打开步骤日志：
 
 \myGraphic{0.6}{content/chapter2/images/4.png}{图2.4 --- 检查当前分支中的工作流运行}
 
 \item 
-WORKFLOWS 窗口显示了主分支中仓库的所有工作流程，可以将工作流程固定在列表顶部，打开工作流程文件进行编辑，或者如果工作流具有 workflow\_dispatch 触发器，则可以运行工作流的触发器（见图 2.5）：
+WORKFLOWS 窗口显示了主分支中库的所有工作流程，可以将工作流程固定在列表顶部，打开工作流程文件进行编辑，或者如果工作流具有 workflow\_dispatch 触发器，则可以运行工作流的触发器(见图 2.5)：
 
 \myGraphic{0.6}{content/chapter2/images/5.png}{图2.5 --- 工作流窗口允许触发和打开工作流}
 
 打开工作流文件。
 
 \item 
-接下来，在工作流程文件中尝试使用自动补全功能。删除第 15 行中 vars 后面的值。请注意，扩展程序知晓所有的变量和秘钥（见图 2.6）
+接下来，在工作流程文件中尝试使用自动补全功能。删除第 15 行中 vars 后面的值。请注意，扩展程序知晓所有的变量和秘钥(见图 2.6)
 
 \myGraphic{0.6}{content/chapter2/images/6.png}{图2.6 --- 自动补全所有已知的秘钥和变量}
 
 还具有完整的 workflow 语法，可以在工作流文件中按组合键 [Control]+[Space] 来获取有效元素的列表。
 
-VS Code 会检测到你工作流文件中的问题，并为其提供快速修复（见图 2.7）：
+VS Code 会检测到你工作流文件中的问题，并为其提供快速修复(见图 2.7)：
 
 \myGraphic{0.6}{content/chapter2/images/7.png}{图2.7 --- VS Code 为问题提供快速修复}
 
 \item 
-在SETTINGS窗口中，可以找到库中所有的环境、密钥和变量。但不能创建新的环境，可以为环境或库级别添加密钥和变量，以及编辑或删除它们（见图 2.8）：
+在SETTINGS窗口中，可以找到库中所有的环境、密钥和变量。但不能创建新的环境，可以为环境或库级别添加密钥和变量，以及编辑或删除它们(见图 2.8)：
 
 \myGraphic{0.6}{content/chapter2/images/8.png}{图2.8 --- 在 VS Code 中管理环境、密钥和变量}
 
@@ -103,8 +103,8 @@ VS Code 会检测到你工作流文件中的问题，并为其提供快速修复
 
 \mySubsubsection{2.2.4}{There’s more…}
 
-VS Code 不仅仅可以本地安装——也可以直接在浏览器中使用。在 GitHub 库中，只需按下点号 [.] 键，即可直接在浏览器中用 VS Code 打开当前库，或按下 [Shift]+[>] 在新标签页中打开。要直接在 VS Code 中打开仓库，也可以导航到https://github.dev/<owner>/<repository>。
+VS Code 不仅仅可以本地安装——也可以直接在浏览器中使用。在 GitHub 库中，只需按下点号 [.] 键，即可直接在浏览器中用 VS Code 打开当前库，或按下 [Shift]+[>] 在新标签页中打开。要直接在 VS Code 中打开库，也可以导航到https://github.dev/<owner>/<repository>。
 
 在 GitHub.dev 中，可以像在本地一样处理文件和 Git：首先，提交更改，然后推送到 GitHub。可以安装扩展，并且可以使用 GitHub 账户同步 VS Code 设置。
 
-然而，如果需要终端或安装一些框架，必须在本机进行操作或使用 GitHub Codespaces (\url{https://github.com/features/codespaces})。Codespaces 提供了在 Microsoft Azure 上运行的全功能远程开发环境。每月有 120 小时和 15 GB 的免费存储空间（GitHub Pro 计划则有 180 分钟和 20 GB）；之后，将按分钟和 GB 付费。每 GB 每月成本为 0.07 美元，机器的计算费用每小时在 0.18 美元(双核机器)到 2.88 美元(32 核机器)之间。对于本书来说，我选择了本地版本，以避免用完免费时长的限制，但如果各位读者从未尝试过 Codespaces，我鼓励各位进行尝试，这是为每个项目配备专业开发环境的绝佳方式。
+然而，如果需要终端或安装一些框架，必须在本机进行操作或使用 GitHub Codespaces (\url{https://github.com/features/codespaces})。Codespaces 提供了在 Microsoft Azure 上运行的全功能远程开发环境。每月有 120 小时和 15 GB 的免费存储空间(GitHub Pro 计划则有 180 分钟和 20 GB)；之后，将按分钟和 GB 付费。每 GB 每月成本为 0.07 美元，机器的计算费用每小时在 0.18 美元(双核机器)到 2.88 美元(32 核机器)之间。对于本书来说，我选择了本地版本，以避免用完免费时长的限制，但如果各位读者从未尝试过 Codespaces，我鼓励各位进行尝试，这是为每个项目配备专业开发环境的绝佳方式。

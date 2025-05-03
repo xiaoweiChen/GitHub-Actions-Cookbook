@@ -1,5 +1,5 @@
 
-现在，是时候将我们的应用程序发布到AKS的生产环境了。
+现在，是时候将我们的应用程序发布到 AKS 中的生产环境了。
 
 \mySubsubsection{7.5.1}{Getting ready}
 
@@ -9,7 +9,7 @@
 
 \begin{enumerate}
 \item 
-在 workflow 的顶部添加两个环境变量：
+在工作流的顶部，添加两个更多的环境变量：
 
 \begin{shell}
 env:
@@ -19,7 +19,7 @@ env:
   SERVICE_NAME: 'release-recipe-service'
 \end{shell}
 
-将上一个指南中的 build-and-push-image 作业的输出添加到新作业中，以便新作业能够访问镜像名称：
+为前一个示例中的 build-and-push-image 作业添加一个输出，以便新作业能够访问镜像名称：
 
 \begin{shell}
 outputs:
@@ -27,7 +27,7 @@ outputs:
 \end{shell}
 
 \item 
-在 workflow 中添加一个名为 production 的第二个作业,该作业仅在推送到 main 分支时运行,并与生产环境相关联。将环境的 URL 设置为我们稍后将添加的步骤的输出。该作业将需要 id-token: write 和 contents: read 的权限才能使 OIDC 工作:
+向工作流添加一个名为 production 的第二个作业，该作业仅在推送到 main 时运行，并与生产环境相关联。将环境的 URL 设置为稍后添加的一个步骤的输出。该作业需要权限 id-token: write 和 content: read 以便 OIDC 能够工作：
 
 \begin{shell}
 production:
@@ -43,7 +43,7 @@ production:
 \end{shell}
 
 \item 
-添加步骤以检出仓库并使用 OIDC 登录 Azure：
+添加步骤以签出库并使用 OIDC 登录 Azure：
 
 \begin{shell}
 - name: Checkout
@@ -69,7 +69,7 @@ production:
 \end{shell}
 
 \item 
-检查文件 service.yml。它部署了一个 LoadBalancer，将我们应用程序的 3000 端口显示在 80 端口上。此外，检查 deployment.yml，其中包含我们应用程序的定义。为了替换文件中的环境变量，我们使用 envsubst。然后我们将结果管道传输到 kubectl 并应用清单文件：
+检查文件 service.yml，其部署了一个负载均衡器，将应用程序的 3000 端口映射在 80 端口上。此外，检查 deployment.yml，其中包含应用程序的定义。要替换文件中的环境变量，可使用 envsubst。然后，将结果传递给 kubectl 并应用清单文件：
 
 \begin{shell}
 - name: Deploy
@@ -81,7 +81,7 @@ production:
 \end{shell}
 
 \item 
-使用 kubectl describe service 获取 Kubernetes 中服务的 URL，并将其设置为步骤输出，以便在生产环境 URL 中使用：
+使用 kubectl describe service 获取 Kubernetes 中的服务 URL，并将其设置为步骤输出，以便在环境 URL 中使用：
 
 \begin{shell}
 - name: 'Get Service URL'
@@ -92,7 +92,7 @@ production:
 \end{shell}
 
 \item 
-最后,我们想要检查部署是否成功。如果应用程序有一个 /health 端点,那么我们将查询它,但因为我们的应用程序非常简单,我们将仅依赖于返回的状态码:
+最后，我们想要检查部署是否成功。如果应用程序有一个 /health 端点，需要查询该端点，但由于应用程序非常简单，只依赖返回的状态码即可：
 
 \begin{shell}
 - name: 'Run smoke test'
@@ -107,25 +107,25 @@ production:
   fi
 \end{shell}
 
-这段代码的作用是使用curl --head查询网站的头信息。-s选项抑制了其他输出。然后使用head -1获取第一行。该行看起来像HTTP/1.1 200 OK。我们通过空格切割字符串并取第二个元素(状态码)。如果状态码不是200(OK),则会抛出异常。
+这段代码的作用是使用 curl -{}-head 查询网站的头部信息，-s 选项会抑制其他输出。然后，使用 head -1 获取第一行。该行看起来像 HTTP/1.1 200 OK。我们使用空格分割字符串并取第二个元素(状态码)，如果状态码不是 200(OK)，则会引发异常。
 
 \item 
-将您的更改提交并推送到主分支。这将触发工作流程;这将把新版本的容器推送到注册表,并从那里在AKS中发布。跟随服务的URL(见图7.4)并验证网站是否正确显示:
+提交并推送更改到 main 分支。这将触发工作流；这将把容器的新版本推送到注册表，并从那里在 AKS 中发布它。按照服务的 URL(见图 7.4)，并验证网站是否正确显示：
 
 \myGraphic{0.6}{content/chapter7/images/4.png}{图7.4 --- 部署到动态环境}
 
 \item 
-它将显示您容器中的Hello World应用程序。
+将显示来自容器的 Hello World 应用程序。
 \end{enumerate}
 
 \mySubsubsection{7.5.3}{How it works…}
 
-Azure登录操作将使用OIDC身份验证到Azure。然后可以授予这个身份对Azure资源进行细粒度访问。由于我们限制了仓库中对生产环境的访问,只有这个作业可以使用应用程序对Azure进行身份验证。您也可以使用分支、标签或拉取请求来实现这一点。
+Azure 登录操作将使用 OIDC 身份验证 Azure，可以将此身份授予对 Azure 资源的细粒度访问权限。由于我们限制了库中对生产环境的访问，因此只有此作业可以使用应用程序来验证 Azure，也可以使用分支、标签或拉取请求进行实现。
 
-然后我们使用aks-set-context操作配置使用kubectl对AKS的访问。这将允许我们部署实际应用程序到Kubernetes。
+然后使用 aks-set-context 操作来配置使用 kubectl 访问 AKS，可将实际应用程序部署到 Kubernetes。
 
 \mySubsubsection{7.5.4}{There’s more…}
 
-Kubernetes可能很快就会变得非常复杂。在现实世界中，您将向集群添加DNS和SSL，并使用命名空间来管理并行运行多个容器。这是一种将每个拉取请求部署到动态环境的不错方法。然而，这超出了本书的范围。
+Kubernetes 可以非常快地变得非常复杂。实际上，可向集群添加 DNS 和 SSL，并使用命名空间来管理并行运行的多容器。这是一种很棒的方式，可以将每个拉取请求部署到动态环境，但这些超出了本书的范围。
 
-如果您想使用除Azure以外的其他云提供商来发布容器，您可以在这里找到一个部署到AWS弹性容器服务(ECS)的指南：\url{https://github.com/wulfland/AccelerateDevOps/blob/main/ch9_release/Deploy_to_AWS_ECS.md}，或者另一个部署到Google Kubernetes Engine(GKE)的指南：\url{https://github.com/wulfland/AccelerateDevOps/blob/main/ch9_release/Deploy_to_GKE.md}。
+如果想使用其他云提供商(而不是 Azure)来发布容器，可在这里找到有关如何部署到 AWS Elastic Container Service (ECS) 的动手指南：\url{https://github.com/wulfland/AccelerateDevOps/blob/main/ch9_release/Deploy_to_AWS_ECS.md}，或者在这里找到另一个有关如何部署到 Google Kubernetes Engine (GKE) 的指南：\url{https://github.com/wulfland/AccelerateDevOps/blob/main/ch9_release/Deploy_to_GKE.md}。

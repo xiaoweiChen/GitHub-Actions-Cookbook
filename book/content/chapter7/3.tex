@@ -1,21 +1,21 @@
 
-在这个指南中,我们将在Azure中设置我们的Kubernetes集群,并且我们将在Azure中配置OIDC,以便在不使用存储的密钥的情况下部署到集群。
+本示例中，我们将设置 Azure 中的 Kubernetes 集群，并在 Azure 中配置 OIDC，以便在不使用存储秘钥的情况下部署到集群。
 
 \mySubsubsection{7.3.1}{Getting ready}
 
-确保您拥有至少具有对包的读取访问权限的PAT(个人访问令牌)。
+确保至少有一个具有对软件包的读访问权限的 PAT 令牌。
 
-如果您在Azure方面有经验并且本地安装了Azure CLI(\url{https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest})，那么您可以从中开始工作。如果您对Azure不熟悉或没有安装CLI，只需使用Azure Cloud Shell(\url{https://shell.azure.com})。
+如果熟悉 Azure 并且本地安装了 Azure CLI(\url{https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest})，可以直接从那里开始操作。如果是 Azure 新手或者没有安装 CLI，只需使用Azure Cloud Shell(\url{https://shell.azure.com})即可。
 
-将PAT令牌设置为环境变量：
+将 PAT 令牌设置为环境变量：
 
 \begin{shell}
 $ export GHCR_PAT=<YOUR_PAT_TOKEN>
 \end{shell}
 
-该令牌将被Kubernetes用来从GitHub包注册表中读取。打开脚本setup-azure.sh，并将文件顶部的位置变量调整为您选择的Azure区域。您可以使用az account list-locations -o table命令获取区域列表。
+该令牌将由 Kubernetes 用于从 GitHub Package Registry 读取。打开脚本 setup-azure.sh 并调整文件顶部的 location 变量，以选择想要的 Azure 区域。可以使用 az account list-locations -o table 获取区域列表。
 
-提交并推送您的更改，然后运行脚本：
+提交并推送更改，然后运行脚本：
 
 \begin{shell}
 $ git clone https://github.com/{OWNER}/release-recipe.git
@@ -24,63 +24,63 @@ $ chmod +x setup-azure.sh
 $ ./setup-azure.sh
 \end{shell}
 
-这将创建一个Azure Kubernetes服务并将其与GitHub容器注册表连接。在脚本运行时，您可以配置OIDC以便从工作流程中访问它。
+这将创建一个 Azure Kubernetes Service ，并将其与 GitHub Container registry 连接。在脚本运行时，可以配置 OIDC 以从工作流访问。
 
 \mySubsubsection{7.3.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-使用Cloud Shell或本地终端创建一个新的应用程序注册：
+使用 Cloud Shell 或本地终端，并创建一个新的应用程序注册：
 
 \begin{shell}
 $ az ad app create --display-name release-recipe
 \end{shell}
 
 \item 
-然后，使用注册输出中的应用程序ID创建一个服务主体：
+然后，使用注册输出中的应用 ID 创建一个服务主体：
 
 \begin{shell}
 $ az ad sp create --id <appId>
 \end{shell}
 
 \item 
-接着,打开Azure门户,在Microsoft Entra中,找到“App registrations”下的release-recipe。在“Certificates \& secrets”|“Federated credentials”|“Add credentials”下添加OIDC信任。填写表单。将组织设置为您的GitHub用户名,输入库名称,并将实体类型选择为“Environment”(参见图7.1):
+然后，打开 Azure 门户，在 Microsoft Entra 中，在\textbf{App registrations}(应用程序注册)下找到 release-recipe。在\textbf{Certificates \& secrets | Federated credentials | Add credentials}(证书和机密|联合凭证|添加凭证)下添加 OIDC 信任，填写表单，将组织设置为 GitHub 用户名，输入库名，并将实体类型选择为\textbf{Environment}(环境)(见图 7.1)：
 
-\myGraphic{0.6}{content/chapter7/images/1.png}{图7.1 --- 在Microsoft Entra中连接您的GitHub账户}
+\myGraphic{0.6}{content/chapter7/images/1.png}{图7.1 --- 在Microsoft Entra中连接GitHub账户}
 
-为凭证命名并点击添加。记下release-recipe应用程序的应用程序(客户端)ID和目录租户ID(参见图7.2)。稍后您将需要这些信息:
+为这些凭证命名并点击\textbf{Add}(添加)。记下 release-recipe 应用程序的\textbf{Application (client) ID}(应用程序(客户端)ID)和\textbf{Directory (tenant) ID}(目录(租户)ID)(见图 7.2)。稍后会用到这些信息：
 
-\myGraphic{0.6}{content/chapter7/images/2.png}{图7.2 --- 来自应用程序注册的客户端和租户ID}
+\myGraphic{0.6}{content/chapter7/images/2.png}{图7.2 --- 应用注册的客户端和租户 ID}
 
 \item 
-然后,在工作订阅中为服务主体分配角色。在门户中打开订阅。在访问控制(IAM)| 角色分配 | 添加 | 添加角色分配下( Access control (IAM) | Role assignment | Add | Add role assignment),按照向导操作。选择角色 - 例如,贡献者 - 并点击下一步。选择用户、组或服务主体,并选择您之前创建的服务主体。
+然后，在订阅中为服务主体分配一个角色，并在门户中打开订阅。在\textbf{Access control (IAM) | Role assignment | Add | Add role assignment}(访问控制 (IAM) | 角色分配 | 添加 | 添加角色分配)下，按照向导操作。选择角色——例如，\textbf{Contributor}(参与者)——再点击\textbf{Next}(下一步)。选择“ User, group, or service principal”，然后选择之前创建的服务主体。
 
 \end{enumerate}
 
 \mySubsubsection{7.3.3}{How it works…}
 
-代替使用作为秘密存储的凭据来连接到云提供商,例如Azure、AWS、GCP或HashiCorp,您可以使用OIDC。OIDC将交换短时效的令牌用于身份验证,而不是凭据。您的云提供商也需要在其端支持OIDC。
+可以使用 OIDC(而不是使用存储为机密的凭据，来连接到云提供商，如 Azure、AWS、GCP 或 HashiCorp)。OIDC 将使用短期有效的令牌进行身份验证，而非凭据。云提供商也需要在其端支持 OIDC。
 
-当使用OIDC时,您不必在GitHub中存储云凭据,您对工作流程可以访问的资源有更细粒度的控制,并且您有旋转的、短时效的令牌,这些令牌将在工作流程运行后过期。图7.3显示了OIDC工作原理的概述:
+使用 OIDC 时，无需将云凭据存储在 GitHub 中，可以对工作流可以访问的资源拥有更细粒度的控制，并且拥有轮换的、短期有效的令牌，这些令牌在工作流运行后将过期。图 7.3 展示了 OIDC 的工作原理概述：
 
-\myGraphic{0.6}{content/chapter7/images/3.png}{图7.3 --- 与云提供商集成的OIDC}
+\myGraphic{0.6}{content/chapter7/images/3.png}{图7.3 --- OIDC 与云提供商的集成}
 
 步骤如下：
 
 \begin{itemize}
 \item 
-在您的云提供商和GitHub之间创建OIDC信任。将信任限制在组织和库,并进一步限制对环境、分支或拉取请求的访问。
+在云提供商和 GitHub 之间创建一个 OIDC 信任关系。将信任限制到一个组织和库，并进一步限制对环境、分支或拉取请求的访问。
 
 \item 
-在工作流程运行期间,GitHub OIDC提供者自动生成一个JSON网络令牌。该令牌包含多个声明,为特定工作流程作业建立安全和可验证的身份。
+GitHub OIDC 提供程序在工作流运行期间，自动生成一个 JSON Web Token。该令牌包含多个声明，用于为特定工作流作业建立安全且可验证的身份。
 
 \item 
-云提供商验证这些声明,并提供一个短时效的访问令牌,该令牌仅在工作流程的生命周期内有效。
+云提供商验证声明，并提供一个仅在作业生命周期内有效的短期访问令牌。
 
 \item 
-访问令牌用于访问身份有权访问的资源。
+使用访问令牌访问该身份有权访问的资源。
 \end{itemize}
 
-您可以使用该身份直接访问资源，也可以使用它从安全保险库(如Azure Key Vault或HashiCorp Vault)获取凭据。通过这种方式，您可以通过使用保险库安全地连接到不支持OIDC和自动密钥轮换的服务。
+可以使用该身份直接访问资源，或者使用它从安全库(例如 Azure Key Vault 或 HashiCorp Vault)中获取凭据。通过这种方式，可以使用库安全地连接到不支持 OIDC 和自动密钥轮换的服务。
 
-在GitHub上，您可以找到有关为AWS、Azure和GDP配置OIDC的说明，网址为\url{https://docs.github.com/en/actions/deployment/security-hardening-your-deployments}。
+在 GitHub 上，可以在 \url{https://docs.github.com/en/actions/deployment/security-hardening-your-deployments} 找到有关为 AWS、Azure 和 GCP 配置 OIDC 的说明。

@@ -81,7 +81,7 @@ $ gh release create v1.0.1 --generate-notes
 
 GitVersion(\url{https://gitversion.net/docs/})是一个工具，可根据您的 Git 历史记录自动生成语义化版本号。GitVersion 默认使用与 GitHub flow(\url{https://docs.github.com/en/get-started/usinggithub/github-flow})和 Git flow(\url{https://nvie.com/posts/a-successfulgit-branching-model/})兼容的配置运行。
 
-可以运行 GitVersion init 来启动一个向导，该向导将引导您创建一个配置文件（GitVersion.yml）。在我们的示例中，使用持续交付模式——需要显式地使用标签创建一个版本。但还有其他模式，例如持续部署模式（从特定分支的每个提交创建版本）或主线模式。
+可以运行 GitVersion init 来启动一个向导，该向导将引导您创建一个配置文件(GitVersion.yml)。在我们的示例中，使用持续交付模式——需要显式地使用标签创建一个版本。但还有其他模式，例如持续部署模式(从特定分支的每个提交创建版本)或主线模式。
 
 gittools/actions/gitversion/execute 操作将执行 GitVersion 并将结果保存在 \$GITVERSION\_SEMVER 环境变量中，还可以使用该操作的输出访问版本的各个部分和配置：
 
@@ -99,7 +99,7 @@ gittools/actions/gitversion/execute 操作将执行 GitVersion 并将结果保�
 
 \mySubsubsection{6.7.4}{There’s more…}
 
-还可以使用规范提交（Conventional Commits）(\url{https://www.conventionalcommits.org})从提交消息中自动确定语义化版本。规范提交是一种规范，提供了一组规则，用于通过描述提交消息中的特性、修复和破坏性变更来创建明确的提交历史。可以使用规范提交来创建发布说明——可以将其与 GitVersion 一起使用，以自动确定新版本是补丁、次要还是主要版本。可以通过 GitVersion.yml 配置文件完成：
+还可以使用规范提交(Conventional Commits)(\url{https://www.conventionalcommits.org})从提交消息中自动确定语义化版本。规范提交是一种规范，提供了一组规则，用于通过描述提交消息中的特性、修复和破坏性变更来创建明确的提交历史。可以使用规范提交来创建发布说明——可以将其与 GitVersion 一起使用，以自动确定新版本是补丁、次要还是主要版本。可以通过 GitVersion.yml 配置文件完成：
 
 \begin{shell}
 mode: Mainline

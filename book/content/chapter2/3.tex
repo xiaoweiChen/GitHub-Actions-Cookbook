@@ -1,9 +1,9 @@
 
-全新的仓库中，最好在主分支上创建工作流。如果必须在开发人员正在工作的活跃库中创建工作流，并且不想影响到其他人的工作，那么可以在一个分支中编写工作流程，并通过拉取请求将其合并回主分支。
+全新的库中，最好在主分支上创建工作流。如果必须在开发人员正在工作的活跃库中创建工作流，并且不想影响到其他人的工作，那么可以在一个分支中编写工作流程，并通过拉取请求将其合并回主分支。
 
 然而，某些触发器可能不会按预期工作。如果想要使用 workflow\_dispatch 触发器手动运行工作流，第一个操作必须是合并带有触发器的工作流程回主分支，或者使用 API 来触发工作流程。之后，可以在一个分支中编写工作流程，并在通过 UI 触发工作流程时选择该分支。
 
-如果工作流需要 webhook 触发器，如 push、pull\_request 或 pull\_request\_target，根据计划如何使用这些触发器，可能需要在仓库的分支中创建工作流程。这样，可以在不干扰开发人员工作的前提下测试和调试工作流程，完成时可以将其合并回原始仓库。
+如果工作流需要 webhook 触发器，如 push、pull\_request 或 pull\_request\_target，根据计划如何使用这些触发器，可能需要在库的分支中创建工作流程。这样，可以在不干扰开发人员工作的前提下测试和调试工作流程，完成时可以将其合并回原始库。
 
 \mySubsubsection{2.3.1}{Getting ready}
 
@@ -13,7 +13,7 @@
 $ git reset --hard HEAD
 \end{shell}
 
-也可以在 VS Code 的 Git 窗口中这样做（见图 2.9）：
+也可以在 VS Code 的 Git 窗口中这样做(见图 2.9)：
 
 \myGraphic{0.7}{content/chapter2/images/9.png}{图2.9 --- 丢弃本地更改}
 
@@ -21,7 +21,7 @@ $ git reset --hard HEAD
 
 \begin{enumerate}
 \item 
-在 VS Code 中，点击左下角的 main，选择命令面板中的 \textbf{+ Create new branch… }，输入 new-workflow 作为新分支的名称，然后按 [Enter]（见图 2.10）：
+在 VS Code 中，点击左下角的 main，选择命令面板中的 \textbf{+ Create new branch… }，输入 new-workflow 作为新分支的名称，然后按 [Enter](见图 2.10)：
 
 \myGraphic{0.6}{content/chapter2/images/10.png}{图2.10 --- 在 VS Code 中创建一个新分支}
 
@@ -32,7 +32,7 @@ $ git switch -c new-workflow
 \end{shell}
 
 \item 
-在 VS Code 的 资源管理器 窗口中创建一个新的工作流文件。找到并标记 .github/workflow 文件夹，然后点击 \textbf{New file…}(新建文件…) 图标。输入 DevelopInBranch.yml 作为文件名，然后点击回车（见图 2.11）：
+在 VS Code 的 资源管理器 窗口中创建一个新的工作流文件。找到并标记 .github/workflow 文件夹，然后点击 \textbf{New file…}(新建文件…) 图标。输入 DevelopInBranch.yml 作为文件名，然后点击回车(见图 2.11)：
 
 \myGraphic{0.6}{content/chapter2/images/11.png}{图2.11 --- 在 VS Code 中创建一个新的工作流文件}
 
@@ -56,7 +56,7 @@ jobs:
 \end{shell}
 
 \item 
-添加新文件（暂存更改），输入提交信息，并提交更改（见图 2.12）：
+添加新文件(暂存更改)，输入提交信息，并提交更改(见图 2.12)：
 
 \myGraphic{0.6}{content/chapter2/images/12.png}{图2.12 --- 在 VS Code 中提交新文件}
 
@@ -75,11 +75,11 @@ $ git push -u origin new-workflow
 \end{shell}
 
 \item 
-接下来，我们将为新分支创建一个拉取请求。因为使用了 pull\_request 触发器，这将自动运行新工作流。在浏览器中转到库并导航到 \textbf{Pull requests}(拉取请求)。Git 检测到已经推送了一个新分支，并会提供给创建拉取请求的选项（比较 \& 拉取请求，见图 2.13）：
+接下来，我们将为新分支创建一个拉取请求。因为使用了 pull\_request 触发器，这将自动运行新工作流。在浏览器中转到库并导航到 \textbf{Pull requests}(拉取请求)。Git 检测到已经推送了一个新分支，并会提供给创建拉取请求的选项(比较 \& 拉取请求，见图 2.13)：
 
 \myGraphic{0.6}{content/chapter2/images/13.png}{图2.13 --- 浏览器中创建一个新的拉取请求}
 
-只需保留默认标题（你之前添加的提交信息）然后点击 、\textbf{Create pull request}(创建拉取请求)（见图 2.14）：
+只需保留默认标题(你之前添加的提交信息)然后点击 、\textbf{Create pull request}(创建拉取请求)(见图 2.14)：
 
 \myGraphic{0.6}{content/chapter2/images/14.png}{图2.14 --- 创建一个带有标题和描述的拉取请求}
 
@@ -90,17 +90,17 @@ $ gh pr create --fill
 \end{shell}
 
 \begin{myTip}{GitHub CLI}
-在本书中，将大量使用 GitHub CLI (\url{https://cli.github.com/})，其适用于所有平台，可以通过许多包管理器（Homebrew、WinGet、RPM 等）获取。有关更多安装说明，请参阅 \url{https://github.com/cli/cli#installation}。安装后，需要使用 \verb|gh auth login| 进行身份验证（请参阅 \url{https://cli.github.com/manual/gh_auth_login}）。
+在本书中，将大量使用 GitHub CLI (\url{https://cli.github.com/})，其适用于所有平台，可以通过许多包管理器(Homebrew、WinGet、RPM 等)获取。有关更多安装说明，请参阅 \url{https://github.com/cli/cli#installation}。安装后，需要使用 \verb|gh auth login| 进行身份验证(请参阅 \url{https://cli.github.com/manual/gh_auth_login})。
 \end{myTip}
 
 \item 
-打开你的拉取请求，已经自动执行了工作流程作为检查（见图 2.15）：
+打开你的拉取请求，已经自动执行了工作流程作为检查(见图 2.15)：
 
 \myGraphic{0.6}{content/chapter2/images/15.png}{图2.15 --- 由于 pull\_request 触发器，工作流将自动运行}
 
 你还可以在\textbf{Actions}(操作)选项卡中看到工作流，但不能手动运行工作流。即使有 workflow\_dispatch 触发器，只有该触发器的工作流与 main 合并后，运行工作流程的按钮才可用。之后，也将能够在分支上手动运行。
 
-不过，可以在 VS Code 中运行工作流程。打开 \textbf{GitHub Actions} 扩展，请使用右上角的刷新图标刷新\textbf{Workflows}(工作流)窗口。现在应该看到新的工作流，并且可以使用箭头按钮手动触发（见图 2.16）：
+不过，可以在 VS Code 中运行工作流程。打开 \textbf{GitHub Actions} 扩展，请使用右上角的刷新图标刷新\textbf{Workflows}(工作流)窗口。现在应该看到新的工作流，并且可以使用箭头按钮手动触发(见图 2.16)：
 
 \myGraphic{0.6}{content/chapter2/images/16.png}{图2.16 --- 在 VS Code 中手动运行工作流}
 \end{enumerate}

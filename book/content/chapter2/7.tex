@@ -7,13 +7,13 @@ Act 依赖于 Docker 来运行工作流程，请确保 Docker 已经良好的在
 
 可以使用不同的包管理器安装 act (\url{https://github.com/nektos/act#installationthrough-package-managers})，只需选择适合环境的包管理器，并按照说明进行操作即可。
 
-首次运行 act 时，它会要求使用者选择一个用作默认值的 Docker 镜像，并把该信息保存到 ~/.actrc。有不同的镜像可供选择，有小镜像（node:16-buster-slim）只支持 NodeJS 而不支持更多。大镜像的大小超过 18 GB。鉴于现今的磁盘空间和互联网，使用大镜像会获得最佳结果。为了运行当前的工作流，可以选择中等大小的镜像（见图 2.25）：
+首次运行 act 时，它会要求使用者选择一个用作默认值的 Docker 镜像，并把该信息保存到 ~/.actrc。有不同的镜像可供选择，有小镜像(node:16-buster-slim)只支持 NodeJS 而不支持更多。大镜像的大小超过 18 GB。鉴于现今的磁盘空间和互联网，使用大镜像会获得最佳结果。为了运行当前的工作流，可以选择中等大小的镜像(见图 2.25)：
 
 \myGraphic{0.6}{content/chapter2/images/25.png}{图2.25 --- 首次运行 act 时选择容器镜像}
 
 \mySubsubsection{2.7.2}{How to do it…}
 
-在当前仓库中打开命令提示符，查看新的工作流分支。act 使用工作流程触发器来执行工作流程，并且默认为 push。由于当前工作流只有 pull\_request 触发器，所以必须指定。使用 -l 选项，act 将列出仓库中所有具有相应触发器的工作流程和作业。执行以下命令：
+在当前库中打开命令提示符，查看新的工作流分支。act 使用工作流程触发器来执行工作流程，并且默认为 push。由于当前工作流只有 pull\_request 触发器，所以必须指定。使用 -l 选项，act 将列出库中所有具有相应触发器的工作流程和作业。执行以下命令：
 
 \begin{shell}
 $ act pull_request -l

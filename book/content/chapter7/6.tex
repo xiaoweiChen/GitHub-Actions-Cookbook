@@ -1,33 +1,33 @@
 
-现在我们已经有了一个从包仓库到发布仓库的端到端工作流程,并从这里进入生产环境,我想向您展示如何结合使用Dependabot和GitHub Actions来自动化您的依赖项更新过程。
+现在，我们已经实现了从包库到发布库，再到生产环境的端到端工作流，我展示了如何使用 dependabot 结合 GitHub Actions 来自动化更新依赖项的过程。
 
 \mySubsubsection{7.6.1}{Getting ready}
 
-在仓库中，导航到“设置”|“代码安全性和分析”，确保已启用“依赖关系图”(见图7.4)：
+导航到\textbf{Settings | Code security and analysis}(设置 | 代码安全与分析)，并确保\textbf{Dependency graph}(依赖项图)已启用(见图 7.4)：
 
-\myGraphic{0.6}{content/chapter7/images/5.png}{图7.5 --- 启用依赖关系图和可选的Dependabot警报}
+\myGraphic{0.6}{content/chapter7/images/5.png}{图7.5 --- 启用依赖项图和可选的 dependabot 警报}
 
-这将分析您的仓库并检测您可以在“洞察”|“依赖关系图”下检查的所有依赖项。您还可以启用Dependabot警报。在这种情况下，当您的某个依赖项存在已知漏洞时，Dependabot会通知您。Dependabot安全更新更进一步，Dependabot会为您生成一个包含更新到非漏洞版本的拉取请求。为了减少拉取请求的数量，您可以组合更新(此功能仍处于测试阶段)。
+这将分析库并检测所有依赖项，可以在\textbf{Insights | Dependency graph}(洞察|依赖项图)下检查这些依赖项，还可以启用 Dependabot 警报。当依赖项存在已知漏洞时，dependabot 会进行通知。Dependabot 安全更新更进一步，dependabot 会生成一个拉取请求，其中包含一个更新到非易受攻击版本的版本。为了减少拉取请求的数量，可以将更新分组在一起(此功能仍处于测试阶段)。
 
 \mySubsubsection{7.6.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-创建一个新的名为PAT的dependabot密钥,并将其设置为具有包读取权限的PAT令牌的值:
+创建一个名为 PAT 的新 dependabot 密钥，并将其设置为对软件包具有读取访问权限的 PAT 令牌：
 
 \begin{shell}
 $ gh secret set PAT --app dependabot
 \end{shell}
 
 \item 
-创建一个新文件：.github/dependabot.yml。它总是以version:2开始：
+创建一个新文件：.github/dependabot.yml。总是以 version:2 开头：
 
 \begin{shell}
 version: 2
 \end{shell}
 
 \item 
-使用PAT配置一个新的npm-registry，指向\url{https://npm.pkg.github.com}
+使用 PAT 配置一个新的 npm-registry，指向\url{https://npm.pkg.github.com}
 
 \begin{shell}
 registries:
@@ -39,7 +39,7 @@ registries:
 \end{shell}
 
 \item 
-版本更新在updates下配置。添加生态系统npm，并指向您创建的注册表名称：
+版本更新在 updates 下配置。添加生态系统 npm ，并指向创建的注册表的名称：
 
 \begin{shell}
 updates:
@@ -51,10 +51,10 @@ updates:
       - npm-pkg
 \end{shell}
 
-这将检查npm包的每周更新，包括私有注册表中的包。
+这将检查 npm 包的每周更新，包括私有注册表中的包。
 
 \item 
-可选地，为GitHub操作添加更新：
+可选地，添加 GitHub actions 的更新：
 
 \begin{shell}
 - package-ecosystem: "github-actions"
@@ -63,10 +63,10 @@ updates:
     interval: "weekly"
 \end{shell}
 
-这将检查GitHub操作是否有更新版本。
+这将检查 GitHub actions 的更新版本。
 
 \item 
-您还可以将Docker添加为生态系统：
+还可以将 Docker 添加为生态系统：
 
 \begin{shell}
 - package-ecosystem: "docker"
@@ -75,29 +75,29 @@ updates:
     interval: "weekly"
 \end{shell}
 
-这也适用于Kubernetes清单文件，Dependabot将检查清单文件中镜像标签的更新。然而，在我们的情况下，我们使用环境变量直接部署新版本。
+这同样适用于 Kubernetes 清单文件，dependabot 将检查清单文件中镜像标签的更新。但在我们的示例中，需要使用环境变量直接部署新版本。
 
 \item 
-提交并推送文件。然后,转到Insights | Dependency graph | Dependabot。为每个配置的生态系统都有一个条目,您可以通过点击右侧的链接来检查日志文件(参见图7.6):
+提交并推送该文件。然后，转到\textbf{Insights | Dependency graph | Dependabot}(洞察|依赖项图|Dependabot)。每个已配置的生态系统都有一个条目，可以通过点击右侧的链接来检查日志文件(见图 7.6)：
 
-\myGraphic{0.6}{content/chapter7/images/6.png}{图7.6 --- 检查Dependabot版本更新的日志}
+\myGraphic{0.6}{content/chapter7/images/6.png}{图7.6 --- 检查 dependabot 版本更新的日志}
 
-检查日志中是否有错误。
-
-\item 
-现在，转到包-配方仓库，并使用新的补丁版本创建一个新版本。一旦新包版本发布，转到Insights | Dependency graph| Dependabot，并点击package.json行中的链接。点击检查更新以强制Dependabot现在检查更新(参见图7.7)：
-
-\myGraphic{0.6}{content/chapter7/images/7.png}{图7.7 --- 让Dependabot现在检查更新}
+请检查日志中是否有错误。
 
 \item 
-Dependabot将创建一个新的拉取请求，以更新到新版本(参见图7.8)：
+现在，转到 package-recipe 库，并创建一个带有新补丁版本的新发布。当新包版本发布，转到\textbf{Insights | Dependency graph | Dependabot}(洞察|依赖项图|Dependabot)并点击 package.json 行中的链接。点击\textbf{Check for updates}(检查更新)以强制 dependabot 现在检查更新(见图 7.7)：
 
-\myGraphic{0.6}{content/chapter7/images/8.png}{图7.8 --- Dependabot版本更新创建的拉取请求}
-
-合并拉取请求，或者通过在拉取请求上评论 @dependabot squash and merge 让 Dependabot 来完成合并。
+\myGraphic{0.6}{content/chapter7/images/7.png}{图7.7 --- 让 dependabot 现在检查更新}
 
 \item 
-由于我们信任包的所有者,我们可以自动化这最后一步,并在所有检查都成功后,为特定版本合并每一个拉取请求。创建一个新文件:.github/workflows/dependencies.yml。工作流程将在 pull\_request\_target 上运行,并且它需要写入拉取请求的权限:
+dependabot 将创建一个新的拉取请求，将版本更新到最新版本(见图 7.8)：
+
+\myGraphic{0.6}{content/chapter7/images/8.png}{图7.8 --- 由 dependabot 版本更新创建的拉取请求}
+
+合并拉取请求或通过在拉取请求上评论 @dependabot squash and merge 让 dependabot 来完成。
+
+\item 
+由于我们信任包的所有者，可以自动化这一最后步骤，并在所有检查成功后仅合并特定版本的每个拉取请求。创建一个新文件：.github/workflows/dependencies.yml。该工作流将在 pull\_request\_target 上运行，并且需要对拉取请求进行写入权限：
 
 \begin{shell}
 name: Dependabot auto-merge
@@ -110,7 +110,7 @@ permissions:
 \end{shell}
 
 \item 
-只有在拉取请求的作者是 dependabot 时才运行作业：
+仅当拉取请求的作者为 dependabot 时才运行作业：
 
 \begin{shell}
 jobs:
@@ -121,7 +121,7 @@ jobs:
 \end{shell}
   
 \item 
-第一步是获取 Dependabot 元数据：
+第一步是获取 dependabot 元数据：
 
 \begin{shell}
 - name: Dependabot metadata
@@ -132,7 +132,7 @@ jobs:
 \end{shell}
 
 \item 
-接下来,添加一个基于元数据的条件运行的步骤:如果依赖项名称包含您的包(将 {OWNER} 替换为您的用户名)并且版本更新是补丁版本。如果所有检查都成功,则使用 gh merge -{}-auto 合并拉取请求:
+接下来，添加一个基于以下元数据条件的步骤：如果依赖项名称包含您的包(将 \{OWNER\} 替换为相应的用户名)并且版本更新是补丁版本。如果所有检查都成功，使用 gh merge -{}-auto 合并拉取请求：
 
 \begin{shell}
 - name: Enable auto-merge for all patch versions
@@ -143,17 +143,17 @@ jobs:
     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 \end{shell}
 
-请注意，这个工作流程不会触发监听主分支推送事件的 publish.yml 工作流程。这是因为合并操作是使用 GITHUB\_TOKEN 执行的。您可以使用 PAT(个人访问令牌)令牌，就像最后一步中那样，或者您可以将发布逻辑移动到一个可重用的工作流程中，并直接从该工作流程中调用它。
+请注意，此工作流不会触发监听 main 分支 push 触发的 publish.yml 工作流,因为合并是使用 GITHUB\_TOKEN 进行的。可以使用与上一步相同的个人访问令牌(PAT)，或者可以将发布逻辑移动到一个可重用的工作流中，并直接从此工作流中进行调用。
 
 \item 
-现在,回到 package-recipe 仓库,并使用新的补丁版本创建一个新的发布。一旦新包版本发布,前往 Insights | Dependency graph | Dependabot,并点击 package.json 行中的链接。点击“检查更新”以强制 Dependabot 现在检查更新(见图7.7)。Dependabot 将创建一个拉取请求,触发工作流程,并且拉取请求将自动合并。
+现在，回到 package-recipe 库并创建一个具有新补丁版本的新发布。当新包版本发布，请转到\textbf{Insights | Dependency graph | Dependabot}(洞察|依赖项图|Dependabot)，然后单击 package.json 行中的链接。点击\textbf{Check for updates}(检查更新)以强制 dependabot 现在检查更新(见图 7.7)。Dependabot 将创建一个拉取请求，触发工作流，并且该拉取请求将自动合并。
 \end{enumerate}
 
 \mySubsubsection{7.6.3}{How it works…}
 
-Dependabot 可以帮助您以更少的努力保持依赖项的最新状态。您可以使用它来自动化更新过程，并跟上所有依赖项的最新发布。
+Dependabot 可以以更少的精力使依赖项保持最新。可以使用它来自动化更新过程，并跟踪所有依赖项的最新发布。
 
-有许多生态系统支持这一功能：
+它支持许多生态系统：
 
 \begin{itemize}
 \item 
@@ -217,14 +217,14 @@ Terraform
 yarn
 \end{itemize}
 
-为了获得完整的列表，请参阅以下链接：\url{: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates}。
+为了获得完整的列表，请参阅以下链接：\url{https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates}。
 
-Dependabot 将为每个依赖项的每个版本更新创建拉取请求。您可以在拉取请求上使用 @dependabot 命令与 Dependabot 交互，并告诉它某些事情，例如忽略版本或重新提交更改。
+Dependabot将为每个依赖项的每个版本更新创建拉取请求，可以在拉取请求中使用@Dependabot命令与dependabot交互，并告诉它某些事情，例如：忽略版本或重新应用更改。
 
-dependabot.yml 文件有很多选项。您可以指定允许的更新类型、自定义提交信息、将更新分组、忽略某些依赖项，并添加审查者、标签或分配人员。有关配置选项的完整列表，请参阅以下链接：\url{https://docs.github.com/en/code-security/dependabot/dependabotversion-updates/configuration-options-for-the-dependabot.yml-file}。
+dependabot.yml文件有许多选项，可以指定允许哪些类型的更新，自定义提交消息，将更新分组在一起，忽略某些依赖项，以及添加审阅者、标签或分配人。有关配置选项的完整列表，请参阅以下链接：\url{https://docs.github.com/en/code-security/dependabot/dependabotversion-updates/configuration-options-for-the-dependabot.yml-file}。
 
-结合工作流程和 dependabot/fetch 元数据操作，这是一个非常强大的工具，可以跨多个库和团队自动化您的供应链。如果您查看第 6 章和第 7 章，我们会使用 Conventional Commits 与 GitVersion 来根据传统的提交信息完全自动化语义版本控制。然后我们可以利用 Dependabot 来完全自动化下游依赖项的更新。
+结合工作流和dependabot/fetch metadata操作，这是一个非常强大的工具，可以跨许多库和团队自动化您的供应链。回看第6章和第7章，我们使用Conventional Commits和GitVersion根据约定的提交消息完全自动化语义化版本控制，可以利用dependabot完全自动化下游依赖项的更新。
 
 \mySubsubsection{7.6.4}{There’s more…}
 
-在我们的示例中，我们直接构建容器并将部署推送到 Kubernetes。然而，您也可以使用 Dependabot 来更新 Kubernetes 清单文件，通过为包含引用 Docker 镜像标签的清单的每个目录在您的 dependabot.yml 文件的 Docker 包生态系统元素中添加条目。Kubernetes 清单可以是正常的 Kubernetes 部署文件，也支持 Helm 图表。有关为 Kubernetes 配置您的 dependabot.yml 文件的更多信息，请参阅以下链接：\url{https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configurationoptions-for-the-dependabot.yml-file#docker}。
+我们的示例中，直接构建容器并将部署推送到Kubernetes，也可以通过在dependabot.yml文件的Docker package-ecosystem元素中为包含引用Docker镜像标签的清单的每个目录添加一个条目，使用dependabot更新Kubernetes清单文件。Kubernetes清单可以是普通的Kubernetes部署文件，也支持Helm图表。有关为Kubernetes配置dependabot.yml文件的更多信息，请参阅以下链接：\url{https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configurationoptions-for-the-dependabot.yml-file#docker}。

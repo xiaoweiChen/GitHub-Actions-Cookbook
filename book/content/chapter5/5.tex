@@ -124,7 +124,7 @@ permissions:
 \end{shell}
 
 \item 
-为了解析问题，我们添加一个通用作业，该作业使用我们在 issue-ops 工作流中使用的相同逻辑（在设置输出变量之前直接复制过来）：
+为了解析问题，我们添加一个通用作业，该作业使用我们在 issue-ops 工作流中使用的相同逻辑(在设置输出变量之前直接复制过来)：
 
 \begin{shell}
 jobs:
@@ -148,7 +148,7 @@ jobs:
 \end{shell}
 
 \item 
-然后，添加一个将调用另一个工作流文件的作业。当应用的标签是 delete-repo 时，有条件地执行该作业。使用 with 部分传递仓库名称和其他参数：
+然后，添加一个将调用另一个工作流文件的作业。当应用的标签是 delete-repo 时，有条件地执行该作业。使用 with 部分传递库名称和其他参数：
 
 \begin{shell}
 repo-deletion:
@@ -170,9 +170,9 @@ repo-deletion:
 使用 secrets: inherit，可以允许访问父工作流中的所有密钥，而无需将它们全部指定为密钥参数。
 
 \item 
-提交并推送您的文件，并将 delete-issue 标签应用于您用来测试仓库创建的问题。批准部署，仓库将删除。
+提交并推送您的文件，并将 delete-issue 标签应用于您用来测试库创建的问题。批准部署，库将删除。
 
-请注意，可重用工作流中作业是如何嵌套在工作流作业部分中的，以及它们在设计器中的显示方式（请参阅图 5.15）。
+请注意，可重用工作流中作业是如何嵌套在工作流作业部分中的，以及它们在设计器中的显示方式(请参阅图 5.15)。
 
 \myGraphic{0.6}{content/chapter5/images/15.png}{图 5.15 --- 可重用工作流中的嵌套作业}
 
@@ -198,17 +198,17 @@ repo-deletion:
 同样地，在被调用工作流中定义的 env 环境变量也无法在调用者工作流中访问。
 \end{itemize}
 
-在多个工作流中重用变量，请在组织、仓库或环境级别设置它们，并使用 vars 上下文引用它们。
+在多个工作流中重用变量，请在组织、库或环境级别设置它们，并使用 vars 上下文引用它们。
 
 要了解有关可重用工作流的更多信息，请参阅：\url{https://docs.github.com/en/actions/using-workflows/reusing-workflows}。
 
 注意，我没有在删除版本库后更新项目字段。GitHub Projects 也支持可用于在问题关闭时更新字段的作业。
 
-只需导航到项目中的 Workflows（作业），启用 Item closed（项目关闭），并将状态字段的值设置为所需值（请参阅图 5.16）。
+只需导航到项目中的 Workflows(作业)，启用 Item closed(项目关闭)，并将状态字段的值设置为所需值(请参阅图 5.16)。
 
 \myGraphic{0.6}{content/chapter5/images/16.png}{图 5.16 --- 在 GitHub Projects 中配置作业}
 
-当问题关闭时，这将使状态在我们的案例中自动设置为 Deleted（已删除）。
+当问题关闭时，这将使状态在我们的案例中自动设置为 Deleted(已删除)。
 
 \mySubsubsection{5.5.4}{There’s more…}
 

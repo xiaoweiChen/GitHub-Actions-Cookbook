@@ -83,7 +83,7 @@ repo_name=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.name.text')
 repo_dept=$(echo '${{ steps.parse.outputs.data }}' | jq -r '.department.text')
 \end{shell}
 
-将这两个变量与最终名称（我们的例子中，部门是前缀）组合起来：
+将这两个变量与最终名称(我们的例子中，部门是前缀)组合起来：
 
 \begin{shell}
 repo_full_name=$repo_dept-$repo_name
@@ -116,7 +116,7 @@ if [ -z $repo_full_name ]; then
 fi;
 \end{shell}
 
-此外，添加一个验证规则，即只能使用字母数字字符和连字符（如果您希望使用 kebab casing(短横线) 命名法）：
+此外，添加一个验证规则，即只能使用字母数字字符和连字符(如果您希望使用 kebab casing(短横线) 命名法)：
 
 \begin{shell}
 # shall be alphanumeric and minus only
@@ -155,11 +155,11 @@ outputs:
 \end{shell}
 
 \item 
-现在，使用表单模板创建一个新问题。首先使用一个无效的名称（例如 my\_repo），看看它如何向问题添加评论（请参阅图 5.6）。
+现在，使用表单模板创建一个新问题。首先使用一个无效的名称(例如 my\_repo)，看看它如何向问题添加评论(请参阅图 5.6)。
 
 \myGraphic{0.6}{content/chapter5/images/6.png}{图 5.6 --- 工作流与问题的交互}
 
-修复名称（例如改为 my-repo），然后再次将 repo-request 标签应用到问题上。
+修复名称(例如改为 my-repo)，然后再次将 repo-request 标签应用到问题上。
 
 \end{enumerate}
 
@@ -171,7 +171,7 @@ outputs:
 
 每个工作流作业开始时，GitHub 会自动创建一个唯一的 GITHUB\_TOKEN，可以在工作流中使用它来与 GitHub 进行交互，也可以使用此令牌在工作流作业中进行身份验证。
 
-可以为个人账户，以及组织和仓库配置默认权限——默认是只读权限。最佳实践是保持只读权限，并在工作流或作业中授予显式权限。
+可以为个人账户，以及组织和库配置默认权限——默认是只读权限。最佳实践是保持只读权限，并在工作流或作业中授予显式权限。
 
 GITHUB\_TOKEN 的权限可以配置为顶层键，以应用于工作流中的所有作业，也可以在特定作业中配置。当特定作业中添加 permissions 键时，该作业中使用 GITHUB\_TOKEN 的所有操作和运行命令，都会获得指定的访问权限。
 
@@ -199,7 +199,7 @@ permissions: write-all
 permissions: {}
 \end{shell}
 
-在我们的示例中，我们需要对问题进行写入权限，并且 CLI 需要对仓库的读取权限：
+在我们的示例中，我们需要对问题进行写入权限，并且 CLI 需要对库的读取权限：
 
 \begin{shell}
 permissions:
@@ -226,7 +226,7 @@ steps:
   uses: zentered/issue-forms-body-parser@v2.0.0
 \end{shell}
 
-在 JavaScript（即 GitHub Script 操作）中，可以直接访问 JSON 对象：
+在 JavaScript(即 GitHub Script 操作)中，可以直接访问 JSON 对象：
 
 \begin{shell}
 console.log(data.name.text);

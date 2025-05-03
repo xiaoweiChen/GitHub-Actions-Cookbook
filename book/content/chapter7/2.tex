@@ -1,12 +1,13 @@
-在本教程中，我们将把一个简单的 Web 应用程序容器化并推送到容器注册表中。
+在本示例中，我们将容器化一个简单的 Web 应用程序，并将其推送到容器注册表。
 
 \mySubsubsection{7.2.1}{Getting ready}
 
-打开代码仓库(\url{https://github.com/wulfland/release-recipe})，然后点击“使用此模板创建新的副本”(直接链接：\url{https://github.com/new?template_name=release-recipe&template_owner=wulfland})。在您的个人账户中创建一个新的公共仓库，命名为release-recipe，并克隆该仓库。
+打开库(\url{https://github.com/wulfland/release-recipe})，然后点击\textbf{Use
+this template}(使用此模板)创建新的副本(直接链接：\url{https://github.com/new?template_name=release-recipe&template_owner=wulfland})。在个人账户中创建一个新的公共库，将其命名为 release-recipe，并克隆该库。
 
-打开package.json文件，并调整作者和仓库URL。
+打开 package.json 并调整作者和库 URL。
 
-在依赖项下，将recipe包的所有者和版本更改为您在第6章中创建的包：
+在 dependencies 下，将 package recipe 的所有者和版本调整为来自第 6 章的软件包：
 
 \begin{shell}
 "dependencies": {
@@ -15,7 +16,7 @@
 }
 \end{shell}
 
-在文件.npmrc中替换所有者：
+在文件 .npmrc 中替换所有者：
 
 \begin{shell}
 @wulfland:registry=https://npm.pkg.github.com
@@ -27,7 +28,7 @@
 $ npm login --registry https://npm.pkg.github.com
 \end{shell}
 
-输入您的GitHub用户名和具有访问包权限的PAT令牌。运行以下命令：
+输入 GitHub 用户名和具有访问软件包权限的 PAT 令牌。运行以下命令：
 
 \begin{shell}
 $ npm install
@@ -39,13 +40,13 @@ $ npm start
 Server running at http://localhost:3000
 \end{shell}
 
-现在，您应该有一个在3000端口上运行的Node.js应用程序。打开浏览器，导航到http://localhost:3000，并验证它是否显示Hello World!。通过退出进程(CTRL+C)来停止服务器。
+现在，应该有一个在端口 3000 上运行的 Node.js 应用程序。打开浏览器，导航到 http://localhost:3000，并验证它是否显示 Hello World!。通过退出进程(CTRL+C)停止服务器。
 
 \mySubsubsection{7.2.2}{How to do it…}
 
 \begin{enumerate}
 \item 
-在仓库的根目录下创建一个新文件，名为Dockerfile。从node镜像继承您的镜像，并选择21-bullseye版本。创建一个文件夹，将仓库内容复制到其中，并将其设为工作文件夹：
+在库根目录创建一个新文件，Dockerfile。从 node 镜像继承，并选择 21-bullseye 版本。创建一个文件夹，将库内容复制到其中，并将其设置为工作文件夹：
 
 \begin{shell}
 FROM node:21-bullseye
@@ -55,14 +56,14 @@ WORKDIR /app
 \end{shell}
 
 \item 
-注意，您需要在进行Docker镜像构建之前运行npm install，以避免将您的凭据存储在容器中。在容器中重新构建npm包：
+注意，需要在构建 Docker 镜像之前运行 npm install，以避免在容器中存储凭据。在容器中重建 npm 包：
 
 \begin{shell}
 RUN npm rebuild
 \end{shell}
 
 \item 
-将我们express网站的3000端口暴露出来，并将npm start作为容器的启动命令：
+暴露 express 网站的 3000 端口，并将 npm start 作为容器的启动命令运行：
 
 \begin{shell}
 EXPOSE 3000
@@ -70,7 +71,7 @@ CMD [ "npm", "start"]
 \end{shell}
 
 \item 
-接下来，在本地构建您的容器镜像并运行它：
+接下来，本地构建容器镜像并运行：
 
 \begin{shell}
 $ npm install
@@ -79,10 +80,10 @@ $ docker run -it -p 3000:3000 hello-world-recipe
 \end{shell}
 
 \item 
-再次验证您的本地机器上的网站是否在3000端口上运行。
+再次验证网站是否在本地机器的 3000 端口上运行。
 
 \item 
-创建一个新的工作流程.github/workflows/publish.yml。在拉取请求和推送到主分支上运行它：
+创建一个新的工作流文件 .github/workflows/publish.yml。在拉取请求和推送到 main 分支时运行：
 
 \begin{shell}
 name: Publish Docker Image
@@ -95,7 +96,7 @@ on:
 \end{shell}
 
 \item 
-将注册表名称和镜像名称设为环境变量：
+将注册表名称和镜像名称设置为环境变量：
 
 \begin{shell}
 env:
@@ -104,7 +105,7 @@ env:
 \end{shell}
 
 \item 
-添加一个具有GITHUB\_TOKEN权限的工作，以写入包和读取内容：
+添加一个作业，为 GITHUB\_TOKEN 授予写入软件包和读取内容的权限：
 
 \begin{shell}
 jobs:
@@ -117,7 +118,7 @@ jobs:
 \end{shell}
 
 \item 
-添加以下步骤。检出仓库并登录到Docker注册表：
+添加以下步骤。检出库并登录到 Docker 注册表：
 
 \begin{shell}
 - name: Checkout repository
@@ -132,7 +133,7 @@ jobs:
 \end{shell}
 
 \item 
-从注册表中提取镜像的元数据。我们使用长的SHA作为容器的标签。给这个步骤一个id，以便稍后访问输出：
+从注册表中提取镜像的元数据，使用长 SHA 作为容器的标签。为该步骤指定一个 ID，以便稍后访问其输出：
 
 \begin{shell}
 - name: Extract metadata (tags, labels) for Docker
@@ -145,7 +146,7 @@ jobs:
 \end{shell}
 
 \item 
-设置Node.js以使用正确的版本和注册表。然后，构建和测试您的代码。您需要将NODE\_AUTH\_TOKEN环境变量设置为GITHUB\_TOKEN，以便对包注册表进行身份验证并从第6章的包配方中接收npm包：
+设置 Node.js 以使用正确的版本和注册表。然后，构建和测试代码。必须将 NODE\_AUTH\_TOKEN 环境变量设置为 GITHUB\_TOKEN，以验证到软件包注册表，并从第 6 章的软件包配方中接收 npm 软件包：
 
 \begin{shell}
 - uses: actions/setup-node@v4
@@ -162,7 +163,7 @@ jobs:
 \end{shell}
 
 \item 
-现在，我们已经准备好构建和推送Docker镜像了。使用meta步骤的输出来设置标签和标签：
+现在，我们准备好构建并推送 Docker 镜像。使用 meta 步骤的输出来设置标签和标签：
 
 \begin{shell}
 - name: Build and push Docker image
@@ -175,13 +176,13 @@ jobs:
 \end{shell}
 
 \item 
-提交并推送您的更改。在工作流程运行之后，您将在您仓库的代码选项卡上找到Docker镜像，位于右侧的包下。
+提交并推送更改。工作流运行后，将在库的\textbf{Code}(代码)选项卡右侧的\textbf{Packages}(软件包)下找到 Docker 镜像。
 
 \end{enumerate}
 
 \mySubsubsection{7.2.3}{How it works…}
 
-我使用Express(\url{https://expressjs.com/})作为一个简单的web框架来运行一个网站。该网站显示来自我们包的内容；我们将在即将到来的配方中利用这一点来自动保持我们的依赖项最新。代码很容易理解：
+我使用Express(\url{https://expressjs.com/})作为简单的 Web 框架来运行网站。该网站显示软件包中的内容；将在后续示例中利用这一点来自动保持依赖项的更新。代码很容易理解：
 
 \begin{shell}
 const express = require('express');
@@ -198,13 +199,13 @@ app.listen(port, () => {
 });
 \end{shell}
 
-这次,我省略了所有的linting和testing,因为我们在第6章已经涵盖了这些内容。我们需要将这个应用程序容器化,以便稍后将其部署到云端。
+这次，我省略了所有的代码检查和测试，已经在第 6 章中介绍过了。并且需要将此应用程序容器化，以便稍后将其部署到云端。
 
-要将容器部署到云端,您需要将其存储在容器注册表中。在这里我们使用GitHub Packages,但使用特定于云的注册表的方式相同。您只需要配置PAT令牌,并且不能使用GITHUB\_TOKEN,但这唯一的区别。
+要将容器部署到云端，必须将其存储在容器注册表中。这里使用 GitHub packages，但使用特定于云的注册表方式相同。唯一区别是，需要配置一个 PAT 令牌，不能使用 GITHUB\_TOKEN。
 
 \mySubsubsection{7.2.4}{There’s more…}
 
-Docker元动作(\url{https://github.com/docker/metadata-action})可用于从Git引用和GitHub事件中提取元数据。就像第6章中的GitVersion一样,它可以用于自动处理容器的版本控制。它还支持语义版本控制:
+Docker meta-action(\url{https://github.com/docker/metadata-action})可以从 Git 引用和 GitHub 事件中提取元数据。就像第 6 章中的 GitVersion 一样，可以用于自动化您的容器版本控制，还支持语义化版本控制：
 
 \begin{shell}
 - name: Docker meta
@@ -220,4 +221,4 @@ Docker元动作(\url{https://github.com/docker/metadata-action})可用于从Git�
       type=semver,pattern={{major}}.{{minor}}
 \end{shell}
 
-在我们的示例中，我们只使用Git SHA以便能够部署每个提交，但您可以根据您的工作流程轻松扩展版本控制。
+我们的示例中，只使用 Git SHA 以便能够部署每个提交，但可以根据工作流轻松扩展版本控制。

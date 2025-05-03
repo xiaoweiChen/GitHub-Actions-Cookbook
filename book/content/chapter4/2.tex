@@ -13,14 +13,14 @@ $ docker info | grep Architecture
 
 \begin{enumerate}
 \item 
-可以只用在上一个示例中使用的库，或可以创建一个新库，也可以使用在第 1 章中创建的 GitHubActionsCookbook 库。转到\textbf{Settings | Actions | Runners}(设置|操作|运行器)（/settings/actions/runners）并点击\textbf{New self-hosted}(新自托管运行器)（见图 4.1）：
+可以只用在上一个示例中使用的库，或可以创建一个新库，也可以使用在第 1 章中创建的 GitHubActionsCookbook 库。转到\textbf{Settings | Actions | Runners}(设置|操作|运行器)(/settings/actions/runners)并点击\textbf{New self-hosted}(新自托管运行器)(见图 4.1)：
 
 \myGraphic{0.6}{content/chapter4/images/1.png}{图4.1 --- 
 可以通过进入库的 \textbf{Settings}(设置) 区域来添加自托管运行器}
 
 这将重定向你到 /settings/actions/runners/new。为运行器镜像选择 Linux，并根据 Docker 环境设置架构属性。
 
-注意，每个平台和处理器架构的不同脚本。可以复制整个脚本来在虚拟机上安装，因为在 Docker 容器中，所以需要增加一些步骤；也可以复制单行（见图 4.2）：
+注意，每个平台和处理器架构的不同脚本。可以复制整个脚本来在虚拟机上安装，因为在 Docker 容器中，所以需要增加一些步骤；也可以复制单行(见图 4.2)：
 
 \myGraphic{0.6}{content/chapter4/images/2.png}{图4.2 --- 
 不同平台上安装自托管运行器的脚本}
@@ -83,7 +83,7 @@ $ export RUNNER_ALLOW_RUNASROOT="1"
 
 按回车键并接受所有默认值。
 
-执行脚本后，可以导航回\textbf{Settings | Actions | Runners}(设置|操作|运行器)以查看新注册的运行器。会看到它仍然离线，这是因为还没有启动运行器进程（见图 4.3）：
+执行脚本后，可以导航回\textbf{Settings | Actions | Runners}(设置|操作|运行器)以查看新注册的运行器。会看到它仍然离线，这是因为还没有启动运行器进程(见图 4.3)：
 
 \myGraphic{0.6}{content/chapter4/images/3.png}{图4.3 --- 配置好的但未运行的运行器，会显示状态为离线}
 
@@ -120,7 +120,7 @@ jobs:
 执行工作流程并监控 Docker 容器，以查看它如何执行工作流程，可以根据需要重复此步骤。只要容器正在运行，就会执行所有带有匹配标签的工作流。
 
 \item 
-如果现在终止容器，运行器将保持在 GitHub 上离线状态。想要删除，请导航回\textbf{Settings | Actions | Runners}(设置 | 操作 | 运行器)，并从运行器右侧的菜单中选择\textbf{Remove runner}(删除运行器)（见图 4.4）：
+如果现在终止容器，运行器将保持在 GitHub 上离线状态。想要删除，请导航回\textbf{Settings | Actions | Runners}(设置 | 操作 | 运行器)，并从运行器右侧的菜单中选择\textbf{Remove runner}(删除运行器)(见图 4.4)：
 
 \myGraphic{0.6}{content/chapter4/images/4.png}{图4.4 --- 从 GitHub 中移除运行器}
 
@@ -143,7 +143,7 @@ $ ./config.sh remove --token {TOKEN}
 再次运行工作流程，会看到运行器在执行后将自动删除。
 
 \item 
-接下来，可将我们学到的所有内容放入一个 Dockerfile 中（可以使用：\url{https://github.com/wulfland/GitHubActionsCookbook/blob/main/SelfHostedRunner/Dockerfile}提供的文件）。这样，可以创建一个可重用的 Docker 镜像，将在每次运行时自动注册、等待作业、执行作业，然后终止。
+接下来，可将我们学到的所有内容放入一个 Dockerfile 中(可以使用：\url{https://github.com/wulfland/GitHubActionsCookbook/blob/main/SelfHostedRunner/Dockerfile}提供的文件)。这样，可以创建一个可重用的 Docker 镜像，将在每次运行时自动注册、等待作业、执行作业，然后终止。
 
 我们为了简单起见，从 ubuntu:latest 继承。可以轻松地将其替换为包含所有构建工具的基础镜像：
 
@@ -169,7 +169,7 @@ ENV RUNNER_GROUP="Default"
 ARG DEBIAN_FRONTEND=noninteractive
 \end{shell}
 
-为了在 Docker 镜像中减少层数，最好将整个脚本合并为一个 RUN 命令。该脚本更新包管理器及其所有包，安装所有依赖项，添加容器将以其下运行的 docker 用户（不希望容器以 root 用户运行），下载相应的包并解压，将所有者更改为 docker 用户并执行 installdependencies.sh 脚本：
+为了在 Docker 镜像中减少层数，最好将整个脚本合并为一个 RUN 命令。该脚本更新包管理器及其所有包，安装所有依赖项，添加容器将以其下运行的 docker 用户(不希望容器以 root 用户运行)，下载相应的包并解压，将所有者更改为 docker 用户并执行 installdependencies.sh 脚本：
 
 \begin{shell}
 RUN apt-get -y update && \
@@ -188,7 +188,7 @@ USER docker
 WORKDIR /home/docker/actions-runner
 \end{shell}
 
-如果容器将要运行，必须检查是否提供了 TOKEN 和 RUNNER\_NAME。然后，使用所有参数（包括 -{}-ephemeral）运行配置脚本，然后运行 run.sh 脚本：
+如果容器将要运行，必须检查是否提供了 TOKEN 和 RUNNER\_NAME。然后，使用所有参数(包括 -{}-ephemeral)运行配置脚本，然后运行 run.sh 脚本：
 
 \begin{shell}
 CMD if [ -z "$TOKEN" ]; then echo 'TOKEN is not set'; exit 1; fi
@@ -229,15 +229,15 @@ $ docker run -d --rm -e RUNNER_NAME=Runner1 -e TOKEN={TOKEN} simple-ubuntu-runne
 
 \mySamllsectionNoContent{自托管运行器应用程序}
 
-自托管运行器是通过安装开源的运行器应用程序(\url{https://github.com/actions/runner})创建,创建的。该应用程序基于 .NET Core 运行时，可以在许多操作系统和处理器架构上运行。它可以在 macOS 11（Big Sur）或更高版本、Windows（7 到 10 和 Server 2012 R2 到 20222）、以及许多 Linux 发行版（Red Hat Enterprise 7 或更高版本、Fedora 29 或更高版本、Ubuntu 16.04 或更高版本，等等）上运行。它还可以在 x64、ARM64 和 ARM32 上运行。同时，它还可以在 x64、ARM64 和 ARM32 上运行。有关支持的操作系统的最新列表，请参阅 \url{https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#supported-architectures-and-operating-systems-for-self-hosted-runners}。可以使用运行器应用程序文件夹中的 bin/installdependencies.sh 脚本来安装 .NET Core 运行时所需的所有库。
+自托管运行器是通过安装开源的运行器应用程序(\url{https://github.com/actions/runner})创建,创建的。该应用程序基于 .NET Core 运行时，可以在许多操作系统和处理器架构上运行。它可以在 macOS 11(Big Sur)或更高版本、Windows(7 到 10 和 Server 2012 R2 到 20222)、以及许多 Linux 发行版(Red Hat Enterprise 7 或更高版本、Fedora 29 或更高版本、Ubuntu 16.04 或更高版本，等等)上运行。它还可以在 x64、ARM64 和 ARM32 上运行。同时，它还可以在 x64、ARM64 和 ARM32 上运行。有关支持的操作系统的最新列表，请参阅 \url{https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#supported-architectures-and-operating-systems-for-self-hosted-runners}。可以使用运行器应用程序文件夹中的 bin/installdependencies.sh 脚本来安装 .NET Core 运行时所需的所有库。
 
 如果要运行基于 Docker 的操作，必须使用 Linux 镜像。Windows 和 macOS 不支持运行基于 Docker 的操作！
 
 \mySamllsectionNoContent{GitHub的身份验证}
 
-使用通过 GitHub UI 生成配置令牌来连接运行器到 GitHub。该令牌仅有效 1 小时，并且只能使用该令牌来安装运行器。也可以通过向 https://api.github.com/repos/{OWNER}/{REPO}/actions/runners/registration-token（或对于组织级别的运行器，https://api.github.com/orgs/{ORG}/actions/runners/registration-token）发送 POST 请求，按需通过 REST API 创建安装令牌。
+使用通过 GitHub UI 生成配置令牌来连接运行器到 GitHub。该令牌仅有效 1 小时，并且只能使用该令牌来安装运行器。也可以通过向 https://api.github.com/repos/{OWNER}/{REPO}/actions/runners/registration-token(或对于组织级别的运行器，https://api.github.com/orgs/{ORG}/actions/runners/registration-token)发送 POST 请求，按需通过 REST API 创建安装令牌。
 
-以下是使用个人访问令牌（PAT, personal access token）接收令牌的示例：
+以下是使用个人访问令牌(PAT, personal access token)接收令牌的示例：
 
 \begin{shell}
 $ curl -L \
@@ -256,7 +256,7 @@ $ TOKEN=$(<curl command> | jq .token --raw-output)
 
 必须使用具有 repo 范围的 PAT 访问令牌来使用此端点，GitHub Apps 必须具有库的管理权限和组织的 organization\_self\_hosted\_runners 权限。经过身份验证的用户必须具有对库或组织的管理访问权限，或企业的 manage\_runners:enterprise 范围。该令牌仅用于注册。
 
-在注册过程中，将从服务器接收到一个 JWT（OAuth 交换的 JSON Web 令牌），只有权限监听队列。当工作流程运行开始时，将为构建的生命周期创建另一个预构建的、有限范围（由工作流程定义）的令牌。该令牌无法通过临时脚本或不可靠的代码访问 - 只能由构建代理和任务访问。OAuth 令牌交换之间代理和服务器之间的 RSA 私钥将存储在一个名为 .credentials\_rsaparams 的文件中，服务器持有公钥。每 50 分钟，服务器将向代理发送一个由公钥加密的新令牌。OAuth 配置存储在 .credentials 文件中：
+在注册过程中，将从服务器接收到一个 JWT(OAuth 交换的 JSON Web 令牌)，只有权限监听队列。当工作流程运行开始时，将为构建的生命周期创建另一个预构建的、有限范围(由工作流程定义)的令牌。该令牌无法通过临时脚本或不可靠的代码访问 - 只能由构建代理和任务访问。OAuth 令牌交换之间代理和服务器之间的 RSA 私钥将存储在一个名为 .credentials\_rsaparams 的文件中，服务器持有公钥。每 50 分钟，服务器将向代理发送一个由公钥加密的新令牌。OAuth 配置存储在 .credentials 文件中：
 
 \begin{shell}
 {

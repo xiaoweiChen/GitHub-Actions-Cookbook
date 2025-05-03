@@ -1,20 +1,21 @@
-这段内容概述了如何在最终章节中使用GitHub Actions进行持续部署(CD)。以下是你需要执行的几个步骤和涉及的技术要求：
+在本章的最后，我们将深入研究使用 GitHub Actions 进行持续部署(CD)，创建一个包含简单网站的容器。该网站使用第 6 章中的软件包，并将其部署到云端的 Kubernetes 中，使用 OpenID Connect(OIDC)来保护访问，使用环境来保护部署，并使用并发组来控制多个工作流的流程。
 
-主要覆盖的配方包括：
+本章中，将使用 Microsoft Azure Kubernetes Service(AKS)作为生产环境，也会使用其他云提供商(如 Google Cloud Platform(GCP)上的 Google Kubernetes Engine(GKE)或 Amazon Web Services(AWS)上的 Elastic Container Services(ECS))执行相同的操作。
+
+主要内容有：
 
 \begin{itemize}
 \item 
-建并发布容器
+构建和发布容器
 
 \item 
-使用OIDC(OpenID Connect)安全地部署到任意云平台
+使用OIDC(OpenID Connect)安全地部署到云端
+\item 
+环境批准检查
 
 \item 
-环境审批检查
+将容器应用程序发布到 Azure Kubernetes Service(AKS)
 
 \item 
-将容器应用发布到Azure Kubernetes Service (AKS)
-
-\item 
-自动更新你的依赖项
+自动更新依赖项
 \end{itemize}

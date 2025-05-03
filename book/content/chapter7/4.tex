@@ -1,8 +1,8 @@
-我们已经在第5章《使用GitHub Actions在GitHub中自动化任务》中使用过环境，所以这是一个重复的内容。因此，我会保持这个指南相对简短。环境管理核心发布，我们将在接下来的指南中使用它们来显示我们在Kubernetes中的服务的URL。
+我们已经在第 5 章中使用了环境，所以这部分是重复的，所以这个示例会很简短。环境管理核心发布，接下来的示例将展示，如何使用它们在 Kubernetes 中显示我们服务的 URL。
 
 \mySubsubsection{7.4.1}{Getting ready}
 
-确保您手头有来自前面章节的应用(客户端)ID、目录(租户)ID和订阅ID。可以通过以下命令获取订阅ID:
+确保手头有来自前几章的\textbf{Application (client) ID}(应用程序(客户端)ID)、\textbf{Directory (tenant) ID}(目录(租户)ID) 和\textbf{Subscription ID}(订阅 ID)。可以通过以下方式获取订阅 ID：
 
 \begin{shell}
 $ az account show
@@ -12,29 +12,29 @@ $ az account show
 
 \begin{enumerate}
 \item 
-在您的库设置中，转到“环境”，点击“新环境”，并创建一个名为“生产”的新环境。
+在库设置中，转到\textbf{Environments}(环境)，点击\textbf{New environment}(新建环境)，并创建一个新环境：Production。
 
 \item 
-将main作为部署分支添加。
+添加 main 作为部署分支。
 
 \item 
-添加一个名为AZURE\_CLIENT\_ID的新环境密钥，并将其设置为应用(客户端)ID。
+添加一个名为 AZURE\_CLIENT\_ID 的新\textbf{Environment secret}(环境密钥)，并将其设置为\textbf{Application (client) ID}(应用程序(客户端)ID)。
 
 \item 
-添加一个名为AZURE\_TENANT\_ID的新环境密钥，并将其设置为目录(租户)ID。
+添加一个名为 AZURE\_TENANT\_ID 的新\textbf{Environment secret}(环境密钥)，并将其设置为\textbf{Directory (tenant) ID}(目录(租户)ID)。
 
 \item 
-添加一个名为AZURE\_SUBSCRIPTION\_ID的新环境密钥，并将其设置为订阅ID。
+添加一个名为 AZURE\_SUBSCRIPTION\_ID 的新\textbf{Environment secret}(环境密钥)，并将其设置为\textbf{Subscription ID}(订阅 ID)。
 
 \item 
-添加一个名为AZURE\_CLUSTER\_NAME的新环境密钥，并将其设置为集群的名称(如果您没有修改setup-azure.sh脚本，则为AKSCluster)。
+添加一个名为 AZURE\_CLUSTER\_NAME 的新\textbf{Environment secret}(环境密钥)，并将其设置为集群名称(如果没有修改 setup-azure.sh 脚本，则为 AKSCluster)。
 
 \item 
-添加一个名为AZURE\_RESOURCE\_GROUP的新环境密钥，并将其设置为资源组的名称(如果您没有修改setup-azure.sh脚本，则为AKSCluster)。
+添加一个名为 AZURE\_RESOURCE\_GROUP 的新\textbf{Environment secret}(环境密钥)，并将其设置为资源组名称(如果没有修改 setup-azure.sh 脚本，则为 AKSCluster)。
 \end{enumerate}
 
-我们将在下一个指南中使用这些环境密钥，以安全地部署到云中的Kubernetes。
+我们将在下一个示例中使用这些环境密钥，以安全地将应用程序部署到云端的 Kubernetes。
 
 \mySubsubsection{7.4.3}{How it works…}
 
-环境在工作流程中的作业上添加了一层抽象，并且可以通过规则进行保护。有关批准检查的更多详细信息，请参阅第5章《使用GitHub Actions在GitHub中自动化任务》。环境还可以被OIDC实体信任，这就是我们将在下一个指南中使用的内容。
+环境为工作流中的作业添加了一层抽象，并且可以通过规则进行保护。有关审批检查的更多详情，请参阅第 5 章。环境也可以被 OIDC 实体信任，这就是我们将在下一个示例中使用的功能。

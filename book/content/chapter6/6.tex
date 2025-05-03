@@ -77,7 +77,7 @@ $ gh pr merge -m --auto
 拉取请求合并后，转到库的\textbf{Code}(代码)选项卡下的\textbf{Releases}(发布)部分，然后点击\textbf{Draft a new Release}(草拟新发布)。
 
 \item 
-点击\textbf{Choose a tag}(选择标签)，输入 v1.0.0，然后点击\textbf{Create new tag}(创建新标签)。不要以 Markdown 格式添加发布说明正文，只需点击\textbf{Generate release notes}(生成发布说明)（见图 6.14）：
+点击\textbf{Choose a tag}(选择标签)，输入 v1.0.0，然后点击\textbf{Create new tag}(创建新标签)。不要以 Markdown 格式添加发布说明正文，只需点击\textbf{Generate release notes}(生成发布说明)(见图 6.14)：
 
 \myGraphic{0.6}{content/chapter6/images/14.png}{图6.14 --- 为标签草拟新发布并生成发布说明}
 
@@ -86,12 +86,12 @@ $ gh pr merge -m --auto
 \myGraphic{0.6}{content/chapter6/images/15.png}{图6.15 --- GitHub 发布的详细信息}
 
 \item 
-默认情况下，也应包含作为 .zip 和 .tar 归档的源代码（见图 6.16）：
+默认情况下，也应包含作为 .zip 和 .tar 归档的源代码(见图 6.16)：
 
 \myGraphic{0.6}{content/chapter6/images/16.png}{图6.16 --- 发布的资产包含作为 .zip 和 .tar 归档的源代码}
 
 \item 
-创建发布将触发工作流，并将软件包以版本 1.0.0 发布到库（请注意，这来自 package.json 文件，而非标签！）。
+创建发布将触发工作流，并将软件包以版本 1.0.0 发布到库(请注意，这来自 package.json 文件，而非标签！)。
 
 该软件包看起来如图 6.17 所示：
 
@@ -107,7 +107,7 @@ $ gh pr merge -m --auto
 
 \mySamllsectionNoContent{语义化版本控制}
 
-软件包通常使用语义化版本控制（Semantic Versioning）创建，这是一种为软件指定版本号的正式约定。它由具有不同含义的不同部分组成。语义化版本号的示例有 1.0.0 或 1.5.99-beta。其格式如下：
+软件包通常使用语义化版本控制(Semantic Versioning)创建，这是一种为软件指定版本号的正式约定。它由具有不同含义的不同部分组成。语义化版本号的示例有 1.0.0 或 1.5.99-beta。其格式如下：
 
 \begin{shell}
 <major>.<minor>.<patch>-<pre>
@@ -115,16 +115,16 @@ $ gh pr merge -m --auto
 
 \begin{itemize}
 \item 
-主版本号（Major）：当版本不向后兼容并具有破坏性更改时，此数字标识符会增加。升级到新的主版本号必须谨慎处理！主版本号为零表示处于初始开发阶段。
+主版本号(Major)：当版本不向后兼容并具有破坏性更改时，此数字标识符会增加。升级到新的主版本号必须谨慎处理！主版本号为零表示处于初始开发阶段。
 
 \item 
-次版本号（Minor）：当添加新功能但版本与先前版本向后兼容时，此数字标识符会增加。如果需要新功能，则可以更新而不会破坏任何内容。
+次版本号(Minor)：当添加新功能但版本与先前版本向后兼容时，此数字标识符会增加。如果需要新功能，则可以更新而不会破坏任何内容。
 
 \item 
-修订版本号（Patch）：当发布向后兼容的错误修复时，此数字标识符会增加。新的修订号应始终安装。
+修订版本号(Patch)：当发布向后兼容的错误修复时，此数字标识符会增加。新的修订号应始终安装。
 
 \item 
-预发布标识符（Pre-release）：使用连字符附加的文本标识符。标识符只能使用 ASCII 字母数字字符和连字符（[0-9A-Za-z-]）。文本越长，预发布版本越小（例如 -alpha < -beta < -rc）。预发布版本始终小于常规版本（例如 1.0.0-alpha < 1.0.0）。
+预发布标识符(Pre-release)：使用连字符附加的文本标识符。标识符只能使用 ASCII 字母数字字符和连字符([0-9A-Za-z-])。文本越长，预发布版本越小(例如 -alpha < -beta < -rc)。预发布版本始终小于常规版本(例如 1.0.0-alpha < 1.0.0)。
 \end{itemize}
 
 有关完整规范，请参阅 \url{https://semver.org/}。

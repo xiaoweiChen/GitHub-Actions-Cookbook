@@ -1,11 +1,11 @@
 
 SBOM(软件物料清单)( https://www.cisa.gov/sbom)声明了构成软件的嵌套组件清单。根据 2014 年的《网络供应链管理和国情透明法案》，美国政府被要求为其采购的任何产品获取 SBOM。
 
-可以在 GitHub 上的\textbf{Insights | Dependency graph | Export SBOM}(洞察|依赖关系图|导出 SBOM)处手动导出 SBOM（见图 6.19）：
+可以在 GitHub 上的\textbf{Insights | Dependency graph | Export SBOM}(洞察|依赖关系图|导出 SBOM)处手动导出 SBOM(见图 6.19)：
 
 \myGraphic{0.6}{content/chapter6/images/19.png}{图6.19 --- 手动导出 SBOM}
 
-SBOM 是一个遵循软件包数据交换（SPDX）标准的 JSON 文件。
+SBOM 是一个遵循软件包数据交换(SPDX)标准的 JSON 文件。
 
 本示例中，我们将自动化从库的当前依赖项生成 SBOM 的过程，并将其作为添加到发布中。
 
@@ -78,7 +78,7 @@ $ gh release create v1.0.5 --generate-notes
 \end{shell}
 
 \item 
-工作流将创建一个发布并将 SBOM 附加为资产（见图 6.20）：
+工作流将创建一个发布并将 SBOM 附加为资产(见图 6.20)：
 
 \myGraphic{0.6}{content/chapter6/images/20.png}{图6.20 --- 自动附加到发布中的 SBOM 资产}
 
@@ -128,13 +128,13 @@ SBOM 有不同的常见格式：
 \item 
 SPDX:SPDX 是源自 Linux 基金会的 SBOM 开放标准，其起源是许可证合规性，也包含版权、安全引用和其他元数据。
 
-SPDX 最近被批准为 ISO/IEC 标准（ISO/IEC 5962:2021），并且它满足了国家电信和信息管理局（NTIA）的《软件物料清单的最小元素》的要求。
+SPDX 最近被批准为 ISO/IEC 标准(ISO/IEC 5962:2021)，并且它满足了国家电信和信息管理局(NTIA)的《软件物料清单的最小元素》的要求。
 
 \item 
-CycloneDX (CDX)：CDX 是一个轻量级的开源格式，起源于开放全球应用安全项目（OWASP）社区。它优化了将 SBOM 生成集成到发布管道中。
+CycloneDX (CDX)：CDX 是一个轻量级的开源格式，起源于开放全球应用安全项目(OWASP)社区。它优化了将 SBOM 生成集成到发布管道中。
 
 \item 
-软件识别(SWID)标签：SWID 是一个由各种商业软件发布者使用的 ISO/IEC 行业标准（ISO/IEC 19770-2）。支持软件库存的自动化、机器上软件漏洞的评估、缺失补丁的检测、配置清单评估的目标、软件完整性检查、安装和执行白名单/黑名单以及其他安全和操作用例。
+软件识别(SWID)标签：SWID 是一个由各种商业软件发布者使用的 ISO/IEC 行业标准(ISO/IEC 19770-2)。支持软件库存的自动化、机器上软件漏洞的评估、缺失补丁的检测、配置清单评估的目标、软件完整性检查、安装和执行白名单/黑名单以及其他安全和操作用例。
 \end{itemize}
 
 每种格式都有不同的工具和用例。GitHub、FOSSology 和 yft 使用 SPDX。可以使用 Anchore SBOM 操作( \url{https://github.com/marketplace/actions/anchore-sbom-action})为 Docker 或开放容器计划(OCI)容器生成 SPDX SBOM：
@@ -151,7 +151,7 @@ CycloneDX (CDX)：CDX 是一个轻量级的开源格式，起源于开放全球�
 
 SBOM 正在上传工作流工件。
 
-CDX(\url{https://cyclonedx.org/})更专注于应用程序安全。在市场上提供了 NodeJS、.NET、Python、PHP 和 Go 的版本——但使用 CLI 或其他包管理器支持更多语言（Java、Maven、Conan 等），使用方法也很简单。
+CDX(\url{https://cyclonedx.org/})更专注于应用程序安全。在市场上提供了 NodeJS、.NET、Python、PHP 和 Go 的版本——但使用 CLI 或其他包管理器支持更多语言(Java、Maven、Conan 等)，使用方法也很简单。
 
 以下是 .NET 操作的示例：
 
@@ -183,7 +183,7 @@ CDX 也用于 OWASP Dependency-Track(\url{https://github.com/DependencyTrack/dep
     projectversion: 'main'
 \end{shell}
 
-SWID 标签更多地用于软件资产管理（SAM）解决方案，例如 Snow(\url{https://www.snowsoftware.com/})、Microsoft System Center 或 ServiceNow IT Operations Management（ITOM）。CDX 和 SPDX 可以在存在时使用 SWID 标签。
+SWID 标签更多地用于软件资产管理(SAM)解决方案，例如 Snow(\url{https://www.snowsoftware.com/})、Microsoft System Center 或 ServiceNow IT Operations Management(ITOM)。CDX 和 SPDX 可以在存在时使用 SWID 标签。
 
 如果您想了解更多关于 SBOM 的信息，请访问 \url{https://www.ntia.gov/sbom}。
 

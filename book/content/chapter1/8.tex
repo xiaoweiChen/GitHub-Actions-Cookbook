@@ -9,26 +9,26 @@
 
 \begin{enumerate}
 \item 
-导航到\textbf{Settings | Environments}(设置|环境)并点击\textbf{New environment}(新环境)（见图 1.25）：
+导航到\textbf{Settings | Environments}(设置|环境)并点击\textbf{New environment}(新环境)(见图 1.25)：
 
 \myGraphic{0.6}{content/chapter1/images/25.png}{图1.25 --- 库中管理环境}
 
-输入名称 Production 并点击\textbf{Configure environment}(配置环境)（见图 1.26）：
+输入名称 Production 并点击\textbf{Configure environment}(配置环境)(见图 1.26)：
 
 \myGraphic{0.6}{content/chapter1/images/26.png}{图1.26 --- 创建新环境}
 
 \item 
-将自己添加为必需的审查者，并点击\textbf{Save protection rule}(保存保护规则)（见图 1.27）：
+将自己添加为必需的审查者，并点击\textbf{Save protection rule}(保存保护规则)(见图 1.27)：
 
 \myGraphic{0.6}{content/chapter1/images/27.png}{图1.27 --- 配置部署保护规则}
 
 \item 
-在\textbf{Deployment branches and tags}(部署分支和标签)下，选择\textbf{Selected branches and tags}(选定的分支和标签)，点击加号，并为 main 分支添加一个名称模式（见图 1.28）：
+在\textbf{Deployment branches and tags}(部署分支和标签)下，选择\textbf{Selected branches and tags}(选定的分支和标签)，点击加号，并为 main 分支添加一个名称模式(见图 1.28)：
 
 \myGraphic{0.7}{content/chapter1/images/28.png}{图1.28 --- 配置部署分支和标签}
 
 \item 
-在\textbf{Environment secrets}(环境密钥)下，点击\textbf{Add secret}(添加密钥)并添加一个新的 MY\_SECRET 密钥，其值为 Open Sesame（见图 1.29）。重复此操作，使用\textbf{Add variable}(添加变量)添加一个 WHO\_TO\_GREET 变量，其值为 Production users：
+在\textbf{Environment secrets}(环境密钥)下，点击\textbf{Add secret}(添加密钥)并添加一个新的 MY\_SECRET 密钥，其值为 Open Sesame(见图 1.29)。重复此操作，使用\textbf{Add variable}(添加变量)添加一个 WHO\_TO\_GREET 变量，其值为 Production users：
 
 \myGraphic{0.7}{content/chapter1/images/29.png}{图1.29 --- 向环境添加密钥和变量}
 
@@ -85,12 +85,12 @@ Production:
 只需复制前一个作业的步骤即可。
 
 \item 
-将更改提交到 main 分支，工作流程将自动运行。导航到新的工作流程运行并检查工作流程设计器，其很好地展示了并行执行。工作流程在执行 Production 之前将暂停，并等待批准（请参阅图 1.31）：
+将更改提交到 main 分支，工作流程将自动运行。导航到新的工作流程运行并检查工作流程设计器，其很好地展示了并行执行。工作流程在执行 Production 之前将暂停，并等待批准(请参阅图 1.31)：
 
 \myGraphic{0.6}{content/chapter1/images/31.png}{图1.31 --- 工作流程将在具有必需审查者的环境之前停止，并等待批准}
 
 \item 
-点击\textbf{Review deployment}(审查部署)，选中 \textbf{Production} 并添加可选评论。点击\textbf{Approve and deploy}(批准并部署)开始执行 Production 作业（见图 1.32）：
+点击\textbf{Review deployment}(审查部署)，选中 \textbf{Production} 并添加可选评论。点击\textbf{Approve and deploy}(批准并部署)开始执行 Production 作业(见图 1.32)：
 
 \myGraphic{0.6}{content/chapter1/images/32.png}{图1.32 --- 批准受保护的环境}
 
@@ -98,7 +98,7 @@ Production:
 
 \myGraphic{0.6}{content/chapter1/images/33.png}{图1.33 --- 工作流的最终摘要}
 
-打开各个作业并检查添加的步骤的输出（见图 1.34）。密钥和变量来自代码库，并且只有在设置环境时才会进行覆盖：
+打开各个作业并检查添加的步骤的输出(见图 1.34)。密钥和变量来自代码库，并且只有在设置环境时才会进行覆盖：
 
 \myGraphic{0.6}{content/chapter1/images/34.png}{图1.34 --- 生产密钥只有在批准后才对生产环境可用}
 
@@ -106,7 +106,7 @@ Production:
 
 \mySubsubsection{1.8.3}{There’s more…}
 
-如果正在使用 GitHub CLI 为环境设置密钥或变量，可以使用 -{}-env (-e) 参数指定。对于组织密钥，可以将可见性 (-{}-visibility 或 -v) 设置为 all、private 或 selected。对于 selected,必须使用 -{}-repos (-r) 指定一个或多个代码仓库:
+如果正在使用 GitHub CLI 为环境设置密钥或变量，可以使用 -{}-env (-e) 参数指定。对于组织密钥，可以将可见性 (-{}-visibility 或 -v) 设置为 all、private 或 selected。对于 selected,必须使用 -{}-repos (-r) 指定一个或多个代码库:
 
 \begin{shell}
 $ gh secret set secret-name --env environment-name
@@ -114,7 +114,7 @@ $ gh secret set secret-name --org org -v private
 $ gh secret set secret-name --org org -v selected -r repo
 \end{shell}
 
-环境比本指南中使用的选项更多。还可以配置一个等待计时器，在工作流执行特定环境的部署作业之前，将工作流暂停 n 分钟（最多 30 天）。
+环境比本指南中使用的选项更多。还可以配置一个等待计时器，在工作流执行特定环境的部署作业之前，将工作流暂停 n 分钟(最多 30 天)。
 
 还有一个名为“自定义部署保护规则”的新功能仍处于测试阶段。此功能允许创建 GitHub 应用程序，该应用程序可以暂停部署并等待特定条件。 Datadog,Honeycomb,Sentry,New Relic和Service Now已经有应用程序(请参阅\url{https://doc.github.com/en/actions/deployment/deployment/protecting-deployments/configuring-configuring-configuring-custom-custom-deployment-protection-protection-protection-protection-protection-protection-protection-protection-custom-custom-customdeployment-prection-prection-prection-es})。
 

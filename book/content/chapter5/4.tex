@@ -1,8 +1,8 @@
-在本示例中，我们将使用环境审批来在创建版本库之前获取审批，将使用一个 GitHub App 进行身份验证。因为版本库的创建通常发生在组织范围内，并且不能使用 GITHUB\_TOKEN，所以必须使用一个 GitHub App 或具有正确范围的个人访问令牌（PAT）。
+在本示例中，我们将使用环境审批来在创建版本库之前获取审批，将使用一个 GitHub App 进行身份验证。因为版本库的创建通常发生在组织范围内，并且不能使用 GITHUB\_TOKEN，所以必须使用一个 GitHub App 或具有正确范围的个人访问令牌(PAT)。
 
 \mySubsubsection{5.4.1}{Getting ready}
 
-确保你已完成前面的示例，并继续在同一个仓库中进行操作。
+确保你已完成前面的示例，并继续在同一个库中进行操作。
 
 \mySubsubsection{5.4.2}{How to do it…}
 
@@ -14,7 +14,7 @@
 将环境命名为 repo-creation，然后点击 \textbf{Configure environment}(配置环境)。
 
 \item 
-将自己添加为 \textbf{Required reviewer}（必需审阅者），并且不允许管理员绕过此规则（请参阅图 5.7）。
+将自己添加为 \textbf{Required reviewer}(必需审阅者)，并且不允许管理员绕过此规则(请参阅图 5.7)。
 
 \myGraphic{0.6}{content/chapter5/images/7.png}{图 5.7 --- 配置环境保护规则}
 
@@ -22,13 +22,13 @@
 点击 \textbf{Save protection rules}(保存保护规则)。
 
 \item 
-下一步是创建一个应用（App）来进行身份验证。我建议使用组织（organization）来尝试此示例，也可以使用您的个人账户。前往 \url{https://github.com/settings/apps}，然后点击 \textbf{New GitHub App}(新建 GitHub 应用)。
+下一步是创建一个应用(App)来进行身份验证。我建议使用组织(organization)来尝试此示例，也可以使用您的个人账户。前往 \url{https://github.com/settings/apps}，然后点击 \textbf{New GitHub App}(新建 GitHub 应用)。
 
 \item 
-为其指定一个名称（例如，\{your username\}-repo-creation），并将 Homepage URL（主页 URL）设置为版本库的 URL。
+为其指定一个名称(例如，\{your username\}-repo-creation)，并将 Homepage URL(主页 URL)设置为版本库的 URL。
 
 \item 
-在 Repository permissions(仓库权限) 部分，可选择以下权限：
+在 Repository permissions(库权限) 部分，可选择以下权限：
 
 \begin{itemize}
 \item 
@@ -55,15 +55,15 @@ Administration(管理): Read and write(读写)
 从应用的 \textbf{General}(常规) 选项卡中复制 App ID。
 
 \item 
-在 GitHub 上的应用中，选择 \textbf{Install App}（安装应用）并点击 \textbf{Install}（安装）。选择组织或账户，点击\textbf{Install}（安装），保持 \textbf{All repositories}（所有版本库）被选中，然后点击 \textbf{Install}（安装）。
+在 GitHub 上的应用中，选择 \textbf{Install App}(安装应用)并点击 \textbf{Install}(安装)。选择组织或账户，点击\textbf{Install}(安装)，保持 \textbf{All repositories}(所有版本库)被选中，然后点击 \textbf{Install}(安装)。
 
 \item 
-返回到版本库中的环境。添加一个新的密钥 PRIVATE\_KEY，并将之前下载的密钥文件内容添加进去。另外，添加一个 APP\_ID 变量，其值为应用 ID（请参阅图 5.8）。
+返回到版本库中的环境。添加一个新的密钥 PRIVATE\_KEY，并将之前下载的密钥文件内容添加进去。另外，添加一个 APP\_ID 变量，其值为应用 ID(请参阅图 5.8)。
 
 \myGraphic{0.6}{content/chapter5/images/8.png}{图 5.8 --- 向环境添加变量和密钥}
 
 \item 
-编辑工作流文件，并添加一个 create-repo 作业。使该作业依赖于之前的作业（needs: issue-ops），并将其分配给之前创建的环境（environment: repo-creation）：
+编辑工作流文件，并添加一个 create-repo 作业。使该作业依赖于之前的作业(needs: issue-ops)，并将其分配给之前创建的环境(environment: repo-creation)：
 
 \begin{shell}
 create-repo:
@@ -155,11 +155,11 @@ steps:
 \myGraphic{0.6}{content/chapter5/images/9.png}{图 5.9 --- 使用环境进行手动工作流审批}
 
 \item 
-点击 \textbf{Review deployments}（审核部署），选择环境，然后点击 \textbf{Approve and deploy}（批准并部署）（请参阅图 5.10）。
+点击 \textbf{Review deployments}(审核部署)，选择环境，然后点击 \textbf{Approve and deploy}(批准并部署)(请参阅图 5.10)。
 
 \myGraphic{0.6}{content/chapter5/images/10.png}{图 5.10 --- 批准部署到环境}
 
-该工作流将创建版本库，并使用问题中的评论通知发起请求的用户（请参阅图 5.11）。
+该工作流将创建版本库，并使用问题中的评论通知发起请求的用户(请参阅图 5.11)。
 
 \myGraphic{0.6}{content/chapter5/images/11.png}{图 5.11 --- 工作流使用问题评论通知用户关于版本库创建成功}
 
@@ -211,7 +211,7 @@ environment:
 必需审阅者：可以列出最多六个用户或团队作为必需审阅者，以批准引用该环境的工作流作业。审阅者必须至少拥有版本库的读取权限，只需要一个必需审阅者批准作业即可继续。
 
 \item 
-等待计时器：可以在作业最初触发后暂停工作流一段时间。时间（以分钟为单位）必须是一个介于 0 和 43,200（30 天）之间的整数，可以使用 API 在该时间内取消工作流。
+等待计时器：可以在作业最初触发后暂停工作流一段时间。时间(以分钟为单位)必须是一个介于 0 和 43,200(30 天)之间的整数，可以使用 API 在该时间内取消工作流。
 
 \item 
 部署分支和标签：使用部署分支和标签来限制哪些分支和标签可以部署到该环境。环境针对部署分支和标签的选项为无限制、仅受保护分支或选定的分支和标签。
@@ -227,7 +227,7 @@ environment:
 
 \mySamllsectionNoContent{认证}
 
-可以使用 GitHub 令牌和工作流权限做很多事情。但在自动化组织级别的操作时，可能需要使用个人访问令牌（PAT）或 GitHub App。GitHub App 是推荐的方式，因其与用户无关。
+可以使用 GitHub 令牌和工作流权限做很多事情。但在自动化组织级别的操作时，可能需要使用个人访问令牌(PAT)或 GitHub App。GitHub App 是推荐的方式，因其与用户无关。
 
 我们已经在上一章中了解了 GitHub App。要在工作流中使用 GitHub App 进行身份验证，可以使用 actions/create-github-app-token 操作：
 
@@ -259,13 +259,13 @@ issue是与用户交互的好方法——可能还希望将自动化的状态存
 
 GitHub Projects 非常灵活，可以将其中的问题和拉取请求来自不同的版本库。所以它相当复杂，需要使用内部 ID 来引用字段。
 
-在调整工作流之前，运行以下命令来列出用于跟踪问题的项目的字段（我们的例子中，ID 是 19，所有者是 wulfland）：
+在调整工作流之前，运行以下命令来列出用于跟踪问题的项目的字段(我们的例子中，ID 是 19，所有者是 wulfland)：
 
 \begin{shell}
 $ gh project field-list <ID> --owner <OWNER> --format json | jq
 \end{shell}
 
-这将生成一个包含项目中所有字段的 JSON 对象。查找这些 ID。对于状态（Status）字段，还需要选项的 ID：
+这将生成一个包含项目中所有字段的 JSON 对象。查找这些 ID。对于状态(Status)字段，还需要选项的 ID：
 
 \begin{shell}
 {
@@ -351,11 +351,11 @@ gh project item-edit --id $issue_id \
   --project-id $project_id
 \end{shell}
 
-现在，可以在 Projects（项目）中跟踪版本库请求的状态（图 5.13）。
+现在，可以在 Projects(项目)中跟踪版本库请求的状态(图 5.13)。
 
 \myGraphic{0.6}{content/chapter5/images/13.png}{图 5.13 --- 在 GitHub Projects 中跟踪 IssueOps 的状态}
 
-元数据也可以在每个单独的问题卡片上看到（请参阅图 5.14）。
+元数据也可以在每个单独的问题卡片上看到(请参阅图 5.14)。
 
 \myGraphic{0.6}{content/chapter5/images/14.png}{图 5.14 --- GitHub Projects 卡片在 GitHub Issues 中}
 
