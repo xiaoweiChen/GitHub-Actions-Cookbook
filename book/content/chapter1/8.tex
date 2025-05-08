@@ -116,9 +116,9 @@ $ gh secret set secret-name --org org -v selected -r repo
 
 环境比本指南中使用的选项更多。还可以配置一个等待计时器，在工作流执行特定环境的部署作业之前，将工作流暂停 n 分钟(最多 30 天)。
 
-还有一个名为“自定义部署保护规则”的新功能仍处于测试阶段。此功能允许创建 GitHub 应用程序，该应用程序可以暂停部署并等待特定条件。 Datadog,Honeycomb,Sentry,New Relic和Service Now已经有应用程序(请参阅\url{https://doc.github.com/en/actions/deployment/deployment/protecting-deployments/configuring-configuring-configuring-custom-custom-deployment-protection-protection-protection-protection-protection-protection-protection-protection-custom-custom-customdeployment-prection-prection-prection-es})。
+还有一个名为“自定义部署保护规则”的新功能仍处于测试阶段。此功能允许创建 GitHub 应用程序，该应用程序可以暂停部署并等待特定条件。 Datadog,Honeycomb,Sentry,New Relic和Service Now已经有应用程序(请参阅\url{https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/configuring-custom-deployment-protection-rules#using-existing-custom-deployment-protection-rules})。
 
-环境保护规则的力量在于部署分支或标签规则，这可以限制不适用于分支保护规则的代码部署到某些环境。可以包括各种检查 - Codeowners 批准、代码审查者、部署到某些其他环境、SonarQube 质量门\footnote{质量门:是一种创新的管理策略，它将产品设计流程中的关键节点设定为严格的检查点，就像一道道严密的门坎。}和其他许多自动代码检查(请参阅\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-inyour-repository/managing-protected-branches/about-protected-branches})。
+环境保护规则的力量在于部署分支或标签规则，这可以限制不适用于分支保护规则的代码部署到某些环境。可以包括各种检查 - Codeowners 批准、代码审查者、部署到某些其他环境、SonarQube 质量门\footnote{质量门:是一种创新的管理策略，它将产品设计流程中的关键节点设定为严格的检查点，就像一道道严密的门坎。}和其他许多自动代码检查(请参阅\url{https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches})。
 
 
 
